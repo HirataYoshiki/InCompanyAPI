@@ -20,19 +20,23 @@ services:
     image: incompanyapi/backend:1.0
     build: ./backend
     container_name: 'incompanyapi_backend'
+    volumes: 
+      - ../backend:/tmp/dev/backend
     ports: 
-      - 5000:5000
+      - 8000:8000
     stdin_open: true
     tty: true
-    volumes: 
-      - ../backend:/home/user1/dev/backend
-  frontend: 
-    image: incompanyapi/frontend:1.0
-    build: ./frontend
-    container_name: 'incompanyapi_frontend'
-    ports: 
-      - 5000:5001
-    stdin_open: true
-    tty: true
-    volumes: 
-      - ../frontend:/home/user1/dev/frontend
+    working_dir: '/tmp/dev/backend'
+    depends_on: 
+      - db
+  #frontend: 
+    #image: incompanyapi/frontend:1.0
+    #build: ./frontend
+    #container_name: 'incompanyapi_frontend'
+    #ports: 
+      #- 5000:5000
+    #stdin_open: true
+    #tty: true
+    #volumes: 
+     # - ../frontend:/home/user1/dev/frontend
+    #depends_on: [backend]

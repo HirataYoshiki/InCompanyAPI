@@ -1,8 +1,8 @@
 {
-    "name": "Example ScrapingApp",
+    "name": "CompanyAPI",
     "dockerComposeFile": "docker-compose.yml",
-    "service": "web",
-    "workspaceFolder": "/home/user1/dev",
+    "service": "backend",
+    "workspaceFolder": "/tmp/dev/backend",
     "extensions": [
         "ms-python.python",
         "ms-python.pylance"
