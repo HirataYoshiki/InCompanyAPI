@@ -11,5 +11,6 @@ tzdata \
 ENV TZ=Asia/Tokyo
 
 WORKDIR /tmp/dev/backend
+ENV PYTHONPATH "${PYTHONPATH}:/tmp/dev/backend"
 COPY requirements.txt ${PWD}
 RUN pip install -r requirements.txt
