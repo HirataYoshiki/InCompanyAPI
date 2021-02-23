@@ -1,0 +1,38 @@
+version: '3.2'
+
+services: 
+  db:
+    image: incompanyapi/mysql:1.0
+    build: ./db
+    container_name: 'incompanyapi_db'
+    expose: 
+      - "3306"
+    environment: 
+      - TZ=Asia/Tokyo
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=my
+      - MYSQL_USER=my
+      - MYSQL_PASSWORD=my
+    volumes: 
+      - ../db/database:/var/lib/mysql
+      - ../db/init:/docker-entrypoint-initdb.d
+  backend: 
+    image: incompanyapi/backend:1.0
+    build: ./backend
+    container_name: 'incompanyapi_backend'
+    ports: 
+      - 5000:5000
+    stdin_open: true
+    tty: true
+    volumes: 
+      - ../backend:/home/user1/dev/backend
+  frontend: 
+    image: incompanyapi/frontend:1.0
+    build: ./frontend
+    container_name: 'incompanyapi_frontend'
+    ports: 
+      - 5000:5001
+    stdin_open: true
+    tty: true
+    volumes: 
+      - ../frontend:/home/user1/dev/frontend
