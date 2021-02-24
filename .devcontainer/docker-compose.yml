@@ -5,17 +5,21 @@ services:
     image: incompanyapi/mysql:1.0
     build: ./db
     container_name: 'incompanyapi_db'
-    expose: 
-      - "3306"
+    restart: always
+    ports: 
+      - "3306:3306"
     environment: 
-      - TZ=Asia/Tokyo
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=my
-      - MYSQL_USER=my
-      - MYSQL_PASSWORD=my
+      TZ: Asia/Tokyo
+      MYSQL_ROOT_PASSWORD: my
+      MYSQL_DATABASE: my
+      MYSQL_USER: my
+      MYSQL_PASSWORD: my
+      BIND-ADDRESS: 0.0.0.0
     volumes: 
       - ../db/database:/var/lib/mysql
       - ../db/init:/docker-entrypoint-initdb.d
+    networks: 
+      - local-net
   backend: 
     image: incompanyapi/backend:1.0
     build: ./backend
@@ -29,6 +33,10 @@ services:
     working_dir: '/tmp/dev/backend'
     depends_on: 
       - db
+    networks: 
+      - local-net
+    
+
   #frontend: 
     #image: incompanyapi/frontend:1.0
     #build: ./frontend
@@ -40,3 +48,7 @@ services:
     #volumes: 
      # - ../frontend:/home/user1/dev/frontend
     #depends_on: [backend]
+
+networks:
+  local-net:
+    driver: bridge
