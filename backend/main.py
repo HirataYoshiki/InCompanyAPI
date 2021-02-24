@@ -2,12 +2,16 @@ from fastapi import FastAPI
 import uvicorn
 
 import Routers
+from apps.register.router import routers as register
 
 
 app = FastAPI()
 app.include_router(
   Routers.routers
   )
+app.include_router(
+register
+)
 
 @app.get('/')
 def hello():

@@ -14,7 +14,6 @@ services:
       MYSQL_DATABASE: my
       MYSQL_USER: my
       MYSQL_PASSWORD: my
-      BIND-ADDRESS: 0.0.0.0
     volumes: 
       - ../db/database:/var/lib/mysql
       - ../db/init:/docker-entrypoint-initdb.d
