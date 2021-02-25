@@ -1,11 +1,13 @@
+from sqlalchemy.sql.sqltypes import Boolean
 from db import Base,engine
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, Boolean
 
 class User(Base):
   userid = Column(Integer, primary_key=True, index=True)
   username = Column(String(50))
   password = Column(String(300))
   mailaddress = Column(String(100))
+  editor = Column(Boolean,default=False)
   __tablename__ = "users"
 
 

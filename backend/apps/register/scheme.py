@@ -5,6 +5,7 @@ class User_in(BaseModel):
   username:str
   password:str
   mailaddress:Optional[str]=None
+  editor:bool=False
 
 
 class User_out(BaseModel):
@@ -12,3 +13,4 @@ class User_out(BaseModel):
   username:str
   password:str
   mailaddress:Optional[str]=None
+  editor:bool

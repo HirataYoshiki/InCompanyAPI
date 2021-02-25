@@ -1,5 +1,5 @@
-from fastapi import APIRouter
-from auth import auth
+from fastapi import APIRouter,Depends
+from auth import get_current_user
 from db import get_session
 from . import scheme,models
 
@@ -14,7 +14,8 @@ async def add_user(user:scheme.User_in):
   adds=models.User(
     username=user.username,
     password = hashedpassword,
-    mailaddress = user.mailaddress
+    mailaddress = user.mailaddress,
+    editor=user.editor
   )
   session.add(adds)
   try:
@@ -31,5 +32,7 @@ async def get_all_users():
   query=session.query(models.User).all()
   return {"item":query}
 
-if __name__=="__main__":
-  print(auth)
+@routers.get("/users/me")
+async def get_users_me(current_user: scheme.User_out = Depends(get_current_user)):
+    return current_user
+
