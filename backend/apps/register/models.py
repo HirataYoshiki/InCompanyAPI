@@ -1,10 +1,10 @@
 from db import Base,engine
-from sqlalchemy import Boolean, Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime
 
 class User(Base):
   userid = Column(Integer, primary_key=True, index=True)
   username = Column(String(50))
-  password = Column(String(50))
+  password = Column(String(300))
   mailaddress = Column(String(100))
   __tablename__ = "users"
 

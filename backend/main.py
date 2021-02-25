@@ -3,6 +3,7 @@ import uvicorn
 
 import Routers
 from apps.register.router import routers as register
+from auth import router as authrouter
 
 
 app = FastAPI()
@@ -11,6 +12,9 @@ app.include_router(
   )
 app.include_router(
 register
+)
+app.include_router(
+authrouter
 )
 
 @app.get('/')

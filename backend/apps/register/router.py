@@ -3,22 +3,25 @@ from auth import auth
 from db import get_session
 from . import scheme,models
 
+import hashlib
+
 routers= APIRouter()
 
 @routers.post('/users')
 async def add_user(user:scheme.User_in):
   session = get_session()
+  hashedpassword = hashlib.sha256(user.password.encode()).hexdigest()
   adds=models.User(
     username=user.username,
-    password = user.password,
+    password = hashedpassword,
     mailaddress = user.mailaddress
   )
   session.add(adds)
   try:
     session.commit()
-  except:
+  except Exception as e:
     session.rollback()
-    print("rollbaced")
+    print(e)
 
   return {"status":"true"}
 
