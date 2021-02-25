@@ -3,9 +3,9 @@ from sqlalchemy import Boolean, Column, Integer, String, DateTime
 
 class User(Base):
   userid = Column(Integer, primary_key=True, index=True)
-  username = Column(String)
-  password = Column(String)
-  mailaddress = Column(String)
+  username = Column(String(50))
+  password = Column(String(50))
+  mailaddress = Column(String(100))
   __tablename__ = "users"
 
 
