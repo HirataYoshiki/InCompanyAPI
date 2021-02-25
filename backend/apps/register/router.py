@@ -1,3 +1,4 @@
+from typing import Optional
 from fastapi import APIRouter,Depends
 
 from auth import get_current_user
@@ -53,7 +54,31 @@ async def get_all_users():
   query=session.query(models.User).all()
   return {"item":query}
 
-@routers.get("/users/me")
+@routers.get('/users/me')
 async def get_users_me(current_user: scheme.User_out = Depends(get_current_user)):
     return current_user
+
+@routers.put('users/me')
+async def update_users_me(update:scheme.User_update,current_user: scheme.User_out = Depends(get_current_user)):
+  session = get_session()
+  query = session.query(models.User).filter(models.User.userid==current_user.userid).one()
+  print("query: \n",query)
+  if update.username != None:
+    query.username=update.username
+  if update.mailaddress != None:
+    query.mailaddress = update.mailaddress
+  if update.password != None:
+    query.password = hashlib.sha256(update.encode()).hexdigest()
+    
+  session.add(update)
+  try:
+    session.commit()
+  except Exception as e:
+    session.rollback()
+    print(e)
+
+  return {
+    "status":"true",
+    "item":update
+    }
 

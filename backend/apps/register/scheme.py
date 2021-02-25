@@ -7,10 +7,14 @@ class User_in(BaseModel):
   mailaddress:Optional[str]=None
   editor:bool=False
 
-
 class User_out(BaseModel):
   userid:int
   username:str
-  password:str
+  hashedpassword:str
   mailaddress:Optional[str]=None
   editor:bool
+
+class User_update(BaseModel):
+  username: Optional[str]=None
+  mailaddress:Optional[str]=None 
+  password: Optional[str]=None 
