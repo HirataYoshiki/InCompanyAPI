@@ -1,4 +1,4 @@
 #python cache files
 __pycache__
-.pyc
+*.pyc
 ideas

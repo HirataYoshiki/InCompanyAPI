@@ -1,4 +1,5 @@
 from fastapi import APIRouter,Depends
+
 from auth import get_current_user
 from db import get_session
 from . import scheme,models
@@ -18,13 +19,33 @@ async def add_user(user:scheme.User_in):
     editor=user.editor
   )
   session.add(adds)
+  query = session.query(models.User).filter(models.User.username==user.username).one()
   try:
     session.commit()
   except Exception as e:
     session.rollback()
     print(e)
 
-  return {"status":"true"}
+  return {
+    "status":"true",
+    "item":query
+    }
+
+@routers.delete('/users/{userid}')
+async def delete_user(userid:int):
+  session = get_session()
+  deletes = session.query(models.User).filter(models.User.userid==userid).one()
+  session.delete(deletes)
+  try:
+    session.commit()
+  except Exception as e:
+    session.rollback()
+    print(e)
+
+  return {
+    "status":"true",
+    "item":userid
+    }
 
 @routers.get('/users')
 async def get_all_users():
