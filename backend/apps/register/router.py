@@ -17,7 +17,8 @@ async def add_user(user:scheme.User_in):
   try:
     session.commit()
   except:
-    session.rollback
+    session.rollback()
+    print("rollbaced")
 
   return {"status":"true"}
 
