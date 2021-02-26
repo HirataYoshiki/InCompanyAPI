@@ -15,6 +15,6 @@ class User_out(BaseModel):
   editor:bool
 
 class User_update(BaseModel):
-  username: Optional[str]=None
-  mailaddress:Optional[str]=None 
-  password: Optional[str]=None 
+  username: str=""
+  mailaddress:str="" 
+  password: str="" 

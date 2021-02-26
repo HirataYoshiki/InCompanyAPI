@@ -1,10 +1,12 @@
 from fastapi import APIRouter,Depends
+from sqlalchemy import exc
+from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.sql.elements import False_
 
 from auth import get_current_user
 from db import get_session
 from apps.character import scheme,models
 from apps.register.scheme import User_out
-
 
 router= APIRouter()
 
@@ -27,18 +29,57 @@ async def register_new_user(
   except Exception as e:
     session.rollback()
     print(e)
-    return {"status":"Error"}
+    return {"status":False}
   return {
-    "status":"OK",
-    "username":current_user.username,
-    "characters":characters
+    "status":True,
+    "data":session.query(models.Character).filter(models.Character.username==current_user.username).one()
     } 
 
 @router.get('/characters/me')
 async def get_my_character(current_user:User_out=Depends(get_current_user)):
   session = get_session()
+  try:
+    query = session.query(models.Character).filter(models.Character.username==current_user.username).one()
+    return {
+      "status":True,
+      "data":query
+    }
+  except NoResultFound as e:
+    print(e)
+    return {"status":False,"data":"Not Registered.try to post quest @ /characters/me with params... department:str,position:str,skills:str[...]"}
+
+@router.put('/characters/me')
+async def update_my_character(
+  characters:scheme.Character_update,
+  current_user:User_out=Depends(get_current_user)):
+  session = get_session()
+  query=session.query(models.Character).filter(models.Character.username==current_user.username).one()
+  if characters.department:
+    query.department=characters.department
+  if characters.position:
+    query.position=characters.position
+  query.skills=characters.skills
+  try:
+    session.commit()
+    return {
+      "status":True,
+      "data":session.query(models.Character).filter(models.Character.username==current_user.username).one()
+    }
+  except Exception as e:
+    session.rollback()
+    print(e)
+    return {"status":False}
+
+@router.delete('/characters/me')
+async def delete_me(current_user:User_out=Depends(get_current_user)):
+  session = get_session()
   query = session.query(models.Character).filter(models.Character.username==current_user.username).one()
-  return {
-    "status":"OK",
-    "data":query
-  }
+  session.delete(query)
+  try:
+    session.commit()
+    return {"status":True,"data":query}
+  except Exception as e:
+    session.rollback()
+    print(e)
+    return {"status":False}
+  

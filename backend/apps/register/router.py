@@ -3,7 +3,7 @@ from sqlalchemy.orm.exc import MultipleResultsFound
 
 from auth import get_current_user
 from db import get_session
-from . import scheme,models
+from apps.register import scheme,models
 
 import hashlib
 
@@ -31,7 +31,7 @@ async def add_user(user:scheme.User_in):
     print(e)
 
   return {
-    "status":"true",
+    "status":True,
     "item":query
     }
 
@@ -47,7 +47,7 @@ async def delete_user(userid:int):
     print(e)
 
   return {
-    "status":"true",
+    "status":True,
     "item":userid
     }
 
@@ -61,19 +61,18 @@ async def get_all_users():
 async def get_users_me(current_user: scheme.User_out = Depends(get_current_user)):
     return current_user
 
-@router.put('users/me')
+@router.put('/users/me')
 async def update_users_me(update:scheme.User_update,current_user: scheme.User_out = Depends(get_current_user)):
   session = get_session()
   query = session.query(models.User).filter(models.User.userid==current_user.userid).one()
-  print("query: \n",query)
-  if update.username != None:
+  if update.username:
     query.username=update.username
-  if update.mailaddress != None:
+  if update.mailaddress:
     query.mailaddress = update.mailaddress
-  if update.password != None:
-    query.password = hashlib.sha256(update.encode()).hexdigest()
+  if update.password:
+    query.password = hashlib.sha256(update.password.encode()).hexdigest()
     
-  session.add(update)
+  session.add(query)
   try:
     session.commit()
   except Exception as e:
@@ -81,7 +80,7 @@ async def update_users_me(update:scheme.User_update,current_user: scheme.User_ou
     print(e)
 
   return {
-    "status":"true",
+    "status":True,
     "item":update
     }
 
