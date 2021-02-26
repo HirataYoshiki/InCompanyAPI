@@ -21,19 +21,22 @@ async def add_user(user:scheme.User_in):
   )
   try:
     session.add(adds)
-    query = session.query(models.User).filter(models.User.username==user.username).one()
     session.commit()
+    query = session.query(models.User).filter(models.User.username==user.username).one()
+    return {
+      "status":True,
+      "item":query
+    }
   except MultipleResultsFound as milti:
     session.rollback()
     print(milti)
+    return {"status":False}
   except Exception as e:
     session.rollback()
     print(e)
+    return {"status":False}
 
-  return {
-    "status":True,
-    "item":query
-    }
+  
 
 @router.delete('/users/{userid}')
 async def delete_user(userid:int):
@@ -62,7 +65,9 @@ async def get_users_me(current_user: scheme.User_out = Depends(get_current_user)
     return current_user
 
 @router.put('/users/me')
-async def update_users_me(update:scheme.User_update,current_user: scheme.User_out = Depends(get_current_user)):
+async def update_users_me(
+  update:scheme.User_update,
+  current_user: scheme.User_out = Depends(get_current_user)):
   session = get_session()
   query = session.query(models.User).filter(models.User.userid==current_user.userid).one()
   if update.username:
@@ -75,12 +80,13 @@ async def update_users_me(update:scheme.User_update,current_user: scheme.User_ou
   session.add(query)
   try:
     session.commit()
+    return {
+      "status":True,
+      "item":session.query(models.User).filter(models.User.userid==current_user.userid).one()
+      }
   except Exception as e:
     session.rollback()
     print(e)
 
-  return {
-    "status":True,
-    "item":update
-    }
+  
 
