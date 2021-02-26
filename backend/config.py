@@ -1,6 +1,7 @@
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from passlib.context import CryptContext
 
+
 class Develop:
   user_name="my"
   password="my"

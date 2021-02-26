@@ -1,15 +1,12 @@
 from fastapi import FastAPI
 import uvicorn
-
-import Routers
-from apps.register.router import routers as registerrouter
-from auth import router as authrouter
+from Routers import ROUTERS
 
 
 app = FastAPI()
-app.include_router(Routers.routers)
-app.include_router(registerrouter)
-app.include_router(authrouter)
+
+for router in ROUTERS:
+  app.include_router(router)
 
 @app.get('/')
 def hello():
