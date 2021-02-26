@@ -4,6 +4,7 @@ from sqlalchemy.orm.exc import MultipleResultsFound
 from auth import get_current_user
 from db import get_session
 from apps.register import scheme,models
+from apps.register.control import get_editor_user
 
 import hashlib
 
@@ -55,7 +56,7 @@ async def delete_user(userid:int):
     }
 
 @router.get('/users')
-async def get_all_users():
+async def get_all_users(editor:models.User=Depends(get_editor_user)):
   session=get_session()
   query=session.query(models.User).all()
   return {"item":query}
