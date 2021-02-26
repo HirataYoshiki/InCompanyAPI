@@ -3,9 +3,11 @@
 # import router and add the router here.
 
 from auth import router as auth_router
-from apps.register.router import routers as register_router
+from apps.register.router import router as register_router
+from apps.character.router import router as character_router
 
 ROUTERS=[
   auth_router,
-  register_router
+  register_router,
+  character_router
   ]

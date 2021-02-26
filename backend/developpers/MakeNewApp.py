@@ -16,16 +16,20 @@ def MakeNewApp(appname):
 def MakeMSRfiles(newapp):
   files = {
     "model":{
-      "dir":newapp/'./models.py',
-      "text":"from sqlalchemy.sql.sqltypes import Boolean\nfrom db import Base,engine\nfrom sqlalchemy import Column, Integer, String, Boolean"
+      "dir": newapp/'./models.py',
+      "text": "from sqlalchemy.sql.sqltypes import Boolean\nfrom db import Base,engine\nfrom sqlalchemy import Column, Integer, String, Boolean"
     },
     "scheme":{
-      "dir":newapp/'./scheme.py',
-      "text":"from pydantic import BaseModel\nfrom typing import List,Optional"
+      "dir": newapp/'./scheme.py',
+      "text": "from pydantic import BaseModel\nfrom typing import List,Optional"
     },
     "router":{
-      "dir":newapp/'./router.py',
-      "text":"from typing import Optional\nfrom fastapi import APIRouter,Depends\n\nfrom auth import get_current_user\nfrom db import get_session\nfrom . import scheme,models\n\nrouter= APIRouter()"
+      "dir": newapp/'./router.py',
+      "text": "from fastapi import APIRouter,Depends\n\nfrom auth import get_current_user\nfrom db import get_session\nfrom apps.{} import scheme,models\nfrom apps.register.scheme import User_out\n\nrouter= APIRouter()".format(newapp.name)
+    },
+    "init":{
+      "dir": newapp/'./__init__.py',
+      "text": ""
     }
   }
 
@@ -35,5 +39,5 @@ def MakeMSRfiles(newapp):
 
 if __name__=="__main__":
   AppName=input("Input New App Name Here\n\t->")
-  newapp=MakeNewApp("testapp")
+  newapp=MakeNewApp(AppName)
   MakeMSRfiles(newapp)
