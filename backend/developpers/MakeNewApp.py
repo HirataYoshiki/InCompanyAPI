@@ -6,9 +6,8 @@ apps = backend/'./apps'
 
 def MakeNewApp(appname):
   newapp=apps/'./{}'.format(appname)
-  print(newapp)
   if newapp.exists():
-    print("exist")
+    print(f"{appname} already exists")
     return False
   newapp.mkdir()
   return newapp
@@ -41,3 +40,4 @@ if __name__=="__main__":
   AppName=input("Input New App Name Here\n\t->")
   newapp=MakeNewApp(AppName)
   MakeMSRfiles(newapp)
+  print(f"Completed.\n[Dir] {newapp}")
