@@ -1,5 +1,4 @@
 from pathlib import Path
-import os
 
 backend = Path(__file__).parent.parent
 apps = backend/'./apps'
@@ -28,7 +27,7 @@ def MakeMSRfiles(newapp):
     },
     "init":{
       "dir": newapp/'./__init__.py',
-      "text": ""
+      "text": '"""\nAdd descriptions here\n"""'
     }
   }
 

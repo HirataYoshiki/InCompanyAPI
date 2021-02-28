@@ -5,9 +5,11 @@
 from auth import router as auth_router
 from apps.register.router import router as register_router
 from apps.character.router import router as character_router
+from apps.report.router import router as report_router
 
 ROUTERS=[
   auth_router,
   register_router,
-  character_router
+  character_router,
+  report_router
   ]
