@@ -1,23 +1,33 @@
 from apps.register.models import User
 from typing import Optional,List
 
-from fastapi import APIRouter,Depends
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session,Query
 
 from auth import get_current_user
 from db import get_session
-from apps.report import scheme,models
-from apps.report.control import create_new_report,get_current_users_reports
+from apps.report import scheme, models
+from apps.report.control import create_new_report, get_current_users_reports, create_new_header
 from apps.register.control import get_editor_user
 from apps.register.scheme import User_out
 
 router= APIRouter()
 
+
 @router.get('/reports/all')
-async def get_all_reports(
+async def editor_get_all_reports(
   editor:User_out=Depends(get_editor_user),
   session:Session=Depends(get_session)):
   query = session.query(models.Report).all()
+  return {"status":True,"data":query}
+
+@router.get('/reports/{reportid}')
+async def editor_get_report(
+  reportid:int,
+  editor:User_out=Depends(get_editor_user),
+  session:Session=Depends(get_session)
+):
+  query = session.query(models.Report).filter(models.Report.reportid==reportid).one()
   return {"status":True,"data":query}
 
 @router.post('/reports/me')
@@ -60,8 +70,28 @@ async def update_report(
     "staus":True,
     "data": session.query(models.Report).filter(
     models.Report.username==current_user.username,
-    models.Report.localreportid==localreportid).one()}
+    models.Report.localreportid==localreportid).one()
+    }
 
+@router.delete('/reports/me/{localreportid}')
+async def delete_my_report(
+  localreportid:int,
+  session:Session=Depends(get_session),
+  current_user:User=Depends(get_current_user)
+):
+  query:models.Report = session.query(models.Report).filter(
+    models.Report.username==current_user.username,
+    models.Report.localreportid==localreportid).one()
+
+  session.delete(query)
+  session.commit()
+  return {"status":True,"data":localreportid}
+
+@router.post('/reports/me/headers')
+async def create_new_my_header(
+  header:models.ReportHeader=Depends(create_new_header)
+):
+  return {"status":True,"data":header}
 
 
 

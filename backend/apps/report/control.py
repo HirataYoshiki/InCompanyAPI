@@ -1,6 +1,6 @@
 from db import get_session
-from apps.report.models import Report
-from apps.report.scheme import Reportin,Reportupdate
+from apps.report.models import Report,ReportHeader
+from apps.report.scheme import ReportHeaderin, Reportin,Reportupdate
 from apps.register.models import User
 from auth import get_current_user
 
@@ -12,7 +12,7 @@ from typing import Optional
 import inspect
 
 
-# For POST Method-------------------------------------------------------
+# For report: POST Method-------------------------------------------------------
 async def create_new_report(
   title:str,teamid:Optional[int]=None,
   headerid:Optional[int]=None,
@@ -65,6 +65,15 @@ async def get_current_users_reports(current_user:User=Depends(get_current_user),
   query = session.query(Report).filter(Report.username==current_user.username)
   return query
 
+async def create_new_header(
+  header:ReportHeaderin,
+  current_user:User=Depends(get_current_user),
+  session:Session=Depends(get_session)):
 
+  adds = ReportHeader(**header.__dict__)
+  session.add(adds)
+  session.commit()
+
+  return adds
 
 
