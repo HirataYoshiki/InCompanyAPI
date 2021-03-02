@@ -1,12 +1,12 @@
 from db import get_session
-from apps.report import models
-from apps.report.scheme import Reportin,Reportout
-from auth import get_current_user
+from apps.report.models import Report
+from apps.report.scheme import Reportin,Reportupdate
 from apps.register.models import User
+from auth import get_current_user
 
 from fastapi import Depends
 from sqlalchemy import desc
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session,Query
 
 from typing import Optional
 import inspect
@@ -21,15 +21,14 @@ async def create_new_report(
   dicts = _precreate_new_report(title,teamid,headerid)
   dicts["username"]=current_user.username
 
-  q = session.query(models.Report).filter(models.Report.username==current_user.username).order_by(desc(models.Report.reportid)).first()
-  print("kueri ",q)
+  q = session.query(Report).filter(Report.username==current_user.username).order_by(desc(Report.reportid)).first()
   try:
     localreportid= q.localreportid +1
   except:
     #for the first post
     localreportid=1
   dicts["localreportid"]=localreportid
-  adds = models.Report(**dicts)
+  adds = Report(**dicts)
   session.add(adds)
   try:
     session.commit()
@@ -63,5 +62,9 @@ def get_args_of_current_function():
 #--------------------------------------------------------------------------------------
 
 async def get_current_users_reports(current_user:User=Depends(get_current_user),session:Session=Depends(get_session)):
-  query = session.query(models.Report).filter(models.Report.username==current_user.username)
+  query = session.query(Report).filter(Report.username==current_user.username)
   return query
+
+
+
+

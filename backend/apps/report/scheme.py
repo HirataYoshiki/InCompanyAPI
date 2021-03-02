@@ -18,6 +18,12 @@ class Reportout(BaseModel):
   teamid:Optional[int]=None
   headerid:Optional[int]=None
 
+class Reportupdate(BaseModel):
+  title:Optional[str]=None
+  contentsid:Optional[int]=None
+  teamid:Optional[int]=None
+  headerid:Optional[int]=None
+
 class ReportHeaderin(BaseModel):
   type:str
 

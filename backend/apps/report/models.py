@@ -1,10 +1,11 @@
 from db import Base,engine
 from sqlalchemy import Column, Integer, String, Boolean, DateTime,ForeignKey
 from sqlalchemy.orm import relationship
+from dataclasses import dataclass
 
 
 #   Content N-1 Contents 1-1 Report N-1 Header
-
+@dataclass
 class Report(Base):
   __tablename__ = "report"
   reportid=Column(Integer, primary_key=True, index=True)
@@ -17,6 +18,13 @@ class Report(Base):
   timestamp=Column(DateTime)
   contents = relationship("ReportContents",back_populates="report")
   header = relationship("ReportHeader",back_populates="report")
+
+  def updates(self,**kwargs):
+    for k,v in kwargs.items():
+      for sk in self.__dict__.keys():
+        if k==sk:
+          setattr(self,sk,v)
+    return self
 
 class ReportHeader(Base):
   __tablename__="reportheader"

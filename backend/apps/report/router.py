@@ -1,5 +1,5 @@
 from apps.register.models import User
-from typing import Optional
+from typing import Optional,List
 
 from fastapi import APIRouter,Depends
 from sqlalchemy.orm import Session,Query
@@ -40,5 +40,25 @@ async def get_my_report_selected_by_id(
     return {"status":True,"data":report}
   except Exception as e:
     print(e)
-    return {"none":None}
+    return {"status":False}
+
+@router.put('/reports/me/{localreportid}')
+async def update_report(
+  localreportid:int,
+  update:scheme.Reportupdate,
+  session:Session=Depends(get_session),
+  current_user:User=Depends(get_current_user)
+):
+  query:models.Report = session.query(models.Report).filter(
+    models.Report.username==current_user.username,
+    models.Report.localreportid==localreportid).one()
+
+  updated=query.updates(**update.__dict__)
+  session.commit()
+
+  return {"staus":True,"data":updated}
+
+
+
+
 
