@@ -10,6 +10,7 @@ class Reportin(BaseModel):
 
 class Reportout(BaseModel):
   reportid:int
+  localreportid:int
   username:str
   title:str
   contentsid:int

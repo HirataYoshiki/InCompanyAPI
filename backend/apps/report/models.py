@@ -3,11 +3,12 @@ from sqlalchemy import Column, Integer, String, Boolean, DateTime,ForeignKey
 from sqlalchemy.orm import relationship
 
 
-#   Content <-o Contents o-o Report o-> Header
+#   Content N-1 Contents 1-1 Report N-1 Header
 
 class Report(Base):
   __tablename__ = "report"
   reportid=Column(Integer, primary_key=True, index=True)
+  localreportid=Column(Integer)
   username=Column(String(50))
   title = Column(String(255))
   teamid=Column(Integer)
