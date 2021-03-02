@@ -53,10 +53,14 @@ async def update_report(
     models.Report.username==current_user.username,
     models.Report.localreportid==localreportid).one()
 
-  updated=query.updates(update)
+  query.updates(update)
   session.commit()
 
-  return {"staus":True,"data":updated}
+  return {
+    "staus":True,
+    "data": session.query(models.Report).filter(
+    models.Report.username==current_user.username,
+    models.Report.localreportid==localreportid).one()}
 
 
 
