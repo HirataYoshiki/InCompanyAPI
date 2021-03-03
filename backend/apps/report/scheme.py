@@ -3,7 +3,6 @@ from typing import Optional
 from datetime import datetime
 
 class Reportin(BaseModel):
-  username:str
   title:str
   teamid:Optional[int]=None
   headerid:Optional[int]=None
@@ -13,8 +12,8 @@ class Reportout(BaseModel):
   localreportid:int
   username:str
   title:str
-  contentsid:int
-  timestamp:datetime
+  contentsid:Optional[int]=None
+  timestamp:Optional[datetime]=None
   teamid:Optional[int]=None
   headerid:Optional[int]=None
 

@@ -31,7 +31,7 @@ async def add_user(user:scheme.User_in):
   except MultipleResultsFound as milti:
     session.rollback()
     print(milti)
-    return {"status":False}
+    return {"status":False,"text":"The user already exists"}
   except Exception as e:
     session.rollback()
     print(e)

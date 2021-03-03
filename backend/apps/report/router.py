@@ -7,91 +7,83 @@ from sqlalchemy.orm import Session,Query
 from auth import get_current_user
 from db import get_session
 from apps.report import scheme, models
-from apps.report.control import create_new_report, get_current_users_reports, create_new_header
+from apps.report.control import *
 from apps.register.control import get_editor_user
 from apps.register.scheme import User_out
 
 router= APIRouter()
 
+class Reports:
+  @router.get('/reports/all')
+  async def editor_get_all_reports(
+    editor:User=Depends(get_editor_user),
+    session:Session=Depends(get_session)):
+    query = session.query(models.Report).all()
+    return {"status":True,"data":query}
 
-@router.get('/reports/all')
-async def editor_get_all_reports(
-  editor:User_out=Depends(get_editor_user),
-  session:Session=Depends(get_session)):
-  query = session.query(models.Report).all()
-  return {"status":True,"data":query}
+  @router.get('/reports/{reportid}',response_model=scheme.Reportout)
+  async def editor_get_report(
+    report: scheme.Reportout = Depends(get_current_users_reports_by_id)):
+    return report
 
-@router.get('/reports/{reportid}')
-async def editor_get_report(
-  reportid:int,
-  editor:User_out=Depends(get_editor_user),
-  session:Session=Depends(get_session)
-):
-  query = session.query(models.Report).filter(models.Report.reportid==reportid).one()
-  return {"status":True,"data":query}
+  @router.post('/reports/me',response_model=scheme.Reportout)
+  async def create_my_new_report(
+    report:scheme.Reportout=Depends(create_new_report)):
+    return report
 
-@router.post('/reports/me')
-async def create_my_new_report(
-  report:models.Report=Depends(create_new_report)):
-  return report
+  @router.get('/reports/me')
+  async def get_my_reports(
+    query:Query=Depends(get_current_users_reports)
+    ):
+    try:
+      return query.all()
+    except:
+      print("Error: router.py")
 
-@router.get('/reports/me')
-async def get_my_reports(
-  query:Query=Depends(get_current_users_reports)
+  @router.get('/reports/me/{localreportid}',response_model=scheme.Reportout)
+  async def get_my_report_selected_by_id(
+    report: scheme.Reportout = Depends(get_current_users_reports_by_id)):
+    return report
+
+  @router.put('/reports/me/{localreportid}',response_model=scheme.Reportout)
+  async def update_report(
+    report:scheme.Reportout=Depends(update_current_users_reports_by_id)
   ):
-  return {"status":True,"data":query.all()}
+    return report
+    
 
-@router.get('/reports/me/{localreportid}')
-async def get_my_report_selected_by_id(
-  localreportid:int,
-  query:Query=Depends(get_current_users_reports)):
-  try:
-    report = query.filter(models.Report.localreportid==localreportid).one()
-    return {"status":True,"data":report}
-  except Exception as e:
-    print(e)
-    return {"status":False}
+  @router.delete('/reports/me/{localreportid}')
+  async def delete_my_report(
+    localreportid:int,
+    session:Session=Depends(get_session),
+    current_user:User=Depends(get_current_user)
+  ):
+    query:models.Report = session.query(models.Report).filter(
+      models.Report.username==current_user.username,
+      models.Report.localreportid==localreportid).one()
 
-@router.put('/reports/me/{localreportid}')
-async def update_report(
-  localreportid:int,
-  update:scheme.Reportupdate,
-  session:Session=Depends(get_session),
-  current_user:User=Depends(get_current_user)
-):
-  query:models.Report = session.query(models.Report).filter(
-    models.Report.username==current_user.username,
-    models.Report.localreportid==localreportid).one()
+    session.delete(query)
+    session.commit()
+    return {"status":True,"data":localreportid}
 
-  query.updates(update)
-  session.commit()
+class Headers:
+  @router.post('/reports/me/headers',response_model=scheme.ReportHeaderout)
+  async def create_new_my_header(
+    header:scheme.ReportHeaderout=Depends(create_new_header)
+  ):
+    return header
 
-  return {
-    "staus":True,
-    "data": session.query(models.Report).filter(
-    models.Report.username==current_user.username,
-    models.Report.localreportid==localreportid).one()
-    }
+  @router.get('/reports/me/headers')
+  async def get_my_headers(
+    headers: Query = Depends(get_current_users_header_query)
+  ):
+    return headers.all()
 
-@router.delete('/reports/me/{localreportid}')
-async def delete_my_report(
-  localreportid:int,
-  session:Session=Depends(get_session),
-  current_user:User=Depends(get_current_user)
-):
-  query:models.Report = session.query(models.Report).filter(
-    models.Report.username==current_user.username,
-    models.Report.localreportid==localreportid).one()
-
-  session.delete(query)
-  session.commit()
-  return {"status":True,"data":localreportid}
-
-@router.post('/reports/me/headers')
-async def create_new_my_header(
-  header:models.ReportHeader=Depends(create_new_header)
-):
-  return {"status":True,"data":header}
+  @router.get('/reports/{localreportid}/headers',response_model=scheme.ReportHeaderout)
+  async def get_header_by_localreportid(
+    header:scheme.ReportHeaderout=Depends(get_current_users_header_by_localreportid)
+  ):
+    return header
 
 
 

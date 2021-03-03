@@ -6,6 +6,7 @@ from fastapi import Depends, HTTPException, status, APIRouter, HTTPException, st
 from fastapi.security import OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from pydantic import BaseModel
+from sqlalchemy.orm import Session
 
 from db import get_session
 from apps.register.models import User
@@ -48,7 +49,7 @@ def get_password_hash(password):
       return Develop.config["PWD_CONTEXT"].hash(password)
 
 
-def get_user(session, username: str):
+def get_user(session:Session, username: str):
       try:
             user_data = session.query(User).filter(User.username==username).one()
             return user_data
