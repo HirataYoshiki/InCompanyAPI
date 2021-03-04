@@ -9,47 +9,82 @@ import hashlib
 
 
 client = TestClient(app)
-TOKENDATA=None
-USERNAME = "testdesu"
-PASSWORD = "password"
-HASSEDPASS=hashlib.sha256(PASSWORD.encode()).hexdigest()
-MAILADDRESS = "test@test.test"
-EDITOR = True
-
-
-def test_create_user_200():
-
-  response=client.post(
-    "/users",
-    json={"username": USERNAME,"password": PASSWORD,"mailaddress": MAILADDRESS,"editor": EDITOR}
-  )
-
-  assert response.status_code==200
-  assert response.json()=={
-    "userid": 1,
-    "username": USERNAME,
-    "password": HASSEDPASS,
-    "mailaddress": MAILADDRESS,
-    "editor": EDITOR
+USER = {
+  'editor':{
+    'input':{
+      'username': 'a',
+      'password': 'a',
+      'editor': True,
+      'mailaddress': 'a'
+    },
+    'output':{
+      'userid': 1,
+      'username': 'a',
+      'password': hashlib.sha256('a'.encode()).hexdigest(),
+      'mailaddress': 'a',
+      'editor': True
+    }
+  },
+  'not editor':{
+    'input':{
+      'username': 'b',
+      'password': 'b',
+      'mailaddress': 'b',
+      'editor': False
+    },
+    'output':{
+      'userid': 2,
+      'username': 'b',
+      'password': hashlib.sha256('b'.encode()).hexdigest(),
+      'mailaddress': 'b',
+      'editor': False
+    }
   }
+}
 
-def test_create_user_false():
+
+
+def test_create_editor_user_200():
   response=client.post(
-    "/users",
-    json={"username": USERNAME,"password": PASSWORD,"mailaddress": MAILADDRESS,"editor": EDITOR}
+    '/users',
+    json=USER['editor']['input']
+  )
+
+  assert response.status_code==200
+  assert response.json()==USER['editor']['output']
+
+def test_create_not_editor_user_200():
+  response=client.post(
+    '/users',
+    json=USER['not editor']['input']
+  )
+
+  assert response.status_code==200
+  assert response.json()==USER['not editor']['output']
+
+def test_create_user_doubled():
+  response=client.post(
+    '/users',
+    json=USER['editor']['input']
   )
   assert response.status_code==200
-  assert response.json()=={"status":False}
+  assert response.json()=={'status':False}
 
 def test_create_user_luck_name():
+  json = USER['editor']['input'].copy()
+  json['username']=''
   response=client.post(
-    "/users",
-    json={"password": PASSWORD,"mailaddress": MAILADDRESS,"editor": EDITOR}
+    '/users',
+    json=json
   )
-  assert response.status_code==422
+
+  assert response.status_code==200
 
 def test_get_token_200():
-  (content, header) = encode_multipart_formdata([('username', USERNAME),('password',PASSWORD)])
+  username = USER['editor']['input']['username']
+  password = USER['editor']['input']['password']
+
+  (content, header) = encode_multipart_formdata([('username', username),('password',password)])
   response = client.post(
     '/token',
     headers={'Content-Type': header},
@@ -58,22 +93,17 @@ def test_get_token_200():
   assert response.status_code==200
 
 def test_get_users_me():
-  (content, header) = encode_multipart_formdata([('username', USERNAME),('password',PASSWORD)])
+  (content, header) = encode_multipart_formdata([('username', USER['editor']['input']['username']),('password',USER['editor']['input']['password'])])
   accesstoken = client.post(
     '/token',
     headers={'Content-Type': header},
-    data=content).json()["access_token"]
+    data=content).json()['access_token']
   response=client.get(
     '/users/me',
-    headers={"Authorization": "Bearer "+accesstoken}
+    headers={'Authorization': 'Bearer '+accesstoken}
   )
+
   assert response.status_code==200
-  assert response.json()=={
-    "userid": 1,
-    "username": USERNAME,
-    "password": HASSEDPASS,
-    "mailaddress": MAILADDRESS,
-    "editor": EDITOR
-    }
+  assert response.json()==USER['editor']['output']
 
 
