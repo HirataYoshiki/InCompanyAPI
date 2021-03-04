@@ -1,6 +1,0 @@
-#python cache files
-__pycache__
-*.pyc
-ideas
-
-db/database/*
