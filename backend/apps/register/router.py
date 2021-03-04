@@ -1,4 +1,5 @@
 from fastapi import APIRouter,Depends
+from sqlalchemy.orm import Session
 from sqlalchemy.orm.exc import MultipleResultsFound
 
 from auth import get_current_user
@@ -11,8 +12,9 @@ import hashlib
 router= APIRouter()
 
 @router.post('/users')
-async def add_user(user:scheme.User_in):
-  session = get_session()
+async def add_user(
+  user:scheme.User_in,
+  session:Session=Depends(get_session)):
   hashedpassword = hashlib.sha256(user.password.encode()).hexdigest()
   adds=models.User(
     username=user.username,
@@ -20,22 +22,19 @@ async def add_user(user:scheme.User_in):
     mailaddress = user.mailaddress,
     editor=user.editor
   )
-  try:
+  query = session.query(models.User).filter(models.User.username==user.username).one_or_none()
+  session.add(adds)
+  if query==None:
     session.add(adds)
     session.commit()
     query = session.query(models.User).filter(models.User.username==user.username).one()
     return scheme.User_out(**query.__dict__)
 
-  except MultipleResultsFound as milti:
+  else:
     session.rollback()
-    print(milti)
-    return {"status":False,"text":"The user already exists"}
-  except Exception as e:
-    session.rollback()
-    print(e)
     return {"status":False}
 
-  
+
 
 @router.delete('/users/{userid}')
 async def delete_user(userid:int):
