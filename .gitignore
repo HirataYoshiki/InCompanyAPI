@@ -3,4 +3,4 @@ __pycache__
 *.pyc
 ideas
 
-db/database
+db/database/*
