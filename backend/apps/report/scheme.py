@@ -30,6 +30,7 @@ class ReportHeaderout(BaseModel):
   headerid:int
   type:str
 
+
 class Contentin(BaseModel):
   contentsid:int
   content:str

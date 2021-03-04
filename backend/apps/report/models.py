@@ -3,8 +3,7 @@ from db import Base,engine
 from sqlalchemy import Column, Integer, String, Boolean, DateTime,ForeignKey
 from sqlalchemy.orm import relationship
 
-from apps.report.scheme import Reportupdate
-
+from apps.report.scheme import ReportHeaderin, Reportupdate
 
 
 #   Content N-1 Contents 1-1 Report N-1 Header
@@ -24,7 +23,7 @@ class Report(Base):
   def updates(self,updates:Reportupdate):
     for k,v in updates.__dict__.items():
       for sk in self.__dict__.keys():
-        if k==sk:
+        if k==sk and v!=None:
           setattr(self,sk,v)
     return self
 
@@ -33,6 +32,13 @@ class ReportHeader(Base):
   headerid=Column(Integer, primary_key=True, index=True)
   type = Column(String(100))
   report=relationship("Report")
+
+  def updates(self,updates:ReportHeaderin):
+    for k,v in updates.__dict__.items():
+      for sk in self.__dict__.keys():
+        if k==sk and v != None:
+          setattr(self,sk,v)
+    return self
 
 class ReportContents(Base):
   __tablename__="reportcontents"

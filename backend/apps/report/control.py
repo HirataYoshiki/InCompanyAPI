@@ -1,4 +1,3 @@
-from logging import Handler
 from db import get_session
 from apps.report.models import Report,ReportHeader
 from apps.report.scheme import ReportHeaderin, ReportHeaderout, Reportin,Reportupdate, Reportout
@@ -8,9 +7,10 @@ from auth import get_current_user
 from fastapi import Depends
 from sqlalchemy import desc
 from sqlalchemy.orm import Session, Query
+from pydantic.error_wrappers import ValidationError
+from starlette.status import HTTP_400_BAD_REQUEST
 
 from typing import Optional
-import inspect
 
 
 # For report: POST Method-------------------------------------------------------
@@ -19,7 +19,10 @@ async def create_new_report(
   current_user:User=Depends(get_current_user),
   session:Session=Depends(get_session)):
 
-  q = session.query(Report).filter(Report.username==current_user.username).order_by(desc(Report.reportid)).first()
+  q = session.query(Report).filter(
+    Report.username==current_user.username).order_by(
+      desc(Report.reportid)
+      ).first()
   try:
     localreportid:int= q.localreportid +1
   except:
@@ -74,15 +77,12 @@ async def update_current_users_reports_by_id(
     Report.username==current_user.username,
     Report.localreportid==localreportid
     ).one()
-
-  updated=report.updates(update)
-  print("report ",report.__dict__)
-  print("update ",updated.__dict__)
+  
+  updated:Report=report.updates(update)
+  copy= updated.__dict__.copy()
   session.commit()
-  return Reportout(**updated.__dict__)
-
-
-
+  print(copy)
+  return Reportout(**copy)
 
 
 
@@ -120,10 +120,30 @@ async def get_current_users_header_by_localreportid(
   localreportid:int,
   query:Query=Depends(get_current_users_reports)
 ):
-  header:ReportHeader=query.filter(
+  header:Report=query.filter(
     Report.localreportid==localreportid
     ).one()
+  try:
+    output = ReportHeaderout(**header.header.__dict__)
+    return output
+  except ValidationError as e:
+    print(e)
+    assert HTTP_400_BAD_REQUEST
 
-  output = ReportHeaderout(**header.__dict__)
+async def update_header_by_headerid(
+  headerid:int,
+  header:ReportHeaderin=Depends(),
+  session:Session=Depends(get_session),
+  current_user:User=Depends(get_current_user)
+):
+  query:ReportHeader = session.query(ReportHeader).filter(
+    ReportHeader.headerid==headerid
+  ).one()
+
+  query.type=header.type
+  output = ReportHeaderout(
+    **query.__dict__.copy()
+  )
+  session.commit()
   return output
-
+  

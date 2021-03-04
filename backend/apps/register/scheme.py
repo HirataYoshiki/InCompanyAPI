@@ -4,15 +4,15 @@ from typing import List,Optional
 class User_in(BaseModel):
   username:str
   password:str
-  mailaddress:Optional[str]=None
   editor:bool=False
+  mailaddress:Optional[str]=None
 
 class User_out(BaseModel):
   userid:int
   username:str
-  hashedpassword:str
-  mailaddress:Optional[str]=None
+  password:str
   editor:bool
+  mailaddress:Optional[str]=None
 
 class User_update(BaseModel):
   username: Optional[str]=None

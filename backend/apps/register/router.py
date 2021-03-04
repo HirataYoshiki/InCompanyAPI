@@ -24,10 +24,8 @@ async def add_user(user:scheme.User_in):
     session.add(adds)
     session.commit()
     query = session.query(models.User).filter(models.User.username==user.username).one()
-    return {
-      "status":True,
-      "item":query
-    }
+    return scheme.User_out(**query.__dict__)
+
   except MultipleResultsFound as milti:
     session.rollback()
     print(milti)

@@ -26,12 +26,12 @@ class Reports:
     report: scheme.Reportout = Depends(get_current_users_reports_by_id)):
     return report
 
-  @router.post('/reports/me',response_model=scheme.Reportout)
+  @router.post('/reports',response_model=scheme.Reportout)
   async def create_my_new_report(
     report:scheme.Reportout=Depends(create_new_report)):
     return report
 
-  @router.get('/reports/me')
+  @router.get('/reports')
   async def get_my_reports(
     query:Query=Depends(get_current_users_reports)
     ):
@@ -40,19 +40,19 @@ class Reports:
     except:
       print("Error: router.py")
 
-  @router.get('/reports/me/{localreportid}',response_model=scheme.Reportout)
+  @router.get('/reports/{localreportid}',response_model=scheme.Reportout)
   async def get_my_report_selected_by_id(
     report: scheme.Reportout = Depends(get_current_users_reports_by_id)):
     return report
 
-  @router.put('/reports/me/{localreportid}',response_model=scheme.Reportout)
+  @router.put('/reports/{localreportid}',response_model=scheme.Reportout)
   async def update_report(
     report:scheme.Reportout=Depends(update_current_users_reports_by_id)
   ):
     return report
     
 
-  @router.delete('/reports/me/{localreportid}')
+  @router.delete('/reports/{localreportid}')
   async def delete_my_report(
     localreportid:int,
     session:Session=Depends(get_session),
@@ -67,13 +67,13 @@ class Reports:
     return {"status":True,"data":localreportid}
 
 class Headers:
-  @router.post('/reports/me/headers',response_model=scheme.ReportHeaderout)
+  @router.post('/reports/headers',response_model=scheme.ReportHeaderout)
   async def create_new_my_header(
     header:scheme.ReportHeaderout=Depends(create_new_header)
   ):
     return header
 
-  @router.get('/reports/me/headers')
+  @router.get('/reports/headers')
   async def get_my_headers(
     headers: Query = Depends(get_current_users_header_query)
   ):
@@ -85,6 +85,11 @@ class Headers:
   ):
     return header
 
+  @router.put('/reports/headers/{headerid}',response_model=ReportHeaderout)
+  async def update_header(
+    updated_header:ReportHeaderout=Depends(update_header_by_headerid)
+  ):
+    return updated_header
 
 
 
