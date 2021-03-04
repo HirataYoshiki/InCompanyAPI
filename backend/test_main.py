@@ -44,23 +44,18 @@ USER = {
 
 
 
-def test_create_editor_user_200():
-  response=client.post(
-    '/users',
-    json=USER['editor']['input']
-  )
+def test_create_user_200():
+  testers=['editor','not editor']
+  for tester in testers:
+    response=client.post(
+      '/users',
+      json=USER[tester]['input']
+    )
 
-  assert response.status_code==200
-  assert response.json()==USER['editor']['output']
+    assert response.status_code==200
+    assert response.json()==USER[tester]['output']
 
-def test_create_not_editor_user_200():
-  response=client.post(
-    '/users',
-    json=USER['not editor']['input']
-  )
 
-  assert response.status_code==200
-  assert response.json()==USER['not editor']['output']
 
 def test_create_user_doubled():
   response=client.post(
@@ -81,29 +76,34 @@ def test_create_user_luck_name():
   assert response.status_code==200
 
 def test_get_token_200():
-  username = USER['editor']['input']['username']
-  password = USER['editor']['input']['password']
+  testers=['editor','not editor']
+  for tester in testers:
+    username = USER[tester]['input']['username']
+    password = USER[tester]['input']['password']
 
-  (content, header) = encode_multipart_formdata([('username', username),('password',password)])
-  response = client.post(
-    '/token',
-    headers={'Content-Type': header},
-    data=content)
+    (content, header) = encode_multipart_formdata([('username', username),('password',password)])
+    response = client.post(
+      '/token',
+      headers={'Content-Type': header},
+      data=content)
 
-  assert response.status_code==200
+    assert response.status_code==200
 
 def test_get_users_me():
-  (content, header) = encode_multipart_formdata([('username', USER['editor']['input']['username']),('password',USER['editor']['input']['password'])])
-  accesstoken = client.post(
-    '/token',
-    headers={'Content-Type': header},
-    data=content).json()['access_token']
-  response=client.get(
-    '/users/me',
-    headers={'Authorization': 'Bearer '+accesstoken}
-  )
+  testers = ['editor','not editor']
+  for tester in testers:
+    username=USER[tester]['input']['username']
+    password=USER[tester]['input']['password']
+    (content, header) = encode_multipart_formdata([('username', username),('password',password)])
+    accesstoken = client.post(
+      '/token',
+      headers={'Content-Type': header},
+      data=content).json()['access_token']
+    response=client.get(
+      '/users/me',
+      headers={'Authorization': 'Bearer '+accesstoken}
+    )
 
-  assert response.status_code==200
-  assert response.json()==USER['editor']['output']
-
+    assert response.status_code==200
+    assert response.json()==USER[tester]['output']
 
