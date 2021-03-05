@@ -15,9 +15,9 @@ from typing import Optional
 
 # For report: POST Method-------------------------------------------------------
 async def create_new_report(
+  input:Reportin,
   current_user:User=Depends(get_current_user),
-  session:Session=Depends(get_session),
-  input:Reportin=Depends()):
+  session:Session=Depends(get_session)):
 
   q = session.query(Report).filter(
     Report.username==current_user.username).order_by(
@@ -69,7 +69,7 @@ async def get_current_users_reports_by_id(
 #--------------------------------------------------------------------------------------
 async def update_current_users_reports_by_id(
   localreportid:int,
-  update:Reportupdate=Depends(),
+  update:Reportupdate,
   current_user:User=Depends(get_current_user),
   session:Session=Depends(get_session) 
 ):
@@ -87,7 +87,7 @@ async def update_current_users_reports_by_id(
 
 
 async def create_new_header(
-  header:ReportHeaderin=Depends(),
+  header:ReportHeaderin,
   current_user:User=Depends(get_current_user),
   session:Session=Depends(get_session)):
 
@@ -132,7 +132,7 @@ async def get_current_users_header_by_localreportid(
 
 async def update_header_by_headerid(
   headerid:int,
-  header:ReportHeaderin=Depends(),
+  header:ReportHeaderin,
   session:Session=Depends(get_session),
   current_user:User=Depends(get_current_user)
 ):

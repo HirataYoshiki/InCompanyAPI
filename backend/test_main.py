@@ -171,3 +171,6 @@ def test_create_character_me():
 
     assert response.status_code==200
     assert response.json()==characters[tester]["output"]
+
+
+
