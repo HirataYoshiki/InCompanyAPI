@@ -42,6 +42,71 @@ USER = {
   }
 }
 
+CHARACTERS={
+  "editor":{
+    "input":{
+      "department":"edit",
+      "position": "editor",
+      "skills": ["editor","QC"]
+    },
+    "output": {
+      "id":1,
+      "username": USER['editor']['input']['username'],
+      "department":"edit",
+      "position": "editor",
+      "skills": ["editor","QC"]
+    }
+  },
+  "not editor":{
+    "input":{
+      "department":"not edit",
+      "position": "not editor",
+      "skills": ["not editor"]
+    },
+    "output": {
+      "id":2,
+      "username": USER['not editor']['input']['username'],
+      "department":"not edit",
+      "position": "not editor",
+      "skills": ["not editor"]
+    }
+    
+  }
+}
+
+REPORTS={
+  'editor': {
+    'input': {
+      'title': 'editor_title'
+    },
+    'output': {
+      'reportid': 1,
+      'localreportid': 1,
+      'username': USER['editor']['input']['username'],
+      'title': 'editor_title',
+      'contentsid': None,
+      'timestamp': None,
+      'teamid': None,
+      'headerid': None
+    }
+  },
+  'not editor': {
+    'input': {
+      'title': 'not_editor_title'
+    },
+    'output': {
+      'reportid': 2,
+      'localreportid': 1,
+      'username': USER['not editor']['input']['username'],
+      'title': 'not_editor_title',
+      'contentsid': None,
+      'timestamp': None,
+      'teamid': None,
+      'headerid': None
+    }
+  }
+}
+
 
 def test_create_user_200():
   testers=['editor','not editor']
@@ -128,49 +193,84 @@ def test_update_me():
 
     assert response.json()['item']==output
 
+def test_failure_get_character():
+  testers=['editor', 'not editor']
+  for tester in testers:
+    accesstoken = _get_access_token(tester)
+    response = client.get(
+      '/characters/me',
+      headers={'Authorization': 'Bearer '+accesstoken},
+    )
+
+    assert response.status_code==200
+    assert response.json() == {"status":False,"data":"Not Registered.try to post quest @ /characters/me with params... department:str,position:str,skills:str[...]"}
+
 def test_create_character_me():
-  characters={
-    "editor":{
-      "input":{
-        "department":"edit",
-        "position": "editor",
-        "skills": ["editor","QC"]
-      },
-      "output": {
-        "id":1,
-        "username": "editor",
-        "department":"edit",
-        "position": "editor",
-        "skills": ["editor"]
-      }
-    },
-    "not editor":{
-      "input":{
-        "department":"not edit",
-        "position": "not editor",
-        "skills": ["not editor"]
-      },
-      "output": {
-        "id":2,
-        "username": "not editor",
-        "department":"not edit",
-        "position": "not editor",
-        "skills": ["not editor"]
-      }
-      
-    }
-  }
   testers = ["editor", "not editor"]
   for tester in testers:
     accesstoken=_get_access_token(tester)
     response=client.post(
       '/characters',
       headers={'Authorization': 'Bearer '+accesstoken},
-      json = characters[tester]["input"]
+      json = CHARACTERS[tester]["input"]
     )
 
     assert response.status_code==200
-    assert response.json()==characters[tester]["output"]
+    assert response.json()==CHARACTERS[tester]["output"]
+
+def test_get_characters():
+  testers=['editor', 'not editor']
+  for tester in testers:
+    accesstoken = _get_access_token(tester)
+    response = client.get(
+      '/characters/me',
+      headers={'Authorization': 'Bearer '+accesstoken},
+    )
+
+    assert response.status_code==200
+    assert response.json()== CHARACTERS[tester]['output']
+
+def test_update_characters():
+  testers=['editor', 'not editor']
+  for tester in testers:
+    accesstoken = _get_access_token(tester)
+    response = client.put(
+      '/characters/me',
+      headers={'Authorization': 'Bearer '+accesstoken},
+      json = {'position': 'updated'}
+    )
+
+    updated = CHARACTERS[tester]['output']
+    updated['position'] = 'updated'
+    assert response.status_code == 200
+    assert response.json() == updated
+
+
+def test_failure_create_report():
+  testers=['editor', 'not editor']
+  for tester in testers:
+    json=REPORTS[tester]['input'].copy().pop('title')
+    accesstoken = _get_access_token(tester)
+    response = client.post(
+      '/reports',
+      headers={'Authorization': 'Bearer '+accesstoken},
+      json = json
+    )
+
+    assert response.status_code==422
+
+def test_create_report():
+  testers=['editor', 'not editor']
+  for tester in testers:
+    accesstoken = _get_access_token(tester)
+    response = client.post(
+      '/reports',
+      headers={'Authorization': 'Bearer '+accesstoken},
+      json = REPORTS[tester]['input']
+    )
+
+  assert response.status_code==200
+  assert response.json()==REPORTS[tester]['output']
 
 
 

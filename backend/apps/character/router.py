@@ -38,14 +38,15 @@ async def register_new_user(
     )
 
 @router.get('/characters/me')
-async def get_my_character(current_user:User_out=Depends(get_current_user)):
-  session = get_session()
+async def get_my_character(
+  current_user:User_out=Depends(get_current_user),
+  session:Session=Depends(get_session)):
+  
   try:
-    query = session.query(models.Character).filter(models.Character.username==current_user.username).one()
-    return {
-      "status":True,
-      "data":query
-    }
+    query:models.Character = session.query(models.Character).filter(models.Character.username==current_user.username).one()
+    return scheme.Character_out(
+      **query.dictor()
+    )
   except NoResultFound as e:
     print(e)
     return {"status":False,"data":"Not Registered.try to post quest @ /characters/me with params... department:str,position:str,skills:str[...]"}
@@ -55,18 +56,12 @@ async def update_my_character(
   characters:scheme.Character_update,
   current_user:User_out=Depends(get_current_user)):
   session = get_session()
-  query=session.query(models.Character).filter(models.Character.username==current_user.username).one()
-  if characters.department:
-    query.department=characters.department
-  if characters.position:
-    query.position=characters.position
-  query.skills=characters.skills
+  query:models.Character=session.query(models.Character).filter(models.Character.username==current_user.username).one()
+  query.updates(characters)
+  d = query.dictor()
   try:
     session.commit()
-    return {
-      "status":True,
-      "data":session.query(models.Character).filter(models.Character.username==current_user.username).one()
-    }
+    return scheme.Character_out(**d)
   except Exception as e:
     session.rollback()
     print(e)
