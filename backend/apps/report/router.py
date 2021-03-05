@@ -19,7 +19,7 @@ class Reports:
     editor:User=Depends(get_editor_user),
     session:Session=Depends(get_session)):
     query = session.query(models.Report).all()
-    return {"status":True,"data":query}
+    return query
 
   @router.get('/reports/{reportid}',response_model=scheme.Reportout)
   async def editor_get_report(

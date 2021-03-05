@@ -6,6 +6,7 @@ from requests.models import encode_multipart_formdata
 from main import app
 
 import hashlib
+from copy import deepcopy
 
 
 client = TestClient(app)
@@ -130,14 +131,14 @@ def test_create_user_doubled():
   assert response.json()=={'status':False}
 
 def test_create_user_luck_name():
-  json = USER['editor']['input'].copy()
-  json['username']=''
+  json = deepcopy(USER['editor']['input'])
+  json['username']=""
   response=client.post(
     '/users',
     json=json
   )
 
-  assert response.status_code==200
+  assert response.status_code==422
 
 def _get_access_token(tester)->str:
   username = USER[tester]['input']['username']
@@ -165,6 +166,21 @@ def test_get_token_200():
       data=content)
 
     assert response.status_code==200
+
+def test_get_all_users():
+  testers = ['editor','not editor']
+  for tester in testers:
+    accesstoken=_get_access_token(tester)
+    response=client.get(
+      '/users',
+      headers={'Authorization': 'Bearer '+accesstoken}
+    )
+    if tester=='editor':
+      assert response.status_code==200
+      assert response.json()==[USER['editor']['output'],USER['not editor']['output']]
+    else:
+      assert response.status_code==422
+
 
 def test_get_users_me():
   testers = ['editor','not editor']
@@ -259,6 +275,17 @@ def test_failure_create_report():
 
     assert response.status_code==422
 
+def test_failure_get_reports():
+  testers=['editor', 'not editor']
+  for tester in testers:
+    accesstoken = _get_access_token(tester)
+    response = client.post(
+      '/reports',
+      headers={'Authorization': 'Bearer '+accesstoken}
+    )
+    assert response.status_code==422
+
+
 def test_create_report():
   testers=['editor', 'not editor']
   for tester in testers:
@@ -271,6 +298,8 @@ def test_create_report():
 
   assert response.status_code==200
   assert response.json()==REPORTS[tester]['output']
+
+
 
 
 

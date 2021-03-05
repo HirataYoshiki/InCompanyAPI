@@ -52,10 +52,11 @@ async def delete_user(userid:int):
     }
 
 @router.get('/users')
-async def get_all_users(editor:models.User=Depends(get_editor_user)):
-  session=get_session()
+async def get_all_users(
+  editor:models.User=Depends(get_editor_user),
+  session:Session=Depends(get_session)):
   query=session.query(models.User).all()
-  return {"item":query}
+  return query
 
 @router.get('/users/me')
 async def get_users_me(current_user: scheme.User_out = Depends(get_current_user)):
