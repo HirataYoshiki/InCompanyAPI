@@ -131,14 +131,12 @@ def test_create_user_doubled():
   assert response.json()=={'status':False}
 
 def test_create_user_luck_name():
-  json = deepcopy(USER['editor']['input'])
-  json['username']=""
   response=client.post(
     '/users',
-    json=json
+    json={"username":"","password": "fakepass"}
   )
-
-  assert response.status_code==422
+  assert response.json()==None
+  assert response.status_code==200
 
 def _get_access_token(tester)->str:
   username = USER[tester]['input']['username']
@@ -179,7 +177,7 @@ def test_get_all_users():
       assert response.status_code==200
       assert response.json()==[USER['editor']['output'],USER['not editor']['output']]
     else:
-      assert response.status_code==422
+      assert response.status_code==400
 
 
 def test_get_users_me():

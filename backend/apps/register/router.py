@@ -16,22 +16,22 @@ async def add_user(
   user:scheme.User_in,
   session:Session=Depends(get_session)):
   hashedpassword = hashlib.sha256(user.password.encode()).hexdigest()
-  adds=models.User(
-    username=user.username,
-    password = hashedpassword,
-    mailaddress = user.mailaddress,
-    editor=user.editor
-  )
-  query = session.query(models.User).filter(models.User.username==user.username).one_or_none()
-  if query==None:
-    session.add(adds)
-    session.commit()
-    query = session.query(models.User).filter(models.User.username==user.username).one()
-    return scheme.User_out(**query.__dict__)
-
-  else:
-    session.rollback()
-    return {"status":False}
+  if user.username!="" and user.password!="":
+    adds=models.User(
+      username=user.username,
+      password = hashedpassword,
+      mailaddress = user.mailaddress,
+      editor=user.editor
+    )
+    query = session.query(models.User).filter(models.User.username==user.username).one_or_none()
+    if query==None:
+        session.add(adds)
+        session.commit()
+        query = session.query(models.User).filter(models.User.username==user.username).one()
+        return scheme.User_out(**query.__dict__)
+    else:
+      session.rollback()
+      return {"status":False}
 
 
 
