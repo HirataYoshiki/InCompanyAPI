@@ -10,18 +10,21 @@ from apps.register.scheme import User_out
 
 router= APIRouter()
 
-@router.post('/characters')
+@router.post('/characters',response_model=scheme.Character_out)
 async def register_new_user(
   characters:scheme.Character_in,
   current_user:User_out=Depends(get_current_user),
   session:Session=Depends(get_session)
   ):
-
+  try:
+    strskills = ','.join(characters.skills)
+  except:
+    strskills=characters.skills
   NewUser = models.Character(
     username = current_user.username,
     department = characters.department,
     position = characters.position,
-    skills=characters.skills
+    skills=strskills
   )
   session.add(NewUser)
   try:
@@ -30,7 +33,9 @@ async def register_new_user(
     session.rollback()
     print(e)
     return {"status":False}
-  return session.query(models.Character).filter(models.Character.username==current_user.username).one()
+  return scheme.Character_out(
+    **session.query(models.Character).filter(models.Character.username==current_user.username).one().dictor()
+    )
 
 @router.get('/characters/me')
 async def get_my_character(current_user:User_out=Depends(get_current_user)):

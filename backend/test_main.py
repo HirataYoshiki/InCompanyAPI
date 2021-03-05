@@ -134,7 +134,7 @@ def test_create_character_me():
       "input":{
         "department":"edit",
         "position": "editor",
-        "skills": ["editor"]
+        "skills": ["editor","QC"]
       },
       "output": {
         "id":1,
