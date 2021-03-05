@@ -1,5 +1,5 @@
 from fastapi import APIRouter,Depends
-from sqlalchemy import exc
+from sqlalchemy.orm import Session
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.sql.elements import False_
 
@@ -13,10 +13,10 @@ router= APIRouter()
 @router.post('/characters')
 async def register_new_user(
   characters:scheme.Character_in,
-  current_user:User_out=Depends(get_current_user)
+  current_user:User_out=Depends(get_current_user),
+  session:Session=Depends(get_session)
   ):
 
-  session = get_session()
   NewUser = models.Character(
     username = current_user.username,
     department = characters.department,
@@ -30,10 +30,7 @@ async def register_new_user(
     session.rollback()
     print(e)
     return {"status":False}
-  return {
-    "status":True,
-    "data":session.query(models.Character).filter(models.Character.username==current_user.username).one()
-    } 
+  return session.query(models.Character).filter(models.Character.username==current_user.username).one()
 
 @router.get('/characters/me')
 async def get_my_character(current_user:User_out=Depends(get_current_user)):

@@ -23,7 +23,6 @@ async def add_user(
     editor=user.editor
   )
   query = session.query(models.User).filter(models.User.username==user.username).one_or_none()
-  session.add(adds)
   if query==None:
     session.add(adds)
     session.commit()

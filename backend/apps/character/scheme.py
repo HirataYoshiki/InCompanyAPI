@@ -6,16 +6,16 @@ from typing import List,Optional
 class Character_in(BaseModel):
   department:str
   position:str
-  skills:Optional[List[str]]
+  skills:Optional[List[str]]=None
 
 class Character_out(BaseModel):
   id:int
   username:str
   department:str
   position:str
-  skills:Optional[List]
+  skills:Optional[List[str]]=None
 
 class Character_update(BaseModel):
   department:str=""
   position:str=""
-  skills:Optional[List[str]]
+  skills:Optional[List[str]]=None

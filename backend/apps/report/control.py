@@ -15,9 +15,9 @@ from typing import Optional
 
 # For report: POST Method-------------------------------------------------------
 async def create_new_report(
-  input:Reportin=Depends(),
   current_user:User=Depends(get_current_user),
-  session:Session=Depends(get_session)):
+  session:Session=Depends(get_session),
+  input:Reportin=Depends()):
 
   q = session.query(Report).filter(
     Report.username==current_user.username).order_by(
