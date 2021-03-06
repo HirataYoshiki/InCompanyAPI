@@ -251,14 +251,25 @@ def test_update_characters():
     response = client.put(
       '/characters/me',
       headers={'Authorization': 'Bearer '+accesstoken},
-      json = {'position': 'updated'}
+      json = {'skills': ['updated','nice']}
     )
 
     updated = CHARACTERS[tester]['output']
-    updated['position'] = 'updated'
+    updated['skills'] = ['updated','nice']
     assert response.status_code == 200
     assert response.json() == updated
 
+def test_get_updated_characters():
+  testers=['editor', 'not editor']
+  for tester in testers:
+    accesstoken = _get_access_token(tester)
+    response = client.get(
+      '/characters/me',
+      headers={'Authorization': 'Bearer '+accesstoken},
+    )
+
+    assert response.status_code==200
+    assert response.json()== CHARACTERS[tester]['output']
 
 def test_failure_create_report():
   testers=['editor', 'not editor']

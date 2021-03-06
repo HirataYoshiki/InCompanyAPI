@@ -16,6 +16,8 @@ class Character(Base):
     for k in self.__dict__.keys():
       for kk,vv in update.__dict__.items():
         if k==kk and vv is not None:
+          if kk=="skills":
+            vv=(",").join(vv)
           setattr(self,k,vv)
 
   def dictor(self):

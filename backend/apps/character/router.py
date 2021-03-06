@@ -37,7 +37,7 @@ async def register_new_user(
     **session.query(models.Character).filter(models.Character.username==current_user.username).one().dictor()
     )
 
-@router.get('/characters/me')
+@router.get('/characters/me',response_model=scheme.Character_out)
 async def get_my_character(
   current_user:User_out=Depends(get_current_user),
   session:Session=Depends(get_session)):
@@ -51,11 +51,11 @@ async def get_my_character(
     print(e)
     return {"status":False,"data":"Not Registered.try to post quest @ /characters/me with params... department:str,position:str,skills:str[...]"}
 
-@router.put('/characters/me')
+@router.put('/characters/me',response_model=scheme.Character_out)
 async def update_my_character(
   characters:scheme.Character_update,
-  current_user:User_out=Depends(get_current_user)):
-  session = get_session()
+  current_user:User_out=Depends(get_current_user),
+  session:Session=Depends(get_session)):
   query:models.Character=session.query(models.Character).filter(models.Character.username==current_user.username).one()
   query.updates(characters)
   d = query.dictor()

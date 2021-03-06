@@ -10,9 +10,9 @@ from apps.report.scheme import ReportHeaderin, Reportupdate
 class Report(Base):
   __tablename__ = "report"
   reportid=Column(Integer, primary_key=True, index=True)
-  localreportid=Column(Integer)
-  username=Column(String(50))
-  title = Column(String(255))
+  localreportid=Column(Integer,nullable=False)
+  username=Column(String(50),nullable=False)
+  title = Column(String(255),nullable=False)
   teamid=Column(Integer)
   headerid = Column(Integer, ForeignKey('reportheader.headerid'))
   contentsid = Column(Integer, ForeignKey('reportcontents.contentsid'))
@@ -30,7 +30,7 @@ class Report(Base):
 class ReportHeader(Base):
   __tablename__="reportheader"
   headerid=Column(Integer, primary_key=True, index=True)
-  type = Column(String(100))
+  type = Column(String(100),nullable=False)
   report=relationship("Report")
 
   def updates(self,updates:ReportHeaderin):
