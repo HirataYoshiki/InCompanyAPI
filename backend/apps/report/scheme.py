@@ -32,8 +32,8 @@ class ReportHeaderout(BaseModel):
 
 
 class Contentin(BaseModel):
-  contentsid:int
   content:str
+  contentsid:Optional[int]=None
 
 class Contentout(BaseModel):
   contentid:int

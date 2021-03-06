@@ -18,4 +18,4 @@ class Character_out(BaseModel):
 class Character_update(BaseModel):
   department:Optional[str]=None
   position:Optional[str]=None
-  skills:Optional[List]=None
+  skills:Optional[List[str]]=None

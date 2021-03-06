@@ -216,8 +216,7 @@ def test_failure_get_character():
       headers={'Authorization': 'Bearer '+accesstoken},
     )
 
-    assert response.status_code==200
-    assert response.json() == {"status":False,"data":"Not Registered.try to post quest @ /characters/me with params... department:str,position:str,skills:str[...]"}
+    assert response.status_code==400
 
 def test_create_character_me():
   testers = ["editor", "not editor"]
@@ -248,16 +247,14 @@ def test_update_characters():
   testers=['editor', 'not editor']
   for tester in testers:
     accesstoken = _get_access_token(tester)
-    response = client.put(
+    response = client.get(
       '/characters/me',
       headers={'Authorization': 'Bearer '+accesstoken},
       json = {'skills': ['updated','nice']}
     )
-
-    updated = CHARACTERS[tester]['output']
-    updated['skills'] = ['updated','nice']
+    CHARACTERS[tester]['output']['skills'] = ['updated','nice']
+    assert response.json() == CHARACTERS[tester]['output']
     assert response.status_code == 200
-    assert response.json() == updated
 
 def test_get_updated_characters():
   testers=['editor', 'not editor']
@@ -281,7 +278,6 @@ def test_failure_create_report():
       headers={'Authorization': 'Bearer '+accesstoken},
       json = json
     )
-
     assert response.status_code==422
 
 def test_failure_get_reports():
@@ -307,6 +303,19 @@ def test_create_report():
 
   assert response.status_code==200
   assert response.json()==REPORTS[tester]['output']
+
+def test_failure_update_report():
+  testers=['editor', 'not editor']
+  for tester in testers:
+    accesstoken = _get_access_token(tester)
+    response = client.put(
+      f"/reports/{REPORTS[tester]['output']['localreportid']}",
+      headers={'Authorization': 'Bearer '+accesstoken},
+      json = {'headerid': 1}
+    )
+
+    assert response.status_code==400
+
 
 
 

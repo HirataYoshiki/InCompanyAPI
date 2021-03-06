@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from typing import Optional
 import hashlib
 
-from fastapi import Depends, HTTPException, status, APIRouter, HTTPException, status
+from fastapi import Depends, HTTPException, status, APIRouter, status
 from fastapi.security import OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from pydantic import BaseModel

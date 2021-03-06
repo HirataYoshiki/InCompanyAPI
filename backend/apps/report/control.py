@@ -4,7 +4,7 @@ from apps.report.scheme import ReportHeaderin, ReportHeaderout, Reportin,Reportu
 from apps.register.models import User
 from auth import get_current_user
 
-from fastapi import Depends
+from fastapi import Depends,HTTPException
 from sqlalchemy import desc
 from sqlalchemy.orm import Session, Query
 from pydantic.error_wrappers import ValidationError
@@ -18,32 +18,31 @@ async def create_new_report(
   input:Reportin,
   current_user:User=Depends(get_current_user),
   session:Session=Depends(get_session)):
-
-  q = session.query(Report).filter(
-    Report.username==current_user.username).order_by(
-      desc(Report.reportid)
-      ).first()
   try:
-    localreportid:int= q.localreportid +1
-  except:
-    #for the first post
-    localreportid=1
-  adds = Report(
-    **input.__dict__,
-    username=current_user.username,
-    localreportid = localreportid)
-  session.add(adds)
-  try:
+    q = session.query(Report).filter(
+      Report.username==current_user.username).order_by(
+        desc(Report.reportid)
+        ).first()
+    try:
+      localreportid:int= q.localreportid +1
+    except:
+      #for the first post
+      localreportid=1
+    adds = Report(
+      **input.__dict__,
+      username=current_user.username,
+      localreportid = localreportid)
+    session.add(adds)
+    
     session.commit()
     report = session.query(Report).filter(
       Report.username==current_user.username,
       Report.localreportid==localreportid
       ).one()
     return Reportout(**report.__dict__)
-  except Exception as e:
-    print(e)
+  except:
     session.rollback()
-    return {"status":False}
+    raise HTTPException(status_code=400)
 
 
 #--------------------------------------------------------------------------------------
@@ -56,8 +55,7 @@ async def get_current_users_reports(
     query:Query = session.query(Report).filter(Report.username==current_user.username)
     return query
   except:
-    print("Error: control.py")
-    return None
+    raise HTTPException(status_code=400)
 
 async def get_current_users_reports_by_id(
   reportid:int,
@@ -73,16 +71,19 @@ async def update_current_users_reports_by_id(
   current_user:User=Depends(get_current_user),
   session:Session=Depends(get_session) 
 ):
-  report:Report = session.query(Report).filter(
-    Report.username==current_user.username,
-    Report.localreportid==localreportid
-    ).one()
-  
-  updated:Report=report.updates(update)
-  copy= updated.__dict__.copy()
-  session.commit()
-  print(copy)
-  return Reportout(**copy)
+  try:
+    report:Report = session.query(Report).filter(
+      Report.username==current_user.username,
+      Report.localreportid==localreportid
+      ).one()
+    
+    updated:Report=report.updates(update)
+    copy= updated.__dict__.copy()
+    session.commit()
+    print(copy)
+    return Reportout(**copy)
+  except:
+    raise HTTPException(status_code=400)
 
 
 
@@ -128,7 +129,7 @@ async def get_current_users_header_by_localreportid(
     return output
   except ValidationError as e:
     print(e)
-    assert HTTP_400_BAD_REQUEST
+    return HTTPException(status_code=400)
 
 async def update_header_by_headerid(
   headerid:int,

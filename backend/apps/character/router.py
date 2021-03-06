@@ -1,7 +1,6 @@
-from fastapi import APIRouter,Depends
+from fastapi import APIRouter,Depends,HTTPException
 from sqlalchemy.orm import Session
-from sqlalchemy.orm.exc import NoResultFound
-from sqlalchemy.sql.elements import False_
+
 
 from auth import get_current_user
 from db import get_session
@@ -17,25 +16,23 @@ async def register_new_user(
   session:Session=Depends(get_session)
   ):
   try:
-    strskills = ','.join(characters.skills)
-  except:
-    strskills=characters.skills
-  NewUser = models.Character(
-    username = current_user.username,
-    department = characters.department,
-    position = characters.position,
-    skills=strskills
-  )
-  session.add(NewUser)
-  try:
-    session.commit()
-  except Exception as e:
-    session.rollback()
-    print(e)
-    return {"status":False}
-  return scheme.Character_out(
-    **session.query(models.Character).filter(models.Character.username==current_user.username).one().dictor()
+    try:
+      strskills = ','.join(characters.skills)
+    except:
+      strskills=characters.skills
+    NewUser = models.Character(
+      username = current_user.username,
+      department = characters.department,
+      position = characters.position,
+      skills=strskills
     )
+    session.add(NewUser)
+    session.commit()
+    return scheme.Character_out(
+      **session.query(models.Character).filter(models.Character.username==current_user.username).one().dictor()
+      )
+  except:
+    raise HTTPException(status_code=400)
 
 @router.get('/characters/me',response_model=scheme.Character_out)
 async def get_my_character(
@@ -44,13 +41,14 @@ async def get_my_character(
   
   try:
     query:models.Character = session.query(models.Character).filter(models.Character.username==current_user.username).one()
-    return scheme.Character_out(
+    res=scheme.Character_out(
       **query.dictor()
     )
-  except NoResultFound as e:
-    print(e)
-    return {"status":False,"data":"Not Registered.try to post quest @ /characters/me with params... department:str,position:str,skills:str[...]"}
-
+    return res
+  except:
+    raise HTTPException(status_code=400,detail={"Error": "No header is registered."})
+  
+  
 @router.put('/characters/me',response_model=scheme.Character_out)
 async def update_my_character(
   characters:scheme.Character_update,
@@ -62,21 +60,19 @@ async def update_my_character(
   try:
     session.commit()
     return scheme.Character_out(**d)
-  except Exception as e:
+  except:
     session.rollback()
-    print(e)
-    return {"status":False}
+    raise HTTPException(status_code=400)
 
 @router.delete('/characters/me')
-async def delete_me(current_user:User_out=Depends(get_current_user)):
-  session = get_session()
+async def delete_me(
+  current_user:User_out=Depends(get_current_user),
+  session:Session=Depends(get_session)):
   query = session.query(models.Character).filter(models.Character.username==current_user.username).one()
   session.delete(query)
   try:
     session.commit()
     return {"status":True,"data":query}
-  except Exception as e:
+  except:
     session.rollback()
-    print(e)
-    return {"status":False}
-  
+    raise HTTPException(status_code=400)
