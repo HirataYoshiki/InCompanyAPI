@@ -27,8 +27,9 @@ class ReportHeaderin(BaseModel):
   type:str
 
 class ReportHeaderout(BaseModel):
-  headerid:int
+  localheaderid:int
   type:str
+  
 
 
 class Contentin(BaseModel):
@@ -36,7 +37,7 @@ class Contentin(BaseModel):
   contentsid:Optional[int]=None
 
 class Contentout(BaseModel):
-  contentid:int
+  localcontentid:int
   contentsid:int
   content:str
 

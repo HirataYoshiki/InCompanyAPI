@@ -3,7 +3,7 @@ from db import Base,engine
 from sqlalchemy import Column, Integer, String, Boolean, DateTime,ForeignKey
 from sqlalchemy.orm import relationship
 
-from apps.report.scheme import ReportHeaderin, Reportupdate
+from apps.report.scheme import ReportHeaderin, Reportupdate, Contentupdate
 
 
 #   Content N-1 Contents 1-1 Report N-1 Header
@@ -30,6 +30,8 @@ class Report(Base):
 class ReportHeader(Base):
   __tablename__="reportheader"
   headerid=Column(Integer, primary_key=True, index=True)
+  localheaderid=Column(Integer)
+  username=Column(String(50))
   type = Column(String(100),nullable=False)
   report=relationship("Report")
 
@@ -43,6 +45,8 @@ class ReportHeader(Base):
 class ReportContents(Base):
   __tablename__="reportcontents"
   contentsid=Column(Integer, primary_key=True, index=True)
+  localcontentsid=Column(Integer)
+  username=Column(String(50))
   report = relationship("Report",back_populates="contents")
   content = relationship("ReportContent",back_populates="contents")
 
@@ -50,10 +54,19 @@ class ReportContents(Base):
 class ReportContent(Base):
   __tablename__="reportcontent"
   contentid=Column(Integer, primary_key=True, index=True)
+  localcontentid=Column(Integer)
+  username=Column(String(50))
   contentsid = Column(Integer, ForeignKey('reportcontents.contentsid'))
   content=Column(String(600))
   contents=relationship("ReportContents",back_populates="content")
-  
+
+  def updates(self,updates:Contentupdate):
+    for k,v in updates.__dict__.items():
+      for sk in self.__dict__.keys():
+        if k==sk and v!=None:
+          setattr(self,sk,v)
+    return self
+
 if __name__ == "__main__":
   Base.metadata.create_all(bind=engine)
 

@@ -1,6 +1,6 @@
 from db import get_session
-from apps.report.models import Report,ReportHeader
-from apps.report.scheme import ReportHeaderin, ReportHeaderout, Reportin,Reportupdate, Reportout
+from apps.report.models import Report, ReportContent,ReportHeader
+from apps.report.scheme import ReportHeaderin, ReportHeaderout, Reportin,Reportupdate, Reportout,Contentin,Contentout
 from apps.register.models import User
 from auth import get_current_user
 
@@ -10,7 +10,6 @@ from sqlalchemy.orm import Session, Query
 from pydantic.error_wrappers import ValidationError
 from starlette.status import HTTP_400_BAD_REQUEST
 
-from typing import Optional
 
 
 # For report: POST Method-------------------------------------------------------
@@ -129,7 +128,7 @@ async def get_current_users_header_by_localreportid(
     return output
   except ValidationError as e:
     print(e)
-    return HTTPException(status_code=400)
+    raise HTTPException(status_code=400)
 
 async def update_header_by_headerid(
   headerid:int,
@@ -147,4 +146,14 @@ async def update_header_by_headerid(
   )
   session.commit()
   return output
+
+async def create_report_content(
+  content:Contentin,
+  session:Session=Depends(get_session),
+  current_user:User=Depends(get_current_user)
+):
+  try:
+    query=session.query(ReportContent).count()
+  except:
+    raise HTTPException(status_code=400)
   
