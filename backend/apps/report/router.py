@@ -11,7 +11,7 @@ from apps.report.control import *
 from apps.register.control import get_editor_user
 from apps.register.scheme import User_out
 
-router= APIRouter()
+router= APIRouter(prefix='/reportapp')
 
 class Reports:
   @router.get('/reports/all')
@@ -84,7 +84,7 @@ class Reports:
       raise HTTPException(status_code=400)
 
 class Headers:
-  @router.post('/reports/headers',response_model=scheme.ReportHeaderout)
+  @router.post('/headers',response_model=scheme.ReportHeaderout)
   async def create_new_my_header(
     header:scheme.ReportHeaderout=Depends(create_new_header)
   ):
@@ -93,7 +93,7 @@ class Headers:
     except:
       raise HTTPException(status_code=400)
 
-  @router.get('/reports/headers')
+  @router.get('/headers')
   async def get_my_headers(
     headers: Query = Depends(get_current_users_header_query)
   ):
@@ -102,16 +102,8 @@ class Headers:
     except:
       raise HTTPException(status_code=400)
 
-  @router.get('/reports/{localreportid}/headers',response_model=scheme.ReportHeaderout)
-  async def get_header_by_localreportid(
-    header:scheme.ReportHeaderout=Depends(get_current_users_header_by_localreportid)
-  ):
-    try:
-      return header
-    except:
-      raise HTTPException(status_code=400)
 
-  @router.put('/reports/headers/{headerid}',response_model=ReportHeaderout)
+  @router.put('/headers/{localheaderid}',response_model=ReportHeaderout)
   async def update_header(
     updated_header:ReportHeaderout=Depends(update_header_by_headerid)
   ):
@@ -120,5 +112,39 @@ class Headers:
     except:
       raise HTTPException(status_code=400)
 
+  @router.delete('/headers/{localheaderid}')
+  async def delete_header(
+    result:dict=Depends(delete_header_by_id)
+  ):
+    try:
+      return result
+    except:
+      return HTTPException(status_code=400)
 
+  @router.post('/contents')
+  async def create_new_content(
+    content:Contentout=Depends(create_content)
+  ):
+    try:
+      return content
+    except:
+      raise HTTPException(status_code=400)
+
+  @router.get('/contents')
+  async def get_content(
+    contentlist:list=Depends(get_content_list)
+  ):
+    try:
+      return contentlist
+    except:
+      raise HTTPException(status_code=400)
+
+  @router.get('/contents/{localcontentid}')
+  async def get_content_by_id(
+    content:Contentout=Depends(get_content_by_localcontentid)
+  ):
+    try:
+      return content
+    except:
+      raise HTTPException(status_code=400)
 

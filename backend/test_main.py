@@ -202,10 +202,9 @@ def test_update_me():
       json = {'mailaddress':'kirryx@gmail.com'}
     )
 
-    output = USER[tester]['output'].copy()
-    output["mailaddress"]='kirryx@gmail.com'
+    USER[tester]['output']["mailaddress"]='kirryx@gmail.com'
 
-    assert response.json()['item']==output
+    assert response.json()['item']==USER[tester]['output']
 
 def test_failure_get_character():
   testers=['editor', 'not editor']
@@ -247,7 +246,7 @@ def test_update_characters():
   testers=['editor', 'not editor']
   for tester in testers:
     accesstoken = _get_access_token(tester)
-    response = client.get(
+    response = client.put(
       '/characters/me',
       headers={'Authorization': 'Bearer '+accesstoken},
       json = {'skills': ['updated','nice']}
@@ -274,7 +273,7 @@ def test_failure_create_report():
     json=REPORTS[tester]['input'].copy().pop('title')
     accesstoken = _get_access_token(tester)
     response = client.post(
-      '/reports',
+      '/reportapp/reports',
       headers={'Authorization': 'Bearer '+accesstoken},
       json = json
     )
@@ -285,7 +284,7 @@ def test_failure_get_reports():
   for tester in testers:
     accesstoken = _get_access_token(tester)
     response = client.post(
-      '/reports',
+      '/reportapp/reports',
       headers={'Authorization': 'Bearer '+accesstoken}
     )
     assert response.status_code==422
@@ -296,7 +295,7 @@ def test_create_report():
   for tester in testers:
     accesstoken = _get_access_token(tester)
     response = client.post(
-      '/reports',
+      '/reportapp/reports',
       headers={'Authorization': 'Bearer '+accesstoken},
       json = REPORTS[tester]['input']
     )
@@ -304,18 +303,19 @@ def test_create_report():
   assert response.status_code==200
   assert response.json()==REPORTS[tester]['output']
 
-def test_failure_update_report():
+def test_failure_update_report_header_is_not_registered():
   testers=['editor', 'not editor']
   for tester in testers:
     accesstoken = _get_access_token(tester)
     response = client.put(
-      f"/reports/{REPORTS[tester]['output']['localreportid']}",
+      f"/reportapp/headers/{REPORTS[tester]['output']['localreportid']}",
       headers={'Authorization': 'Bearer '+accesstoken},
       json = {'headerid': 1}
     )
 
     assert response.status_code==400
 
+def test_failure_create_report_
 
 
 

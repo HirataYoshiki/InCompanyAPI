@@ -42,8 +42,8 @@ class ReportHeader(Base):
           setattr(self,sk,v)
     return self
 
-class ReportContents(Base):
-  __tablename__="reportcontents"
+class ReportContentGroup(Base):
+  __tablename__="reportcontentgroup"
   contentsid=Column(Integer, primary_key=True, index=True)
   localcontentsid=Column(Integer)
   username=Column(String(50))
@@ -56,7 +56,7 @@ class ReportContent(Base):
   contentid=Column(Integer, primary_key=True, index=True)
   localcontentid=Column(Integer)
   username=Column(String(50))
-  contentsid = Column(Integer, ForeignKey('reportcontents.contentsid'))
+  contentsid = Column(Integer, ForeignKey('reportcontentgroup.contentsid'))
   content=Column(String(600))
   contents=relationship("ReportContents",back_populates="content")
 

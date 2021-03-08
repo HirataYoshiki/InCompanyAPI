@@ -147,13 +147,133 @@ async def update_header_by_headerid(
   session.commit()
   return output
 
+async def delete_header_by_id(
+  localheaderid:int,
+  session:Session=Depends(get_session),
+  current_user:User=Depends(get_current_user)
+):
+  try:
+    deletes=session.query(ReportHeader).filter(
+      ReportHeader.username==current_user.username,
+      ReportHeader.localheaderid==localheaderid
+    ).one
+
+    session.delete(deletes)
+    return {"id": localheaderid}
+  except:
+    raise HTTPException(status_code=400)
+
 async def create_report_content(
   content:Contentin,
   session:Session=Depends(get_session),
   current_user:User=Depends(get_current_user)
 ):
   try:
-    query=session.query(ReportContent).count()
+    localcontentid=session.query(ReportContent).filter(
+      ReportContent.username==current_user.username
+    ).count()+1
+    addcontent=ReportContent(
+      **content.__dict__,
+      localcontentid=localcontentid,
+      username=current_user.username
+    )
+    session.add(addcontent)
+    try:
+      session.commit()
+    except:
+      session.rollback()
+      raise HTTPException(status_code=400)
   except:
     raise HTTPException(status_code=400)
-  
+
+async def _get_report_content_query(
+  current_user:User=Depends(get_current_user),
+  session:Session=Depends(get_session)
+):
+  try:
+    query:Query=session.query(ReportContent).filter(
+    ReportContent.username==current_user.username
+  )
+    return query
+  except:
+    raise HTTPException(status_code=400) 
+
+async def get_report_content_all(
+  query:Query=Depends(_get_report_content_query)
+):
+  try:
+    contentsall=query.all()
+    return contentsall
+  except:
+    raise HTTPException(status_code=400)
+
+async def get_report_content_by_localcontentid(
+  localcontentid:int,
+  query:Query=Depends(_get_report_content_query)
+):
+  try:
+    content=query.filter(
+      ReportContent.localcontentid==localcontentid
+    ).one_or_none()
+    if content==None:
+      raise HTTPException(status_code=400)
+    return content
+  except:
+    raise HTTPException(status_code=400)
+
+
+async def create_content(
+  content:Contentin,
+  session:Session=Depends(get_session),
+  current_user:User=Depends(get_current_user)
+):
+  try:
+    try:
+      localcontentid:int = session.query(ReportContent).filter(
+          ReportContent.username==current_user.username
+          ).order_by(desc(ReportContent.localcontentid)
+          ).first().localcontentid+1
+    except:
+      localcontentid=1
+    adds=ReportContent(
+      **content.__dict__,
+      username=current_user.username,
+      localcontentid=localcontentid
+    )
+    
+    show=adds.__dict__.copy()
+    session.add(adds)
+    session.commit()
+    return Contentout(**show)
+  except:
+    raise HTTPException(status_code=400)
+
+async def _get_my_content_query(
+  session:Session=Depends(get_session),
+  current_user:User=Depends(get_current_user)
+):
+  try:
+    query:Query=session.query(ReportContent).filter(
+      ReportContent.username==current_user.username
+    )
+    return query
+  except:
+    raise HTTPException(status_code=400)
+
+async def get_content_list(
+  query:Query=Depends(_get_my_content_query)
+):
+  try:
+    return query.all()
+  except:
+    raise HTTPException(status_code=400)
+
+async def get_content_by_localcontentid(
+  localcontentid:int,
+  query:Query=Depends(_get_my_content_query)
+):
+  try:
+    content=query.filter(ReportContent.localcontentid==localcontentid).one_or_none()
+    return Contentout(**content.__dict__)
+  except:
+    raise HTTPException(status_code=400)

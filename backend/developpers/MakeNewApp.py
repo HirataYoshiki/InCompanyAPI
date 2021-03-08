@@ -15,15 +15,25 @@ def MakeMSRfiles(newapp):
   files = {
     "model":{
       "dir": newapp/'./models.py',
-      "text": "from sqlalchemy.sql.sqltypes import Boolean\nfrom db import Base,engine\nfrom sqlalchemy import Column, Integer, String, Boolean"
+      "text": "\
+        from sqlalchemy.sql.sqltypes import Boolean\n\
+        from db import Base,engine\n\
+        from sqlalchemy import Column, Integer, String, Boolean"
     },
     "scheme":{
       "dir": newapp/'./scheme.py',
-      "text": "from pydantic import BaseModel\nfrom typing import List,Optional"
+      "text": "\
+        from pydantic import BaseModel\n\
+        from typing import List,Optional"
     },
     "router":{
       "dir": newapp/'./router.py',
-      "text": "from fastapi import APIRouter,Depends\n\nfrom auth import get_current_user\nfrom db import get_session\nfrom apps.{} import scheme,models\nfrom apps.register.scheme import User_out\n\nrouter= APIRouter()".format(newapp.name)
+      "text": "\
+        from fastapi import APIRouter, Depends, HttpException\n\n\
+        from auth import get_current_user\n\
+        from db import get_session\nfrom apps.{} import scheme,models\n\
+        from apps.register.scheme import User_out\n\n\
+        router= APIRouter(prefix='/{}app')".format(newapp.name,newapp.name)
     },
     "init":{
       "dir": newapp/'./__init__.py',

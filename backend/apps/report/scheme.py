@@ -29,8 +29,6 @@ class ReportHeaderin(BaseModel):
 class ReportHeaderout(BaseModel):
   localheaderid:int
   type:str
-  
-
 
 class Contentin(BaseModel):
   content:str
@@ -38,6 +36,10 @@ class Contentin(BaseModel):
 
 class Contentout(BaseModel):
   localcontentid:int
-  contentsid:int
   content:str
+  contentsid:Optional[int]=None
+
+class Contentupdate(BaseModel):
+  contentsid:Optional[int]=None
+  content:Optional[str]=None
 
