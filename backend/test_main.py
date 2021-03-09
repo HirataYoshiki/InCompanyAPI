@@ -322,9 +322,9 @@ def test_failure_create_report_header():
     response = client.post(
       "/reportapp/headers",
       headers={'Authorization': 'Bearer '+accesstoken},
-      json = {'type': 1}
+      json = {'typei': 56}
     )
-    assert response.status_code==400
+    assert response.status_code==422
  
 def test_create_report_header():
   testers=['editor', 'not editor']
@@ -333,9 +333,9 @@ def test_create_report_header():
     response = client.post(
       "/reportapp/headers",
       headers={'Authorization': 'Bearer '+accesstoken},
-      json = {'type': 'new'}
+      json = {'type': tester}
     )
-    assert response.json()=={'localheaderid': 1,'type': 'new'}
+    assert response.json()=={'localheaderid': 1,'type': tester}
     assert response.status_code==200
 
 

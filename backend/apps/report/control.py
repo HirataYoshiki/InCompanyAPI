@@ -14,22 +14,24 @@ from starlette.status import HTTP_400_BAD_REQUEST
 from copy import deepcopy
 
 
-
+def _create_localid(session:Session,username,table:object,idcolumn,tableproperty:str)->int:
+  try:
+    q = session.query(table).filter(
+      table.username==username).order_by(
+        desc(idcolumn)
+        ).first()
+    localid:int= getattr(q,tableproperty) +1
+    return localid    
+  except:
+    localid=1
+    return localid    
 # For report: POST Method-------------------------------------------------------
 async def create_new_report(
   input:Reportin,
   current_user:User=Depends(get_current_user),
   session:Session=Depends(get_session)):
   try:
-    q = session.query(Report).filter(
-      Report.username==current_user.username).order_by(
-        desc(Report.reportid)
-        ).first()
-    try:
-      localreportid:int= q.localreportid +1
-    except:
-      #for the first post
-      localreportid=1
+    localreportid=_create_localid(session,current_user.username,Report,Report.localreportid,"localreportid")
     adds = Report(
       **input.__dict__,
       username=current_user.username,
@@ -88,28 +90,30 @@ async def update_current_users_reports_by_id(
     raise HTTPException(status_code=400)
 
 
-
 async def create_new_header(
   header:ReportHeaderin,
   current_user:User=Depends(get_current_user),
   session:Session=Depends(get_session)):
   try:
-    localheaderid:int = session.query(ReportHeader).filter(
-      ReportHeader.username==current_user.username
-      ).order_by(desc(ReportHeader.localheaderid)).first()+1
+    localheaderid=_create_localid(session,current_user.username,ReportHeader,ReportHeader.localheaderid,"localheaderid")
+    adds = ReportHeader(
+      type=header.type,
+      username=current_user.username,
+      localheaderid=localheaderid)
+    session.add(adds)
+    try:
+      session.commit()
+      reportheader = ReportHeaderout(
+        **session.query(ReportHeader).filter(
+          ReportHeader.username==current_user.username
+          ).order_by(desc(ReportHeader.headerid)).first().__dict__
+      )
+      return reportheader
+    except:
+      session.rollback()
+      raise HTTPException(status_code=400,detail="couldn't enter data to DB. try again or check your input.")
   except:
-    localheaderid=1
-  adds = ReportHeader(
-    **header.__dict__,
-    username=current_user.username,
-    localheaderid=localheaderid)
-  session.add(adds)
-  session.commit()
-
-  reportheader = ReportHeaderout(
-    **session.query(ReportHeader).order_by(desc(ReportHeader.headerid)).first().__dict__
-  )
-  return reportheader
+    raise HTTPException(status_code=400)
 
 
 async def get_header_query(
