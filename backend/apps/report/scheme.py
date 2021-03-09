@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Any, Optional,List
 from datetime import datetime
 
 class Reportin(BaseModel):
@@ -32,14 +32,19 @@ class ReportHeaderout(BaseModel):
 
 class Contentin(BaseModel):
   content:str
-  contentsid:Optional[int]=None
 
 class Contentout(BaseModel):
   localcontentid:int
   content:str
-  contentsid:Optional[int]=None
+  groupid:Optional[int]=None
 
 class Contentupdate(BaseModel):
-  contentsid:Optional[int]=None
+  groupid:Optional[int]=None
   content:Optional[str]=None
 
+class ContentGroupin(BaseModel):
+  contentids:List[int]
+
+class ContentGroupout(BaseModel):
+  localgroupid:int
+  contents:List[Any]

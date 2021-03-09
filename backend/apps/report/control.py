@@ -1,6 +1,7 @@
+from sqlalchemy.sql.elements import or_
 from db import get_session
-from apps.report.models import Report, ReportContent,ReportHeader
-from apps.report.scheme import ReportHeaderin, ReportHeaderout, Reportin,Reportupdate, Reportout,Contentin,Contentout
+from apps.report.models import Report, ReportContent, ReportContentGroup,ReportHeader
+from apps.report.scheme import ContentGroupin, ContentGroupout, Contentupdate, ReportHeaderin, ReportHeaderout, Reportin,Reportupdate, Reportout,Contentin,Contentout
 from apps.register.models import User
 from auth import get_current_user
 
@@ -9,6 +10,8 @@ from sqlalchemy import desc
 from sqlalchemy.orm import Session, Query
 from pydantic.error_wrappers import ValidationError
 from starlette.status import HTTP_400_BAD_REQUEST
+
+from copy import deepcopy
 
 
 
@@ -90,8 +93,16 @@ async def create_new_header(
   header:ReportHeaderin,
   current_user:User=Depends(get_current_user),
   session:Session=Depends(get_session)):
-
-  adds = ReportHeader(**header.__dict__)
+  try:
+    localheaderid:int = session.query(ReportHeader).filter(
+      ReportHeader.username==current_user.username
+      ).order_by(desc(ReportHeader.localheaderid)).first()+1
+  except:
+    localheaderid=1
+  adds = ReportHeader(
+    **header.__dict__,
+    username=current_user.username,
+    localheaderid=localheaderid)
   session.add(adds)
   session.commit()
 
@@ -156,7 +167,7 @@ async def delete_header_by_id(
     deletes=session.query(ReportHeader).filter(
       ReportHeader.username==current_user.username,
       ReportHeader.localheaderid==localheaderid
-    ).one
+    ).one()
 
     session.delete(deletes)
     return {"id": localheaderid}
@@ -275,5 +286,77 @@ async def get_content_by_localcontentid(
   try:
     content=query.filter(ReportContent.localcontentid==localcontentid).one_or_none()
     return Contentout(**content.__dict__)
+  except:
+    raise HTTPException(status_code=400)
+
+async def update_content_by_localcontentid(
+  localcontentid:int,
+  updates:Contentupdate,
+  session:Session=Depends(get_session),
+  current_user:User=Depends(get_current_user)
+):
+  try:
+    target=session.query(ReportContent).filter(
+      ReportContent.username==current_user.username,
+      ReportContent.localcontentid==localcontentid
+    ).one()
+    target.updates(updates)
+    result=target.__dict__.copy()
+    try:
+      session.commit()
+      return Contentout(**result)
+    except:
+      session.rollback()
+      raise HTTPException(status_code=400)
+  except:
+    raise HTTPException(status_code=400)
+
+async def delete_content_by_localcontentid(
+  localcontentid:int,
+  session:Session=Depends(get_session),
+  current_user:User=Depends(get_current_user)
+):
+  try:
+    deletes=session.query(ReportContent).filter(
+      ReportContent.username==current_user.username,
+      ReportContent.localcontentid==localcontentid
+    ).one()
+    session.delete(deletes)
+    try:
+      session.commit()
+      return {"status":True,"localcontentid": localcontentid}
+    except:
+      raise HTTPException(status_code=400)
+  except:
+    raise HTTPException(status_code=400)
+
+async def create_contentgroup(
+  adds:ContentGroupin,
+  session:Session=Depends(get_session),
+  current_user:User=Depends(get_current_user)
+):
+  try:
+    try:
+      localgroupid:int = session.query(ReportContentGroup).filter(
+          ReportContentGroup.username==current_user.username
+          ).order_by(desc(ReportContentGroup.localgroupid)
+          ).first().localgroupid+1
+    except:
+      localgroupid=1
+    try:
+      session.add(ReportContentGroup(localgroupid=localgroupid,username=current_user.username))
+      contents=session.query(ReportContent).filter(
+        ReportContent.username==current_user.username,
+        ReportContent.localcontentid.in_(adds.contentids)
+      ).all()
+      for content in contents:
+        content.groupid=localgroupid
+      result=deepcopy(contents)
+      session.commit()
+
+      return ContentGroupout(localgroupid=localgroupid,contents=result)
+    except:
+      session.rollback()
+      raise HTTPException(status_code=400,detail="SQL-ERROR")
   except:
     raise HTTPException(status_code=400)

@@ -1,3 +1,4 @@
+from re import S
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from requests.models import encode_multipart_formdata
@@ -119,7 +120,6 @@ def test_create_user_200():
 
     assert response.status_code==200
     assert response.json()==USER[tester]['output']
-
 
 
 def test_create_user_doubled():
@@ -313,9 +313,32 @@ def test_failure_update_report_header_is_not_registered():
       json = {'headerid': 1}
     )
 
-    assert response.status_code==400
+    assert response.status_code==422
 
-def test_failure_create_report_
+def test_failure_create_report_header():
+  testers=['editor', 'not editor']
+  for tester in testers:
+    accesstoken = _get_access_token(tester)
+    response = client.post(
+      "/reportapp/headers",
+      headers={'Authorization': 'Bearer '+accesstoken},
+      json = {'type': 1}
+    )
+    assert response.status_code==400
+ 
+def test_create_report_header():
+  testers=['editor', 'not editor']
+  for tester in testers:
+    accesstoken = _get_access_token(tester)
+    response = client.post(
+      "/reportapp/headers",
+      headers={'Authorization': 'Bearer '+accesstoken},
+      json = {'type': 'new'}
+    )
+    assert response.json()=={'localheaderid': 1,'type': 'new'}
+    assert response.status_code==200
+
+
 
 
 

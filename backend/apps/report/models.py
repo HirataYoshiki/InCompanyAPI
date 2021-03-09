@@ -15,9 +15,9 @@ class Report(Base):
   title = Column(String(255),nullable=False)
   teamid=Column(Integer)
   headerid = Column(Integer, ForeignKey('reportheader.headerid'))
-  contentsid = Column(Integer, ForeignKey('reportcontents.contentsid'))
+  contentsid = Column(Integer, ForeignKey('reportcontentgroup.groupid'))
   timestamp=Column(DateTime)
-  contents = relationship("ReportContents",back_populates="report")
+  group = relationship("ReportContentGroup",back_populates="report")
   header = relationship("ReportHeader",back_populates="report")
 
   def updates(self,updates:Reportupdate):
@@ -44,11 +44,11 @@ class ReportHeader(Base):
 
 class ReportContentGroup(Base):
   __tablename__="reportcontentgroup"
-  contentsid=Column(Integer, primary_key=True, index=True)
-  localcontentsid=Column(Integer)
+  groupid=Column(Integer, primary_key=True, index=True)
+  localgroupid=Column(Integer)
   username=Column(String(50))
-  report = relationship("Report",back_populates="contents")
-  content = relationship("ReportContent",back_populates="contents")
+  report = relationship("Report",back_populates="group")
+  content = relationship("ReportContent",back_populates="group")
 
 
 class ReportContent(Base):
@@ -56,9 +56,9 @@ class ReportContent(Base):
   contentid=Column(Integer, primary_key=True, index=True)
   localcontentid=Column(Integer)
   username=Column(String(50))
-  contentsid = Column(Integer, ForeignKey('reportcontentgroup.contentsid'))
+  groupid = Column(Integer, ForeignKey('reportcontentgroup.groupid'))
   content=Column(String(600))
-  contents=relationship("ReportContents",back_populates="content")
+  group=relationship("ReportContentGroup",back_populates="content")
 
   def updates(self,updates:Contentupdate):
     for k,v in updates.__dict__.items():

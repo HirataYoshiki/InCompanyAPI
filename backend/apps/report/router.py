@@ -148,3 +148,31 @@ class Headers:
     except:
       raise HTTPException(status_code=400)
 
+  @router.put('/contents/{localcontentid}')
+  async def update_content(
+    content:Contentout=Depends(update_content_by_localcontentid)
+  ):
+    try:
+      return content
+    except:
+      raise HTTPException(status_code=400)
+
+  @router.delete('/contents/{localcontentid}')
+  async def delete_content(
+    localcontentid:int,
+    deletes=Depends(delete_content_by_localcontentid)
+  ):
+    try:
+      return deletes
+    except:
+      raise HTTPException(status_code=400)
+
+  @router.post('/groups')
+  async def create_report_group(
+    contentgroup:ContentGroupout=Depends(create_contentgroup)
+  ):
+    try:
+      return contentgroup
+    except:
+      raise HTTPException(status_code=400)
+
