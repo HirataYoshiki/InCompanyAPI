@@ -202,3 +202,11 @@ class Headers:
       return group
     except:
       raise HTTPException(status_code=400)
+  @router.delete('/groups/{localgroupid}')
+  async def delete_group(
+    result=Depends(delete_contentgroup_by_localgroupid)
+    ):
+    try:
+      return result
+    except:
+      raise HTTPException(status_code=400)

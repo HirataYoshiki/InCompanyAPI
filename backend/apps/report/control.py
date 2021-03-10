@@ -433,6 +433,24 @@ async def update_contentgroup_by_localgroupid(
     print(e)
     raise HTTPException(status_code=400)
 
-
+async def delete_contentgroup_by_localgroupid(
+  localgroupid:int,
+  session:Session=Depends(get_session),
+  current_user:User=Depends(get_current_user)):
+  try:
+    deleteset={'username': current_user.username,'localgroupid': localgroupid}
+    deletes=ReportContentGroup.__table__.delete().where(and_(
+      ReportContentGroup.__table__.c.username==bindparam('username'),
+      ReportContentGroup.__table__.c.localgroupid==bindparam('localgroupid')
+    ))
+    session.execute(deletes,deleteset)
+    try:
+      session.commit()
+      return {"status": True,"localgroupid": localgroupid}
+    except:
+      session.rollback()
+      raise HTTPException(status_code=400)
+  except:
+    raise HTTPException(status_code=400)
 
     
