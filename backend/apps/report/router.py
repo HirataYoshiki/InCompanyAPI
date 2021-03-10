@@ -193,3 +193,12 @@ class Headers:
       return group
     except:
       raise HTTPException(status_code=400)
+
+  @router.put('/groups/{localgroupid}',response_model=ContentGroupout)
+  async def update_group(
+  group:ContentGroupout=Depends(update_contentgroup_by_localgroupid)
+  ):
+    try:
+      return group
+    except:
+      raise HTTPException(status_code=400)
