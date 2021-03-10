@@ -121,7 +121,7 @@ class Headers:
     except:
       return HTTPException(status_code=400)
 
-  @router.post('/contents')
+  @router.post('/contents',response_model=Contentout)
   async def create_new_content(
     content:Contentout=Depends(create_content)
   ):
@@ -139,7 +139,7 @@ class Headers:
     except:
       raise HTTPException(status_code=400)
 
-  @router.get('/contents/{localcontentid}')
+  @router.get('/contents/{localcontentid}',response_model=Contentout)
   async def get_content_by_id(
     content:Contentout=Depends(get_content_by_localcontentid)
   ):
@@ -148,7 +148,7 @@ class Headers:
     except:
       raise HTTPException(status_code=400)
 
-  @router.put('/contents/{localcontentid}')
+  @router.put('/contents/{localcontentid}',response_model=Contentout)
   async def update_content(
     content:Contentout=Depends(update_content_by_localcontentid)
   ):
@@ -167,7 +167,7 @@ class Headers:
     except:
       raise HTTPException(status_code=400)
 
-  @router.post('/groups')
+  @router.post('/groups',response_model=ContentGroupout)
   async def create_report_group(
     contentgroup:ContentGroupout=Depends(create_contentgroup)
   ):
@@ -176,3 +176,20 @@ class Headers:
     except:
       raise HTTPException(status_code=400)
 
+  @router.get('/groups')
+  async def get_groups(
+    groups=Depends(get_contentgroup)
+    ):
+    try:
+      return groups
+    except:
+      raise HTTPException(status_code=400)
+  
+  @router.get('/groups/{localgroupid}',response_model=ContentGroupout)
+  async def get_group_by_id(
+    group=Depends(get_contentgroup_by_localgroupid)
+  ):
+    try:
+      return group
+    except:
+      raise HTTPException(status_code=400)

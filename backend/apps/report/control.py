@@ -318,8 +318,7 @@ async def update_content_by_localcontentid(
 async def delete_content_by_localcontentid(
   localcontentid:int,
   session:Session=Depends(get_session),
-  current_user:User=Depends(get_current_user)
-):
+  current_user:User=Depends(get_current_user)):
   try:
     deletes=session.query(ReportContent).filter(
       ReportContent.username==current_user.username,
@@ -334,33 +333,80 @@ async def delete_content_by_localcontentid(
   except:
     raise HTTPException(status_code=400)
 
+
 async def create_contentgroup(
   adds:ContentGroupin,
   session:Session=Depends(get_session),
   current_user:User=Depends(get_current_user)
-):
+  ):
   try:
+    localgroupid=_create_localid(session,current_user.username,ReportContentGroup,ReportContentGroup.localgroupid,"localgroupid")
+    contentslist=session.query(ReportContent).filter(
+      ReportContent.username==current_user.username,
+      ReportContent.localcontentid.in_(adds.localcontentids)
+    ).all()
     try:
-      localgroupid:int = session.query(ReportContentGroup).filter(
-          ReportContentGroup.username==current_user.username
-          ).order_by(desc(ReportContentGroup.localgroupid)
-          ).first().localgroupid+1
-    except:
-      localgroupid=1
-    try:
-      session.add(ReportContentGroup(localgroupid=localgroupid,username=current_user.username))
-      contents=session.query(ReportContent).filter(
-        ReportContent.username==current_user.username,
-        ReportContent.localcontentid.in_(adds.contentids)
-      ).all()
-      for content in contents:
-        content.groupid=localgroupid
-      result=deepcopy(contents)
-      session.commit()
+      group=[{
+        "username": current_user.username,
+        "localgroupid": localgroupid,
+        "contentid": content.contentid,
+        "order": i} for i,content in enumerate(contentslist)]
 
-      return ContentGroupout(localgroupid=localgroupid,contents=result)
+      session.execute(ReportContentGroup.__table__.insert(), group)
+      try:
+        session.commit()
+        addedgroup = session.query(ReportContentGroup).filter(
+          ReportContentGroup.username==current_user.username,
+          ReportContentGroup.localgroupid==localgroupid
+        ).all()
+        result=ContentGroupout(
+          localgroupid=localgroupid,
+          contents=[contenttable.content for contenttable in addedgroup])
+        return result
+      except:
+        session.rollback()
+        raise HTTPException(status_code=400,detail="Could not enter data.")
     except:
       session.rollback()
       raise HTTPException(status_code=400,detail="SQL-ERROR")
   except:
     raise HTTPException(status_code=400)
+
+async def get_contentgroup(
+  session:Session=Depends(get_session),
+  current_user:User=Depends(get_current_user)):
+  try:
+    query=session.query(ReportContentGroup).filter(
+      ReportContentGroup.username==current_user.username
+    ).all()
+    return query
+  except:
+    raise HTTPException(status_code=400)
+
+async def get_contentgroup_by_localgroupid(
+  localgroupid:int,
+  session:Session=Depends(get_session),
+  current_user:User=Depends(get_current_user)
+  ):
+  try:
+    group = session.query(ReportContentGroup).filter(
+      ReportContentGroup.username==current_user.username,
+      ReportContentGroup.localgroupid==localgroupid
+    ).order_by(ReportContentGroup.order).all()
+    if group==[]:
+      raise HTTPException(status_code=400)
+
+    return ContentGroupout(
+      localgroupid=localgroupid,
+      contents=[c.content for c in group])
+  except:
+    raise HTTPException(status_code=400)
+
+async def update_contentgroup_by_localgroupid(
+  localgroupid:int,
+  session:Session=Depends(get_session),
+  current_user:User=Depends(get_current_user)
+  )
+
+
+    

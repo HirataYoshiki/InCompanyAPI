@@ -39,11 +39,10 @@ class Contentout(BaseModel):
   groupid:Optional[int]=None
 
 class Contentupdate(BaseModel):
-  groupid:Optional[int]=None
   content:Optional[str]=None
 
 class ContentGroupin(BaseModel):
-  contentids:List[int]
+  localcontentids:List[int]
 
 class ContentGroupout(BaseModel):
   localgroupid:int
