@@ -1,6 +1,6 @@
 from operator import and_
 from sqlalchemy.sql.elements import or_
-from sqlalchemy.sql.expression import select
+from sqlalchemy.sql.expression import bindparam, select
 from db import get_session
 from apps.report.models import Report, ReportContent, ReportContentGroup,ReportHeader
 from apps.report.scheme import ContentGroupin, ContentGroupout, Contentupdate, ReportHeaderin, ReportHeaderout, Reportin,Reportupdate, Reportout,Contentin,Contentout
@@ -411,56 +411,24 @@ async def update_contentgroup_by_localgroupid(
   current_user:User=Depends(get_current_user)
   ):
   try:
-    print('hi')
-    oldgroupmemberssql=ReportContentGroup.__table__.select(ReportContentGroup.__table__.c.contentid).where(and_(
-      ReportContentGroup.__table__.c.username==current_user.username,
-      ReportContentGroup.__table__.c.localgroupid==localgroupid
-    ))
-    newgroupmemberssql=ReportContent.__table__.select(ReportContent.__table__.c.contentid).where(and_(
-      ReportContent.__table__.c.username==current_user.username,
-      ReportContent.__table__.c.localcontentid.in_(localcontentids.localcontentids)
-    ))
-    try:
-      oldmembers=session.execute(oldgroupmemberssql)
-      newmembers=session.execute(newgroupmemberssql)
-    except:
-      raise HTTPException(status_code=432)
-    print('hi')
-    for oldmember in oldmembers:
-      print(oldmember)
-    deleteer=list(set(oldmembers)-set(newmembers))
-    newcommer=list(set(newmembers)-set(oldmembers))
-    deletes=ReportContentGroup.__table__.delete().where(
-      ReportContentGroup.username==current_user.username,
-      ReportContentGroup.contentid.in_(deleteer)
+    oldset={'username': current_user.username,'localgroupid': localgroupid}
+    old=ReportContentGroup.__table__.delete().where(
+      and_(
+        ReportContentGroup.__table__.c.username==bindparam('username'),
+        ReportContentGroup.__table__.c.localgroupid==bindparam('localgroupid')
+      )
     )
-    session.execute(deletes)
-    print('second Execute')
-    new=[{
-        "username": current_user.username,
-        "localgroupid": localgroupid,
-        "contentid": i,
-        "order": 1} for i in newcommer]
-
-    session.execute(ReportContentGroup.__table__.insert(), new)
-    values=[{"order": i for i,_ in enumerate(newmembers)}]
-    updates=ReportContentGroup.__table__.update().where(
-      ReportContentGroup.username==current_user.username,
-      ReportContentGroup.localgroupid==localgroupid
-    ).values(values)
-    session.execute(updates)
-
+    session.execute(old,oldset)
+    newset=[{'username': current_user.username,'localgroupid': localgroupid,'contentid': n,'order': i} for i,n in enumerate(localcontentids.localcontentids)]
+    session.execute(ReportContentGroup.__table__.insert(),newset)
     try:
       session.commit()
-      query = session.query(ReportContentGroup).filter(
-        ReportContentGroup.username==current_user.username,
-        ReportContentGroup.localgroupid==localgroupid
-      ).all()
-      return ContentGroupout(localgroupid=localgroupid,contents=query)
+      return ContentGroupout(
+        localgroupid=localgroupid,
+        contents=session.query(ReportContentGroup).filter(ReportContentGroup.username==current_user.username,ReportContentGroup.localgroupid==localgroupid).all())
     except:
       session.rollback()
-      raise HTTPException(status_code=400)
-
+      raise HTTPException(status_code=400,detail="not commited.")
   except Exception as e:
     print(e)
     raise HTTPException(status_code=400)

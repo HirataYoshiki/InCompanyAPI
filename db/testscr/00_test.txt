@@ -4,3 +4,6 @@ SET FOREIGN_KEY_CHECKS=1;
 TRUNCATE TABLE users;
 TRUNCATE TABLE report;
 TRUNCATE TABLE `character`;
+TRUNCATE TABLE reportcontent;
+TRUNCATE TABLE reportcontentgroup;
+TRUNCATE TABLE reportheader;
