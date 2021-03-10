@@ -404,9 +404,18 @@ async def get_contentgroup_by_localgroupid(
 
 async def update_contentgroup_by_localgroupid(
   localgroupid:int,
+  localcontentids:ContentGroupin,
   session:Session=Depends(get_session),
   current_user:User=Depends(get_current_user)
-  )
+  ):
+  oldlist=session.query(ReportContentGroup.localgroupid).filter(
+    ReportContentGroup.username==current_user.username,
+    ReportContentGroup.localgroupid==localgroupid
+  ).all()
+  groupid_to_delete=list(set(oldlist)-set(localcontentids.localcontentids))
+  #delete content not in update contents.
+  
+
 
 
     
