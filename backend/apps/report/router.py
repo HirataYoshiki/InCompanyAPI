@@ -83,6 +83,7 @@ class Reports:
     except:
       raise HTTPException(status_code=400)
 
+
 class Headers:
   @router.post('/headers',response_model=scheme.ReportHeaderout)
   async def create_new_my_header(
@@ -101,11 +102,20 @@ class Headers:
       return headers.all()
     except:
       raise HTTPException(status_code=400)
+  
+  @router.get('/headers/{localheaderid}')
+  async def get_header_by_id(
+    header:ReportHeaderout=Depends(get_current_users_header_by_localheaderid)
+    ):
+    try:
+      return header
+    except:
+      raise HTTPException(status_code=400)
 
 
   @router.put('/headers/{localheaderid}',response_model=ReportHeaderout)
   async def update_header(
-    updated_header:ReportHeaderout=Depends(update_header_by_headerid)
+    updated_header:ReportHeaderout=Depends(update_header_by_localheaderid)
   ):
     try:
       return updated_header
@@ -121,6 +131,8 @@ class Headers:
     except:
       return HTTPException(status_code=400)
 
+
+class Content:
   @router.post('/contents',response_model=Contentout)
   async def create_new_content(
     content:Contentout=Depends(create_content)
@@ -167,6 +179,8 @@ class Headers:
     except:
       raise HTTPException(status_code=400)
 
+
+class Contentgroup:
   @router.post('/groups',response_model=ContentGroupout)
   async def create_report_group(
     contentgroup:ContentGroupout=Depends(create_contentgroup)

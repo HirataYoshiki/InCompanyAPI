@@ -339,6 +339,20 @@ def test_create_report_header():
     assert response.status_code==200
 
 
+    
+def test_update_report_header():
+  testers=['editor', 'not editor']
+  for tester in testers:
+    accesstoken = _get_access_token(tester)
+    response = client.put(
+      "/reportapp/headers/1",
+      headers={'Authorization': 'Bearer '+accesstoken},
+      json = {'type': "updated "+ tester}
+    )
+    assert response.json()=={"localheaderid": 1,"type": "updated "+ tester}
+    assert response.status_code==200
+
+
 
 
 

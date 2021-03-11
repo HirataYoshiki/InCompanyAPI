@@ -6,6 +6,7 @@ class Reportin(BaseModel):
   title:str
   teamid:Optional[int]=None
   headerid:Optional[int]=None
+  contentgroupid:Optional[int]=None
 
 class Reportout(BaseModel):
   reportid:int

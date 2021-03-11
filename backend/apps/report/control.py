@@ -76,7 +76,7 @@ async def update_current_users_reports_by_id(
   update:Reportupdate,
   current_user:User=Depends(get_current_user),
   session:Session=Depends(get_session) 
-):
+  ):
   try:
     report:Report = session.query(Report).filter(
       Report.username==current_user.username,
@@ -118,52 +118,53 @@ async def create_new_header(
     raise HTTPException(status_code=400)
 
 
-async def get_header_query(
-  session:Session = Depends(get_session)
-):
-  headers:Query = session.query(Report.header)
-  return headers
 
 async def get_current_users_header_query(
-  query:Query = Depends(get_header_query),
+  session:Session=Depends(get_session),
   current_user:User = Depends(get_current_user)
 ):
-  headers = query.filter(
-    Report.username==current_user.username
+  headers = session.query(ReportHeader).filter(
+    ReportHeader.username==current_user.username
   )
   return headers
 
-async def get_current_users_header_by_localreportid(
-  localreportid:int,
-  query:Query=Depends(get_current_users_reports)
-):
-  header:Report=query.filter(
-    Report.localreportid==localreportid
+async def get_current_users_header_by_localheaderid(
+  localheaderid:int,
+  query:Query=Depends(get_current_users_header_query)
+  ):
+  header:ReportHeader=query.filter(
+    ReportHeader.localheaderid==localheaderid
     ).one()
   try:
-    output = ReportHeaderout(**header.header.__dict__)
+    output = ReportHeaderout(**header.__dict__)
     return output
   except ValidationError as e:
     print(e)
     raise HTTPException(status_code=400)
 
-async def update_header_by_headerid(
-  headerid:int,
+async def update_header_by_localheaderid(
+  localheaderid:int,
   header:ReportHeaderin,
   session:Session=Depends(get_session),
   current_user:User=Depends(get_current_user)
-):
-  query:ReportHeader = session.query(ReportHeader).filter(
-    ReportHeader.headerid==headerid
-  ).one()
+  ):
+  try:
+    query:ReportHeader = session.query(ReportHeader).filter(
+      ReportHeader.username==current_user.username,
+      ReportHeader.localheaderid==localheaderid
+    ).one()
 
-  query.type=header.type
-  output = ReportHeaderout(
-    **query.__dict__.copy()
-  )
-  session.commit()
-  return output
-
+    query.updates(header)
+    output = ReportHeaderout(
+      **query.__dict__
+    )
+    try:
+      session.commit()
+      return output
+    except:
+      raise HTTPException(status_code=400)
+  except:
+    raise HTTPException(status_code=400)
 async def delete_header_by_id(
   localheaderid:int,
   session:Session=Depends(get_session),
@@ -394,9 +395,9 @@ async def get_contentgroup_by_localgroupid(
     group = session.query(ReportContentGroup).filter(
       ReportContentGroup.username==current_user.username,
       ReportContentGroup.localgroupid==localgroupid
-    ).order_by(ReportContentGroup.order).all()
+    ).order_by(ReportContentGroup.localgroupid,ReportContentGroup.order).all()
     if group==[]:
-      raise HTTPException(status_code=400)
+      raise HTTPException(status_code=400,detail="no group found.")
 
     return ContentGroupout(
       localgroupid=localgroupid,
@@ -425,7 +426,9 @@ async def update_contentgroup_by_localgroupid(
       session.commit()
       return ContentGroupout(
         localgroupid=localgroupid,
-        contents=session.query(ReportContentGroup).filter(ReportContentGroup.username==current_user.username,ReportContentGroup.localgroupid==localgroupid).all())
+        contents=session.query(ReportContentGroup).filter(ReportContentGroup.username==current_user.username,ReportContentGroup.localgroupid==localgroupid).order_by(
+          ReportContentGroup.localgroupid,ReportContentGroup.order
+        ).all())
     except:
       session.rollback()
       raise HTTPException(status_code=400,detail="not commited.")
