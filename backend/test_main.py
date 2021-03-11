@@ -1,3 +1,4 @@
+from apps.report.router import Content
 from re import S
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
@@ -109,6 +110,124 @@ REPORTS={
   }
 }
 
+CONTENT={
+  'editor': {
+    'input': {
+      1: {
+        'content': 'editor'
+      },
+      2: {
+        'content': 'another1'
+      }
+    },
+    'output':{
+      1: {
+        'localcontentid': 1,
+        'content': 'editor',
+        'groupid': None
+      },
+      2: {
+        'localcontentid': 2,
+        'content': 'another1',
+        'groupid': None
+      }
+    },
+    'inner': {
+      1: {
+        'contentid': 1,
+        'localcontentid': 1,
+        'username': 'a',
+        'content': 'update editor'
+      },
+      2: {
+        'contentid': 5,
+        'localcontentid': 2,
+        'username': 'a',
+        'content': 'another1'
+      }
+    }
+  },
+  'not editor': {
+    'input': {
+      1: {
+        'content': 'not editor'
+      },
+      2: {
+        'content': 'another2'
+      }
+    },
+    'output':{
+      1: {
+        'localcontentid': 1,
+        'content': 'not editor',
+        'groupid': None
+      },
+      2: {
+        'localcontentid': 2,
+        'content': 'another2',
+        'groupid': None
+      }
+    },
+    'inner': {
+      1: {
+        'contentid': 2,
+        'localcontentid': 1,
+        'username': 'b',
+        'content': 'update not editor'
+      },
+      2: {
+        'contentid': 6,
+        'localcontentid': 2,
+        'username': 'b',
+        'content': 'another2'
+      }
+    }
+  }
+}
+
+CONTENTGROUP= {
+  'editor': {
+    'inner': {
+      1: {
+        'groupid': 1,
+        'username': USER['editor']['input']['username'],
+        'localgroupid': 1,
+        'contentid': CONTENT['editor']['inner'][1]['contentid'],
+        'order': 0
+      },
+      2: {
+        'groupid': 2,
+        'username': USER['editor']['input']['username'],
+        'localgroupid': 1,
+        'contentid': CONTENT['editor']['inner'][2]['contentid'],
+        'order': 1
+      }
+    }
+  },
+  'not editor': {
+    'inner': {
+      1: {
+        'groupid': 3,
+        'username': USER['not editor']['input']['username'],
+        'localgroupid': 1,
+        'contentid': CONTENT['not editor']['inner'][1]['contentid'],
+        'order': 0
+      },
+      2: {
+        'groupid': 4,
+        'username': USER['not editor']['input']['username'],
+        'localgroupid': 1,
+        'contentid': CONTENT['not editor']['inner'][2]['contentid'],
+        'order': 1
+      }
+    }  
+  }
+}
+
+ACCESSTOKENS={
+  'editor': "",
+  'not editor': ""
+}
 
 def test_create_user_200():
   testers=['editor','not editor']
@@ -162,16 +281,15 @@ def test_get_token_200():
       '/token',
       headers={'Content-Type': header},
       data=content)
-
+    ACCESSTOKENS[tester]=response.json()['access_token']
     assert response.status_code==200
 
 def test_get_all_users():
   testers = ['editor','not editor']
   for tester in testers:
-    accesstoken=_get_access_token(tester)
     response=client.get(
       '/users',
-      headers={'Authorization': 'Bearer '+accesstoken}
+      headers={'Authorization': 'Bearer '+ACCESSTOKENS[tester]}
     )
     if tester=='editor':
       assert response.status_code==200
@@ -183,10 +301,10 @@ def test_get_all_users():
 def test_get_users_me():
   testers = ['editor','not editor']
   for tester in testers:
-    accesstoken=_get_access_token(tester)
+    
     response=client.get(
       '/users/me',
-      headers={'Authorization': 'Bearer '+accesstoken}
+      headers={'Authorization': 'Bearer '+ACCESSTOKENS[tester]}
     )
 
     assert response.status_code==200
@@ -195,10 +313,10 @@ def test_get_users_me():
 def test_update_me():
   testers = ['editor','not editor']
   for tester in testers:
-    accesstoken=_get_access_token(tester)
+    
     response=client.put(
       '/users/me',
-      headers={'Authorization': 'Bearer '+accesstoken},
+      headers={'Authorization': 'Bearer '+ACCESSTOKENS[tester]},
       json = {'mailaddress':'kirryx@gmail.com'}
     )
 
@@ -209,10 +327,10 @@ def test_update_me():
 def test_failure_get_character():
   testers=['editor', 'not editor']
   for tester in testers:
-    accesstoken = _get_access_token(tester)
+    
     response = client.get(
       '/characters/me',
-      headers={'Authorization': 'Bearer '+accesstoken},
+      headers={'Authorization': 'Bearer '+ACCESSTOKENS[tester]},
     )
 
     assert response.status_code==400
@@ -220,10 +338,10 @@ def test_failure_get_character():
 def test_create_character_me():
   testers = ["editor", "not editor"]
   for tester in testers:
-    accesstoken=_get_access_token(tester)
+    
     response=client.post(
       '/characters',
-      headers={'Authorization': 'Bearer '+accesstoken},
+      headers={'Authorization': 'Bearer '+ACCESSTOKENS[tester]},
       json = CHARACTERS[tester]["input"]
     )
 
@@ -233,10 +351,10 @@ def test_create_character_me():
 def test_get_characters():
   testers=['editor', 'not editor']
   for tester in testers:
-    accesstoken = _get_access_token(tester)
+    
     response = client.get(
       '/characters/me',
-      headers={'Authorization': 'Bearer '+accesstoken},
+      headers={'Authorization': 'Bearer '+ACCESSTOKENS[tester]},
     )
 
     assert response.status_code==200
@@ -245,10 +363,10 @@ def test_get_characters():
 def test_update_characters():
   testers=['editor', 'not editor']
   for tester in testers:
-    accesstoken = _get_access_token(tester)
+    
     response = client.put(
       '/characters/me',
-      headers={'Authorization': 'Bearer '+accesstoken},
+      headers={'Authorization': 'Bearer '+ACCESSTOKENS[tester]},
       json = {'skills': ['updated','nice']}
     )
     CHARACTERS[tester]['output']['skills'] = ['updated','nice']
@@ -258,10 +376,10 @@ def test_update_characters():
 def test_get_updated_characters():
   testers=['editor', 'not editor']
   for tester in testers:
-    accesstoken = _get_access_token(tester)
+    
     response = client.get(
       '/characters/me',
-      headers={'Authorization': 'Bearer '+accesstoken},
+      headers={'Authorization': 'Bearer '+ACCESSTOKENS[tester]},
     )
 
     assert response.status_code==200
@@ -271,10 +389,10 @@ def test_failure_create_report():
   testers=['editor', 'not editor']
   for tester in testers:
     json=REPORTS[tester]['input'].copy().pop('title')
-    accesstoken = _get_access_token(tester)
+    
     response = client.post(
       '/reportapp/reports',
-      headers={'Authorization': 'Bearer '+accesstoken},
+      headers={'Authorization': 'Bearer '+ACCESSTOKENS[tester]},
       json = json
     )
     assert response.status_code==422
@@ -282,10 +400,10 @@ def test_failure_create_report():
 def test_failure_get_reports():
   testers=['editor', 'not editor']
   for tester in testers:
-    accesstoken = _get_access_token(tester)
+    
     response = client.post(
       '/reportapp/reports',
-      headers={'Authorization': 'Bearer '+accesstoken}
+      headers={'Authorization': 'Bearer '+ACCESSTOKENS[tester]}
     )
     assert response.status_code==422
 
@@ -293,10 +411,10 @@ def test_failure_get_reports():
 def test_create_report():
   testers=['editor', 'not editor']
   for tester in testers:
-    accesstoken = _get_access_token(tester)
+    
     response = client.post(
       '/reportapp/reports',
-      headers={'Authorization': 'Bearer '+accesstoken},
+      headers={'Authorization': 'Bearer '+ACCESSTOKENS[tester]},
       json = REPORTS[tester]['input']
     )
 
@@ -306,10 +424,10 @@ def test_create_report():
 def test_failure_update_report_header_is_not_registered():
   testers=['editor', 'not editor']
   for tester in testers:
-    accesstoken = _get_access_token(tester)
+    
     response = client.put(
       f"/reportapp/headers/{REPORTS[tester]['output']['localreportid']}",
-      headers={'Authorization': 'Bearer '+accesstoken},
+      headers={'Authorization': 'Bearer '+ACCESSTOKENS[tester]},
       json = {'headerid': 1}
     )
 
@@ -318,10 +436,10 @@ def test_failure_update_report_header_is_not_registered():
 def test_failure_create_report_header():
   testers=['editor', 'not editor']
   for tester in testers:
-    accesstoken = _get_access_token(tester)
+    
     response = client.post(
       "/reportapp/headers",
-      headers={'Authorization': 'Bearer '+accesstoken},
+      headers={'Authorization': 'Bearer '+ACCESSTOKENS[tester]},
       json = {'typei': 56}
     )
     assert response.status_code==422
@@ -329,32 +447,141 @@ def test_failure_create_report_header():
 def test_create_report_header():
   testers=['editor', 'not editor']
   for tester in testers:
-    accesstoken = _get_access_token(tester)
+    
     response = client.post(
       "/reportapp/headers",
-      headers={'Authorization': 'Bearer '+accesstoken},
+      headers={'Authorization': 'Bearer '+ACCESSTOKENS[tester]},
       json = {'type': tester}
     )
     assert response.json()=={'localheaderid': 1,'type': tester}
     assert response.status_code==200
 
-
     
 def test_update_report_header():
   testers=['editor', 'not editor']
   for tester in testers:
-    accesstoken = _get_access_token(tester)
+    
     response = client.put(
       "/reportapp/headers/1",
-      headers={'Authorization': 'Bearer '+accesstoken},
+      headers={'Authorization': 'Bearer '+ACCESSTOKENS[tester]},
       json = {'type': "updated "+ tester}
     )
     assert response.json()=={"localheaderid": 1,"type": "updated "+ tester}
     assert response.status_code==200
 
+def test_failure_create_content():
+  testers=['editor', 'not editor']
+  for tester in testers:
+    
+    response = client.post(
+      "/reportapp/contents",
+      headers={'Authorization': 'Bearer '+ACCESSTOKENS[tester]},
+      json = {'contents': 2}
+    )
+    assert response.status_code==422
 
+def test_create_content():
+  testers=['editor', 'not editor']
+  for tester in testers:
+    
+    response = client.post(
+      "/reportapp/contents",
+      headers={'Authorization': 'Bearer '+ACCESSTOKENS[tester]},
+      json = CONTENT[tester]['input'][1]
+    )
+    assert response.json()==CONTENT[tester]['output'][1]
+    assert response.status_code==200
+    
 
+def test_update_content():
+  testers=['editor', 'not editor']
+  for tester in testers:
+    
+    response = client.put(
+      "/reportapp/contents/1",
+      headers={'Authorization': 'Bearer '+ACCESSTOKENS[tester]},
+      json = {'content': "update "+ tester}
+    )
+    assert response.status_code==200
+    CONTENT[tester]['output'][1]['content']="update " + tester
+    assert response.json()==CONTENT[tester]['output'][1]
 
+def test_delete_content():
+  testers=['editor', 'not editor']
+  for tester in testers:
+    
+    dummy = client.post(
+      "/reportapp/contents",
+      headers={'Authorization': 'Bearer '+ACCESSTOKENS[tester]},
+      json = {'content': "dummy"}
+    )
 
+    response = client.delete(
+      "/reportapp/contents/2",
+      headers={'Authorization': 'Bearer '+ACCESSTOKENS[tester]},
+    )
+    assert response.json()=={"status":True,"localcontentid": 2}
+    assert response.status_code==200
+
+def test_get_content_by_localcontentid():
+  testers=['editor', 'not editor']
+  for tester in testers:
+    ACCESSTOKENS[tester] = _get_access_token(tester)
+    response = client.get(
+      "/reportapp/contents/1",
+      headers={'Authorization': 'Bearer '+ACCESSTOKENS[tester]},
+    )
+    assert response.json()==CONTENT[tester]['output'][1]
+    assert response.status_code==200
+
+def test_failure_get_content_by_id():
+  testers=['editor', 'not editor']
+  for tester in testers:
+    
+    response = client.get(
+      "/reportapp/contents/2",
+      headers={'Authorization': 'Bearer '+ACCESSTOKENS[tester]},
+    )
+    assert response.status_code==400
+
+def test_create_contentgroup():
+  testers=['editor', 'not editor']
+  for tester in testers:
+    
+    anothercontent = client.post(
+      "/reportapp/contents",
+      headers={'Authorization': 'Bearer '+ACCESSTOKENS[tester]},
+      json=CONTENT[tester]['input'][2]
+    )
+
+    response = client.post(
+      "/reportapp/groups",
+      headers={'Authorization': 'Bearer '+ACCESSTOKENS[tester]},
+      json={'localcontentids': [1,2]}
+    )
+    assert response.json()=={'localgroupid': 1,'contents': [CONTENT[tester]['inner'][1],CONTENT[tester]['inner'][2]]}
+
+def test_get_contentgroup():
+  testers=['editor', 'not editor']
+  for tester in testers:
+    response = client.get(
+      "/reportapp/groups/1",
+      headers={'Authorization': 'Bearer '+ACCESSTOKENS[tester]},
+    )
+    assert response.json()=={'localgroupid': 1,'contents': [CONTENT[tester]['inner'][1],CONTENT[tester]['inner'][2]]}
+
+def test_update_contentgroup():
+  testers=['editor', 'not editor']
+  for tester in testers:
+    response = client.put(
+      "/reportapp/groups/1",
+      headers={'Authorization': 'Bearer '+ACCESSTOKENS[tester]},
+      json={'localcontentids': [2,1]}
+    )
+    CONTENTGROUP[tester]['inner'][1]['groupid']+=5
+    CONTENTGROUP[tester]['inner'][2]['groupid']+=3
+    CONTENTGROUP[tester]['inner'][1]['order']=1
+    CONTENTGROUP[tester]['inner'][2]['order']=0
+    assert response.json()=={'localgroupid': 1,'contents': [CONTENTGROUP[tester]['inner'][2],CONTENTGROUP[tester]['inner'][1]]}
 
 

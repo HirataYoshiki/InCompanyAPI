@@ -181,29 +181,6 @@ async def delete_header_by_id(
   except:
     raise HTTPException(status_code=400)
 
-async def create_report_content(
-  content:Contentin,
-  session:Session=Depends(get_session),
-  current_user:User=Depends(get_current_user)
-):
-  try:
-    localcontentid=session.query(ReportContent).filter(
-      ReportContent.username==current_user.username
-    ).count()+1
-    addcontent=ReportContent(
-      **content.__dict__,
-      localcontentid=localcontentid,
-      username=current_user.username
-    )
-    session.add(addcontent)
-    try:
-      session.commit()
-    except:
-      session.rollback()
-      raise HTTPException(status_code=400)
-  except:
-    raise HTTPException(status_code=400)
-
 async def _get_report_content_query(
   current_user:User=Depends(get_current_user),
   session:Session=Depends(get_session)
@@ -246,13 +223,7 @@ async def create_content(
   current_user:User=Depends(get_current_user)
 ):
   try:
-    try:
-      localcontentid:int = session.query(ReportContent).filter(
-          ReportContent.username==current_user.username
-          ).order_by(desc(ReportContent.localcontentid)
-          ).first().localcontentid+1
-    except:
-      localcontentid=1
+    localcontentid=_create_localid(session,current_user.username,ReportContent,ReportContent.localcontentid,"localcontentid")
     adds=ReportContent(
       **content.__dict__,
       username=current_user.username,
