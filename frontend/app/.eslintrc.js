@@ -1,5 +1,7 @@
 // https://eslint.org/docs/user-guide/configuring
 
+const { off } = require("node-notifier");
+
 module.exports = {
   root: true,
   parserOptions: {
@@ -24,6 +26,9 @@ module.exports = {
     // allow async-await
     'generator-star-spacing': 'off',
     // allow debugger during development
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'no-trailing-spaces': 'off',
+    'space-infix-ops': 'off',
+    'eol-last': 'off'
   }
 }
