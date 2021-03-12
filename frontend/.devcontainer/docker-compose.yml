@@ -1,0 +1,13 @@
+version: '3.2'
+
+services: 
+  frontend:
+    image: incompanyapi/frontend:1.0
+    build: .
+    container_name: incompanyapi_only_frontend
+    ports: 
+      - 8888:8888
+    volumes: 
+      - ../app:/app
+    stdin_open: true
+    tty: true

@@ -28,3 +28,11 @@ services:
     volumes: 
       - ../backend:/tmp/dev/backend
     working_dir: '/tmp/dev/backend'
+  frontend:
+    image: incompanyapi/frontend:1.0
+    build: ./frontend
+    container_name: incompanyapi_frontend
+    ports: 
+      - 1234:8888
+    volumes: 
+      - ../frontend:/app

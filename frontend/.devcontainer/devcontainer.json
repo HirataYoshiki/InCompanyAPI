@@ -1,0 +1,12 @@
+{
+    "name": "CompanyAPI/Frontend",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "frontend",
+    "workspaceFolder": "/app",
+    "extensions": [
+        "octref.vetur"
+    ],
+    "settings": {
+        "editor.tabSize": 2
+    }
+}
