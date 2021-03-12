@@ -1,24 +1,38 @@
 <template>
-  <form>
-    <div class="form-group">
-      <label for="username">UserName</label>
-      <input type="username" v-model="username" class="form-control" id="username" aria-describedby="usernameHelp" placeholder="Enter Your Name">
-      <small id="usernameHelp" class="form-text text-muted">The input should be alphabets.</small>
+<section id="cover" class="min-vh-100">
+  <div id="cover-caption">
+    <div class="container">
+      <div class="row text-green">
+        <div class="col-xl-5 col-lg-6 col-md-8 col-sm-10 mx-auto text-center form p-4">
+          <h1 class="display-4 py-2 text-truncate">Sign in</h1>
+            <div class="px-2">
+              <form action="" class="justify-content-center">
+                <div class="form-group row">
+                  <label for="username" class="col-sm-2 col-form-label">UserName</label>
+                  <div class="col-sm-10">
+                    <input class="form-control" id="username" placeholder="Enter your name.">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="password" class="col-sm-2 col-form-label">Password</label>
+                  <div class="col-sm-10">
+                    <input type="password" class="form-control" id="password" placeholder="Enter password.">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="mailaddress" class="col-sm-2 col-form-label">E-mail</label>
+                  <div class="col-sm-10">
+                    <input class="form-control" id="mailaddress" placeholder="Enter your E-mail address.">
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg" @click="get_token">Sign in</button>
+              </form>
+            </div>
+        </div>
+      </div>
     </div>
-    <div class="form-group">
-      <label for="Password">Password</label>
-      <input type="password" v-model="password" class="form-control" id="Password" placeholder="Enter Password">
-    </div>
-      <div class="form-group">
-      <label for="mailaddress">e-mail address</label>
-      <input type="mailaddress" v-model="mailaddress" class="form-control" id="mailaddress" placeholder="Enter Your E-Mail">
-      <small id="mailaddressHelp" class="form-text text-muted">Enter e-mail address if you want.</small>
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-    <div>
-      <p>{{texte}}</p>
-    </div>
-  </form>
+  </div>
+</section>
 </template>
 <script>
 export default {
@@ -43,10 +57,8 @@ export default {
   }
 }
 </script>
-
 <style scoped>
-form {
-  width: 50%;
-  align-self: center;
+input {
+  width: 60%;
 }
 </style>
