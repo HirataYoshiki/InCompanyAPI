@@ -8,24 +8,24 @@
             <div class="px-2">
               <form action="" class="justify-content-center">
                 <div class="form-group row">
-                  <label for="username" class="col-sm-2 col-form-label">UserName</label>
-                  <div class="col-sm-10">
-                    <input class="form-control" id="username" placeholder="Enter your name.">
+                  <label for="username" class="col-sm-4 col-form-label">UserName</label>
+                  <div class="col-sm-8">
+                    <input class="form-control" id="username" placeholder="Enter your name." v-model="username">
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label for="password" class="col-sm-2 col-form-label">Password</label>
-                  <div class="col-sm-10">
-                    <input type="password" class="form-control" id="password" placeholder="Enter password.">
+                  <label for="password" class="col-sm-4 col-form-label">Password</label>
+                  <div class="col-sm-8">
+                    <input type="password" class="form-control" id="password" placeholder="Enter password." v-model="password">
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label for="mailaddress" class="col-sm-2 col-form-label">E-mail</label>
-                  <div class="col-sm-10">
-                    <input class="form-control" id="mailaddress" placeholder="Enter your E-mail address.">
+                  <label for="mailaddress" class="col-sm-4 col-form-label">E-mail</label>
+                  <div class="col-sm-8">
+                    <input class="form-control" id="mailaddress" placeholder="Enter your E-mail address" v-model="mailaddress">
                   </div>
                 </div>
-                <button type="submit" class="btn btn-primary btn-lg" @click="get_token">Sign in</button>
+                <button type="submit" class="btn btn-primary btn-lg" @click="show_username">Sign in</button>
               </form>
             </div>
         </div>
@@ -45,20 +45,20 @@ export default {
       texte: ''
     } 
   },
-  async get_token () {
-    let form = new FormData()
-    const url='https://localhost:8080/token'
-    form.append('username', this.username, 'password', this.password)
-    if (this.mailaddress !== '') {
-      form.append('mailaddress', this.mailaddress)
+  methods: {
+    async get_token () {
+      let form = new FormData()
+      const url='https://localhost:8080/token'
+      form.append('username', this.username, 'password', this.password)
+      if (this.mailaddress !== '') {
+        form.append('mailaddress', this.mailaddress)
+      }
+      const response = await this.axios.post(url, form) 
+      this.texte = response.data.access_token
+    },
+    show_username () {
+      alert(this.username)
     }
-    const response = await this.axios.post(url, form) 
-    this.texte = response.data.access_token
   }
 }
 </script>
-<style scoped>
-input {
-  width: 60%;
-}
-</style>
