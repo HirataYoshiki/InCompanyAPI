@@ -8,10 +8,11 @@ import Signin from '@/components/Sign in'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
+Vue.prototype.$axios = axios   
+
+Vue.use(VueAxios, axios)
 Vue.use(Router)
 Vue.use(BootstrapVue)
-Vue.use(VueAxios)
-Vue.use(axios)
 
 export default new Router({
   routes: [

@@ -25,7 +25,7 @@
                     <input class="form-control" id="mailaddress" placeholder="Enter your E-mail address" v-model="mailaddress">
                   </div>
                 </div>
-                <button type="submit" class="btn btn-primary btn-lg" @click="show_username">Sign in</button>
+                <button class="btn btn-primary btn-lg" @click="request_token">Sign in</button>
               </form>
             </div>
         </div>
@@ -46,18 +46,18 @@ export default {
     } 
   },
   methods: {
-    async get_token () {
+    async request_token () {
       let form = new FormData()
       const url='https://localhost:8080/token'
-      form.append('username', this.username, 'password', this.password)
+      form.append('username', this.username)
+      form.append('password', this.password)
       if (this.mailaddress !== '') {
         form.append('mailaddress', this.mailaddress)
       }
-      const response = await this.axios.post(url, form)
-      this.texte = response.data.access_token
-    },
-    show_username () {
-      alert(this.username)
+      const response = await this.$axios.post(url, form)
+      document.cookie = 'accesstoken=; max-age=0'
+      document.cookie='accesstoken=' + response.data.access_token + '; max-age=60'
+      alert(response.data.access_token)
     }
   }
 }
