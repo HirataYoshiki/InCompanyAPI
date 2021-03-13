@@ -17,12 +17,14 @@ services:
       - ../db/testscr:/testsrc
       - ../db/database:/var/lib/mysql
       - ../db/init:/docker-entrypoint-initdb.d
+    networks: 
+      - db_backend
   backend: 
     image: incompanyapi/backend:1.0
     build: ./backend
     container_name: 'incompanyapi_backend'
-    expose:
-      - "8080" 
+    ports:
+      - 8080:8080 
     volumes: 
       - ../backend:/tmp/dev/backend
     working_dir: '/tmp/dev/backend'
@@ -30,6 +32,9 @@ services:
       - db
     stdin_open: true
     tty: true
+    networks: 
+      - db_backend
+      - local-net
   frontend:
     image: incompanyapi/frontend:1.0
     build: ./frontend
@@ -40,3 +45,10 @@ services:
       - backend
     stdin_open: true
     tty: true
+    networks: 
+      - local-net
+networks: 
+  local-net:
+    driver: bridge
+  db_backend: 
+    driver: bridge

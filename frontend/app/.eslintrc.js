@@ -29,6 +29,7 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-trailing-spaces': 'off',
     'space-infix-ops': 'off',
-    'eol-last': 'off'
+    'eol-last': 'off',
+    'space-in-parens': 'off'
   }
 }

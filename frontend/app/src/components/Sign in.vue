@@ -10,13 +10,16 @@
                 <div class="form-group row">
                   <label for="username" class="col-sm-4 col-form-label">UserName</label>
                   <div class="col-sm-8">
-                    <input class="form-control" id="username" placeholder="Enter your name." v-model="username">
+                    <input class="form-control" v-bind:class="{'is-invalid':authentify_error}" id="username" placeholder="Enter your name." v-model="username" required>
+                  </div>
+                  <div class="invalid-feedback" v-if="authentify_error">
+                    The username is not  valid.
                   </div>
                 </div>
                 <div class="form-group row">
                   <label for="password" class="col-sm-4 col-form-label">Password</label>
                   <div class="col-sm-8">
-                    <input type="password" class="form-control" id="password" placeholder="Enter password." v-model="password">
+                    <input type="password" class="form-control" v-bind:class="{'is-invalid':authentify_error}" id="password" placeholder="Enter password." v-model="password" required>
                   </div>
                 </div>
                 <div class="form-group row">
@@ -25,7 +28,7 @@
                     <input class="form-control" id="mailaddress" placeholder="Enter your E-mail address" v-model="mailaddress">
                   </div>
                 </div>
-                <button class="btn btn-primary btn-lg" @click="request_token">Sign in</button>
+                <button class="btn btn-primary btn-lg" type="submit" @click="request_token">Sign in</button>
               </form>
             </div>
         </div>
@@ -42,22 +45,28 @@ export default {
       username: '',
       password: '',
       mailaddress: '',
-      texte: ''
+      authentify_error: false
     } 
   },
   methods: {
     async request_token () {
       let form = new FormData()
-      const url='https://localhost:8080/token'
+      const url='http://localhost:8080/token'
       form.append('username', this.username)
       form.append('password', this.password)
       if (this.mailaddress !== '') {
         form.append('mailaddress', this.mailaddress)
       }
-      const response = await this.$axios.post(url, form)
-      document.cookie = 'accesstoken=; max-age=0'
-      document.cookie='accesstoken=' + response.data.access_token + '; max-age=60'
-      alert(response.data.access_token)
+      await this.$axios.post(url, form)
+        .then((response) => {
+          document.cookie = 'accesstoken=; max-age=0'
+          document.cookie = 'accesstoken=' + response.data.access_token + '; max-age=60'
+          this.authentify_error = false
+          alert('totally Good!\n' + response.data.access_token )
+        })
+        .catch((e) => {
+          this.authentify_error = true
+        })
     }
   }
 }
