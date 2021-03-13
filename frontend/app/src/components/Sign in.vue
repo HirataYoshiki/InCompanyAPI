@@ -53,7 +53,7 @@ export default {
       if (this.mailaddress !== '') {
         form.append('mailaddress', this.mailaddress)
       }
-      const response = await this.axios.post(url, form) 
+      const response = await this.axios.post(url, form)
       this.texte = response.data.access_token
     },
     show_username () {

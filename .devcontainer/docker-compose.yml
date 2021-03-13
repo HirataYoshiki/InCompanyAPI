@@ -22,17 +22,21 @@ services:
     build: ./backend
     container_name: 'incompanyapi_backend'
     ports: 
-      - 8000:8000
-    stdin_open: true
-    tty: true
+      - 8080:8080
     volumes: 
       - ../backend:/tmp/dev/backend
     working_dir: '/tmp/dev/backend'
+    depends_on: 
+      - db
+    stdin_open: true
+    tty: true
   frontend:
     image: incompanyapi/frontend:1.0
     build: ./frontend
     container_name: incompanyapi_frontend
-    ports: 
-      - 1234:8888
     volumes: 
-      - ../frontend:/app
+      - ../frontend/app:/app
+    depends_on: 
+      - backend
+    stdin_open: true
+    tty: true
