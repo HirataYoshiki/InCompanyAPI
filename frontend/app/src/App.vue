@@ -1,12 +1,22 @@
 <template>
   <div id="app">
+    <Headercolumn/>
     <router-view/>
   </div>
 </template>
 
 <script>
+import Headercolumn from './components/Headercolumn'
 export default {
-  name: 'App'
+  name: 'App',
+  components: {
+    Headercolumn
+  },
+  data () {
+    return {
+      username: 'Please Sign in.'
+    }
+  }
 }
 </script>
 
@@ -17,6 +27,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
