@@ -64,6 +64,7 @@ export default {
     go_home () {
       if (!this.authentify_error) {
         this.$parent.username = this.username
+        this.$$parent.login = true
         this.$router.push('/')
       }
     }
