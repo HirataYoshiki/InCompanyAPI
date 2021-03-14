@@ -1,20 +1,31 @@
 <template>
   <div id="app">
     <Headercolumn/>
-    <router-view/>
+    <b-container fluid>
+      <b-row>
+        <b-col cols="2">
+          <Sidebar/>
+        </b-col>
+        <b-col>
+          <router-view/>
+        </b-col>
+      </b-row>
+    </b-container>
   </div>
 </template>
 
 <script>
-import Headercolumn from './components/Headercolumn'
+import Headercolumn from '@/components/Headercolumn'
+import Sidebar from '@/components/Sidebar'
 export default {
   name: 'App',
   components: {
-    Headercolumn
+    Headercolumn,
+    Sidebar
   },
   data () {
     return {
-      username: 'Please Sign in.'
+      username: 'Please Sign in'
     }
   }
 }

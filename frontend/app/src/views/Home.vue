@@ -7,7 +7,7 @@ export default {
   name: 'home',
   data () {
     return {
-      msg: 'Hello' + this.$parent.username
+      msg: 'Hello ' + this.$parent.username
     }
   }
 }

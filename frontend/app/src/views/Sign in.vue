@@ -22,7 +22,7 @@
                     </div>
                   </div>
                 </div>
-                <button class="btn btn-primary btn-lg" type="submit" @click="request_token">Sign in</button>
+                <b-button variant="primary" @click="request_token">Sign in</b-button>
               </form>
             </div>
         </div>
@@ -43,7 +43,7 @@ export default {
     } 
   },
   methods: {
-    request_token () {
+    async request_token () {
       let form = new FormData()
       const url='http://localhost:8080/token'
       form.append('username', this.username)
@@ -51,17 +51,21 @@ export default {
       if (this.mailaddress !== '') {
         form.append('mailaddress', this.mailaddress)
       }
-      this.$axios.post(url, form)
-        .then((response) => {
-          document.cookie = 'accesstoken=; max-age=0'
-          document.cookie = 'accesstoken=' + response.data.access_token + '; max-age=60'
-          this.authentify_error = false
-          this.$parent.username = this.username
-          this.$router.push('/')
-        })
-        .catch((e) => {
-          this.authentify_error = true
-        })
+      try {
+        const response = await this.$axios.post(url, form)
+        document.cookie = 'accesstoken=; max-age=0'
+        document.cookie = 'accesstoken=' + response.data.access_token + '; max-age=60'
+        this.authentify_error = false
+        this.go_home()
+      } catch (error) {
+        this.authentify_error = true
+      }
+    },
+    go_home () {
+      if (!this.authentify_error) {
+        this.$parent.username = this.username
+        this.$router.push('/')
+      }
     }
   }
 }
