@@ -25,8 +25,7 @@ export default {
   },
   data () {
     return {
-      username: 'Please Sign in',
-      login: false
+      username: 'Please Sign in'
     }
   }
 }
