@@ -8,7 +8,7 @@
         </b-col>
         <b-col>
           <section id="cover" class="min-vh-100">
-            <router-view/>
+            <router-view :MyCharacter="character"/>
           </section>
         </b-col>
       </b-row>
@@ -29,7 +29,16 @@ export default {
     return {
       username: 'Please Sign in',
       LoginStatus: false,
-      character: [],
+      character: {
+        id: 0,
+        username: 'test',
+        department: 'test_department',
+        position: 'test_position',
+        skills: [
+          'test_skill1',
+          'test_skill2'
+        ]
+      },
       reports: []
     }
   },
@@ -38,6 +47,34 @@ export default {
       this.username = 'Please Sign in'
       this.LoginStatus = false
       this.$router.push('/')
+    },
+    create_header_with_accesstoken () {
+      let cookies = document.cookie.split(';')
+      var MyAccesstoken = ''
+      for (var cookie of cookies) {
+        let array = cookie.split('=')
+        if (array[0]==='accesstoken') {
+          MyAccesstoken = array[1]
+        }
+      }
+      let headers = {
+        headers: {
+          accept: 'application/json',
+          Authorization: 'Bearer ' + MyAccesstoken
+        }
+      }
+      return headers
+    },
+    async set_character () {
+      const URL = 'http://localhost:8080/characters/me'
+      try {
+        const headers = this.create_header_with_accesstoken() 
+        const response = await this.$axios.get(URL, headers)
+        alert(JSON.stringify(response.data))
+        this.character = JSON.parse(JSON.stringify(response.data))
+      } catch (e) {
+        alert(e)
+      }
     }
   }
 }

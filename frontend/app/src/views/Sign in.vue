@@ -63,6 +63,7 @@ export default {
       if (!this.authentify_error) {
         this.$parent.username = this.username
         this.$parent.LoginStatus = true
+        this.$parent.set_character()
         this.$router.push('/')
       }
     }
