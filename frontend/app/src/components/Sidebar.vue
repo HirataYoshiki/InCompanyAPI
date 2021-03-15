@@ -1,9 +1,9 @@
 <template>
-  <b-list-group>
+  <b-nav vertical pills>
     <div v-for="item in items" :key="item.name">
-     <b-list-group-item v-bind:to="item.url">{{item.name}}</b-list-group-item>
+      <b-nav-item v-bind:to="item.url">{{item.name}}</b-nav-item>
     </div>
-  </b-list-group>
+  </b-nav>
 </template>
 
 <script>

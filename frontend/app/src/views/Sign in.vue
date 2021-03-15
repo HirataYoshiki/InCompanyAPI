@@ -1,5 +1,4 @@
 <template>
-<section id="cover" class="min-vh-100">
   <div id="cover-caption">
     <div class="container">
       <div class="row text-green">
@@ -29,7 +28,6 @@
       </div>
     </div>
   </div>
-</section>
 </template>
 <script>
 export default {

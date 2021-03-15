@@ -1,13 +1,15 @@
 <template>
   <div id="app">
-    <Headercolumn/>
+    <Headercolumn :value="username"/>
     <b-container fluid>
       <b-row>
-        <b-col cols="2">
+        <b-col class="col-md-2 d-none d-md-block bg-secondary sidebar-sticky">
           <Sidebar/>
         </b-col>
         <b-col>
-          <router-view/>
+          <section id="cover" class="min-vh-100">
+            <router-view/>
+          </section>
         </b-col>
       </b-row>
     </b-container>
