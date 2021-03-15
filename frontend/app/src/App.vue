@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Headercolumn :value="username"/>
+    <Headercolumn :value="username" :status="LoginStatus"/>
     <b-container fluid>
       <b-row>
         <b-col class="col-md-2 d-none d-md-block bg-secondary sidebar-sticky">
@@ -27,7 +27,17 @@ export default {
   },
   data () {
     return {
-      username: 'Please Sign in'
+      username: 'Please Sign in',
+      LoginStatus: false,
+      character: [],
+      reports: []
+    }
+  },
+  methods: {
+    init () {
+      this.username = 'Please Sign in'
+      this.LoginStatus = false
+      this.$router.push('/')
     }
   }
 }

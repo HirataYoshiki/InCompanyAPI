@@ -11,7 +11,12 @@
             {{text}}
           </b-nav-text>
           <b-nav-form>
-            <b-button size="sm" class="my-2 my-sm-0" @click="go_signin">Sign in</b-button>
+            <div v-if="status">
+              <b-button size="sm" class="my-2 my-sm-0" variant="outline-secondary" @click="go_signout">Sign out</b-button>
+            </div>
+            <div v-else>
+              <b-button size="sm" class="my-2 my-sm-0" variant="primary" @click="go_signin">Sign in</b-button>
+            </div>
           </b-nav-form>
         </b-navbar-nav>
       </b-collapse>
@@ -23,7 +28,8 @@
 export default {
   name: 'headercolumn',
   props: {
-    value: String
+    value: String,
+    status: Boolean
   },
   data () {
     return {
@@ -33,11 +39,18 @@ export default {
   methods: {
     go_signin () {
       this.$router.push('/signin')
+    },
+    go_signout () {
+      document.cookie = 'accesstoken=; max-age=0'
+      this.$parent.init()
     }
   },
   watch: {
     value: function () {
       this.text = 'Hello! ' + this.value + '  '
+    },
+    status: function () {
+      this.status = this.status
     }
   }
 }
