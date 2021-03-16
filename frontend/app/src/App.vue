@@ -46,6 +46,16 @@ export default {
     init () {
       this.username = 'Please Sign in'
       this.LoginStatus = false
+      this.character = {
+        id: 0,
+        username: 'test',
+        department: 'test_department',
+        position: 'test_position',
+        skills: [
+          'test_skill1',
+          'test_skill2'
+        ]
+      }
       this.$router.push('/')
     },
     create_header_with_accesstoken () {
