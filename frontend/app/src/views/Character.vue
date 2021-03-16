@@ -12,7 +12,19 @@
             No. {{character.id}}
           </b-col>
         </b-row>
-        <b-row id="editbutton">
+        <div v-show="!NotEditMode">
+          <b-row>
+            <b-col>
+              <b-button size="small" pill variant="warning" @click="update_profile">Update Profile</b-button>
+            </b-col>
+           </b-row>
+          <b-row>
+            <b-col>
+              <b-button size="small" pill variant="danger" @click="NotEditMode=true">Stop Edit Profile</b-button>
+            </b-col>
+           </b-row>
+        </div>
+        <b-row id="editbutton" v-if="NotEditMode">
           <b-col>
             <b-button size="small" pill variant="outline-success" @click="switch_edit_mode">Edit Profile</b-button>
           </b-col>
@@ -25,7 +37,7 @@
             <b-list-group-item><h6><u>-Department: {{character.department}}</u></h6></b-list-group-item>
             <b-list-group-item><h6><u>-Position: {{character.position}}</u></h6></b-list-group-item>
             <b-list-group-item>
-              <b-form-tags input-id="tags-basic" tag-variant="primary" v-model="character.skills" placeholder="Add your skill" v-bind:disabled="NotEditMode"></b-form-tags>
+              <b-form-tags input-id="tags-basic" tag-variant="primary" v-model="character.skills" placeholder="Add your skill" v-bind:disabled="NotEditMode" remove-on-delete></b-form-tags>
             </b-list-group-item>
           </b-list-group>
         </div>
@@ -60,6 +72,23 @@ export default {
         this.NotEditMode = false
       } else {
         this.NotEditMode = true
+      }
+    },
+    async update_profile () {
+      let requestbody = {
+        department: this.character.department,
+        position: this.character.position,
+        skills: this.character.skills
+      }
+      let URL = 'http://localhost:8080/characters/me'
+      try {
+        let headers = this.$parent.create_header_with_accesstoken()
+        const response = await this.$axios.put(URL, requestbody, headers)
+        this.$parent.character = JSON.parse(JSON.stringify(response.data))
+        alert('Update Complete')
+        this.NotEditMode = true
+      } catch (e) {
+        console.log(e)
       }
     }
   },

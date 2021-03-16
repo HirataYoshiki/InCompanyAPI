@@ -76,11 +76,10 @@ export default {
       return headers
     },
     async set_character () {
-      const URL = 'http://localhost:8080/characters/me'
+      let URL = 'http://localhost:8080/characters/me'
       try {
         const headers = this.create_header_with_accesstoken() 
         const response = await this.$axios.get(URL, headers)
-        alert(JSON.stringify(response.data))
         this.character = JSON.parse(JSON.stringify(response.data))
       } catch (e) {
         alert(e)
