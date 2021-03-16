@@ -1,33 +1,37 @@
 <template>
   <b-container fluid>
-    <b-form-row id="topside" class="h-50">
-      <b-col col lg="4" id="top-leftside">
-        <b-row id="pictureframe" align-v="stretch" class="justify-content-md-center">
+    <b-form-row id="topside">
+      <b-col id="top-leftside">
+        <b-row id="pictureframe" class="justify-content-md-center">
           <b-col xl="5">
-            <b-avatar sqare size="6rem"></b-avatar>
+            <b-avatar square size="15rem"></b-avatar>
           </b-col>
         </b-row>
-        <b-row id="idframe" align-v="end">
+        <b-row>
           <b-col>
             No. {{character.id}}
           </b-col>
         </b-row>
+        <b-row id="editbutton">
+          <b-col>
+            <b-button size="small" pill variant="outline-success" @click="switch_edit_mode">Edit Profile</b-button>
+          </b-col>
+        </b-row>
       </b-col>
       <b-col id="top-rightside">
-        <div class="text-align-left">
-          <h3><u>Name: {{character.username}}</u></h3>
-          <h4><u>Department: {{character.department}}</u></h4>
-          <h4><u>Position: {{character.position}}</u></h4>
+        <div class="text-align-start">
+          <b-list-group>
+            <b-list-group-item><h4><u>Name: {{character.username}}</u></h4></b-list-group-item>
+            <b-list-group-item><h6><u>-Department: {{character.department}}</u></h6></b-list-group-item>
+            <b-list-group-item><h6><u>-Position: {{character.position}}</u></h6></b-list-group-item>
+            <b-list-group-item>
+              <b-form-tags input-id="tags-basic" tag-variant="primary" v-model="character.skills" placeholder="Add your skill" v-bind:disabled="NotEditMode"></b-form-tags>
+            </b-list-group-item>
+          </b-list-group>
         </div>
       </b-col>
     </b-form-row>
     <b-form-row id="bottomside" class="text-center">
-      <div>
-        <b-form-tags input-id="tags-basic" tag-variant="primary" v-model="character.skills" placeholder="Add your skill" v-bind:disabled="NotEditMode"></b-form-tags>
-      </div>
-      <div>
-        <b-button variant="success" @click="switch_edit_mode">Edit Profile</b-button>
-      </div>
     </b-form-row>
   </b-container>
 </template>
