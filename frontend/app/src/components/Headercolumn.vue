@@ -12,10 +12,10 @@
           </b-nav-text>
           <b-nav-form>
             <div v-if="status">
-              <b-button size="sm" class="my-2 my-sm-0" variant="outline-secondary" @click="go_signout">Sign out</b-button>
+              <b-button size="sm" class="my-2 my-sm-0" variant="outline-secondary" @click="go_signout"><b-icon icon="person-fill"></b-icon>Sign out</b-button>
             </div>
             <div v-else>
-              <b-button size="sm" class="my-2 my-sm-0" variant="primary" @click="go_signin">Sign in</b-button>
+              <b-button size="sm" class="my-2 my-sm-0" variant="primary" @click="go_signin"><b-icon icon="person-fill"></b-icon>Sign in</b-button>
             </div>
           </b-nav-form>
         </b-navbar-nav>

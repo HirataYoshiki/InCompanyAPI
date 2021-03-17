@@ -27,10 +27,14 @@ async def register_new_user(
       skills=strskills
     )
     session.add(NewUser)
-    session.commit()
-    return scheme.Character_out(
-      **session.query(models.Character).filter(models.Character.username==current_user.username).one().dictor()
-      )
+    try:
+      session.commit()
+      return scheme.Character_out(
+        **session.query(models.Character).filter(models.Character.username==current_user.username).one().dictor()
+        )
+    except:
+      session.rollback()
+      raise HTTPException(status_code=400)
   except:
     raise HTTPException(status_code=400)
 
@@ -68,11 +72,14 @@ async def update_my_character(
 async def delete_me(
   current_user:User_out=Depends(get_current_user),
   session:Session=Depends(get_session)):
-  query = session.query(models.Character).filter(models.Character.username==current_user.username).one()
-  session.delete(query)
   try:
-    session.commit()
-    return {"status":True,"data":query}
+    query = session.query(models.Character).filter(models.Character.username==current_user.username).one()
+    session.delete(query)
+    try:
+      session.commit()
+      return {"status":True,"data":query}
+    except:
+      session.rollback()
+      raise HTTPException(status_code=400)
   except:
-    session.rollback()
-    raise HTTPException(status_code=400)
+    raise HTTPException(staus_code=400)

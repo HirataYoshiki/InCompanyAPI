@@ -30,23 +30,27 @@ export default {
       username: 'Please Sign in',
       LoginStatus: false,
       character: {
-        id: 0,
-        username: 'test',
-        department: 'test_department',
-        position: 'test_position',
-        skills: [
-          'test_skill1',
-          'test_skill2'
-        ]
+        contents: {
+          id: 0,
+          username: 'test',
+          department: '',
+          position: '',
+          skills: [
+          ]
+        },
+        NewUser: false
       },
-      reports: []
+      reports: {
+        contents: {}
+      }
     }
   },
   methods: {
     init () {
       this.username = 'Please Sign in'
       this.LoginStatus = false
-      this.character = {
+      this.character.NewUser = false
+      this.character.contents = {
         id: 0,
         username: 'test',
         department: 'test_department',
@@ -80,9 +84,9 @@ export default {
       try {
         const headers = this.create_header_with_accesstoken() 
         const response = await this.$axios.get(URL, headers)
-        this.character = JSON.parse(JSON.stringify(response.data))
+        this.character.contents = JSON.parse(JSON.stringify(response.data))
       } catch (e) {
-        alert(e)
+        this.character.NewUser = true
       }
     }
   }
