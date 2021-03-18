@@ -5,6 +5,8 @@
         <b-card
           border-variant="primary"
           v-bind:header="headertime(report.timestamp)"
+          header-bg-variant="primary"
+          header-text-variant="white"
           header-border-variant="primary"
           align="center"
           v-bind:title="report.title"

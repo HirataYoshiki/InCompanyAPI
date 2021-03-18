@@ -46,11 +46,6 @@ export default {
       select: false
     }
   },
-  mounted: {
-    function () {
-      this.get_reports()
-    }
-  },
   methods: {
     async get_reports () {
       try {
@@ -62,11 +57,14 @@ export default {
       }
     }
   },
+  mounted () {
+    this.get_reports()
+  },
   watch: {
     loginstatus: function () {
       this.loginstatus = this.loginstatus
       if (!this.loginstatus) {
-        this.reports = []
+        this.reports = [{id: 0}]
         this.SelectedReport = {
           report: {
             reportid: 0,
