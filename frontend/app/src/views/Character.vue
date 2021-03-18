@@ -14,20 +14,16 @@
             </b-col>
           </b-row>
           <div v-show="!NotEditMode">
-            <b-row>
-              <b-col>
-                <b-button size="small" pill variant="warning" @click="update_profile"><b-icon icon="check-circle"></b-icon>Update !</b-button>
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col>
-                <b-button size="small" pill variant="danger" @click="rollback_edit"><b-icon icon="x-circle"></b-icon>Decline</b-button>
-              </b-col>
-            </b-row>
+            <b-form-group>
+              <b-button size="small" pill variant="warning" @click="update_profile">Update !<b-icon icon="check-circle"></b-icon></b-button>
+            </b-form-group>
+            <b-form-group>
+              <b-button size="small" pill variant="danger" @click="rollback_edit">Decline <b-icon icon="x-circle"></b-icon></b-button>
+            </b-form-group>
           </div>
           <b-row id="editbutton" v-if="NotEditMode">
             <b-col>
-              <b-button size="small" pill variant="outline-success" @click="switch_edit_mode"><b-icon icon="pencil-square"></b-icon>Edit Profile</b-button>
+              <b-button size="small" pill variant="outline-success" @click="switch_edit_mode">Edit Profile<b-icon icon="pencil-square"></b-icon></b-button>
             </b-col>
           </b-row>
         </b-col>

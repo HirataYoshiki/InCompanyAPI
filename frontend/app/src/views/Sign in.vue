@@ -52,7 +52,7 @@ export default {
       try {
         const response = await this.$axios.post(url, form)
         document.cookie = 'accesstoken=; max-age=0'
-        document.cookie = 'accesstoken=' + response.data.access_token + '; max-age=60'
+        document.cookie = 'accesstoken=' + response.data.access_token + '; max-age=3600'
         this.authentify_error = false
         this.go_home()
       } catch (error) {
