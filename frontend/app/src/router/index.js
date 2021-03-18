@@ -5,6 +5,7 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import Home from '@/views/Home'
 import Character from '@/views/Character'
+import Report from '@/views/Report'
 import Signin from '@/views/Sign in'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -34,6 +35,12 @@ export default new Router({
       path: '/character',
       name: 'character',
       component: Character,
+      props: true
+    },
+    {
+      path: '/report',
+      name: 'report',
+      component: Report,
       props: true
     }
   ]

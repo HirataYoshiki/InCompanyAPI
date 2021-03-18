@@ -30,6 +30,7 @@ module.exports = {
     'no-trailing-spaces': 'off',
     'space-infix-ops': 'off',
     'eol-last': 'off',
-    'space-in-parens': 'off'
+    'space-in-parens': 'off',
+    'spaced-comment': 'off'
   }
 }

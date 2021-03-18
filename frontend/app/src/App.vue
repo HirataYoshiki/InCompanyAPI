@@ -8,7 +8,7 @@
         </b-col>
         <b-col>
           <section id="cover" class="min-vh-100">
-            <router-view :MyCharacter="character"/>
+            <router-view :MyCharacter="character" :loginstatus="LoginStatus"/>
           </section>
         </b-col>
       </b-row>
