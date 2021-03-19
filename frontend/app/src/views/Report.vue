@@ -1,5 +1,6 @@
 <template>
   <div v-if="select">
+    <ReportDetail :Report="SelectedReport.report"/>
   </div>
   <div v-else>
     <ReportsList :List="reports"/>
@@ -8,10 +9,12 @@
 
 <script>
 import ReportsList from '@/components/ReportsList'
+import ReportDetail from '@/components/ReportDetail'
 export default {
   name: 'report',
   components: {
-    ReportsList
+    ReportsList,
+    ReportDetail
   },
   props: {
     loginstatus: Boolean
@@ -57,7 +60,7 @@ export default {
       }
     }
   },
-  mounted () {
+  created () {
     this.get_reports()
   },
   watch: {

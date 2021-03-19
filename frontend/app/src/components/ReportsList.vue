@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <b-form-group label="Your Reports" label-size="lg" label-class="font-weight-bold pt-0 font-size-xx-large">
     <b-card-group deck>
       <div v-for="report in List" :key="report.reportid">
         <b-card
@@ -9,13 +9,14 @@
           header-text-variant="white"
           header-border-variant="primary"
           align="center"
-          v-bind:title="report.title"
-          @click="go_to_report(report.localreportid)">
+          class="mb-2"
+          v-bind:title="report.title">
           <b-card-text>Some descriptions.</b-card-text>
+          <b-button @click="go_to_report(report.localreportid)" variant="primary">Edit</b-button>
         </b-card>
       </div>
     </b-card-group>
-  </div>
+  </b-form-group>
 </template>
 
 <script>
