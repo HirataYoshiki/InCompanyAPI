@@ -1,8 +1,17 @@
 <template>
   <b-card bg-variant="light">
-    <b-form-group label="Title " label-size="lg" label-for="title_input" label-align-xl="left" label-cols-xl="3">
-      <b-form-input id="title_input" size="lg" v-bind:disable="edit">{{report.title}}</b-form-input>
-    </b-form-group>
+    <b-container fluid>
+      <b-row align-v="center" class="bg-secondary">
+        <b-col class="text-white">
+          <h2>{{report.title}}</h2>
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col class="ml-auto text-secondary" md="4">
+          <h5>Name: {{report.username}}</h5>
+        </b-col>
+      </b-row>
+    </b-container>
   </b-card>
 </template>
 
@@ -16,21 +25,16 @@ export default {
     return {
       edit: false,
       report: {
-        reportid: 0,
-        localreportid: 0,
-        username: 'Unknown',
-        title: 'Unknown',
-        contentsid: null,
-        timestamp: null,
-        teamid: null,
-        headerid: null
+        localreportid: this.Report.localreportid,
+        username: this.Report.username,
+        title: this.Report.title,
+        timestamp: this.Report.timestamp
       }
     }
   },
   watch: {
     Report () {
       this.Report = this.Report
-      this.report = this.Report.report
     }
   }
 }

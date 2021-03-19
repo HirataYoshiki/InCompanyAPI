@@ -34,8 +34,12 @@ export default {
     }
   },
   methods: {
-    go_to_report (num) {
-      alert('localreportid: ' + num)
+    go_to_report (localreportid) {
+      for (var report of this.List) {
+        if (report.localreportid===localreportid) {
+          this.$parent.SelectedReport.report = report
+        }
+      }
       this.$parent.select = true
     },
     headertime: function (thetime) {

@@ -1,6 +1,6 @@
 <template>
   <b-nav vertical pills>
-    <b-nav-text class="text-white font-weight-bold pt-0 font-size-large">
+    <b-nav-text class="text-dark font-weight-bold pt-0 font-size-large">
       Apps
     </b-nav-text>
     <div v-for="item in items" :key="item.name">
