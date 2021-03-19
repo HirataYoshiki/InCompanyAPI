@@ -1,7 +1,7 @@
 <template>
   <b-nav vertical pills>
-    <b-nav-text>
-      apps
+    <b-nav-text class="text-white font-weight-bold pt-0 font-size-large">
+      Apps
     </b-nav-text>
     <div v-for="item in items" :key="item.name">
       <b-nav-item v-bind:to="item.url">
