@@ -37,7 +37,8 @@ export default {
       username: '',
       password: '',
       mailaddress: '',
-      authentify_error: false
+      authentify_error: false,
+      signup: false
     } 
   },
   methods: {

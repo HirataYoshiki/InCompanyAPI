@@ -2,7 +2,6 @@
   <b-card>
     <b-form-group label="Your Reports" label-size="lg" label-class="font-weight-bold pt-0">
       <b-icon icon="file-earmark-plus" class="ml-auto" variant="success"></b-icon>
-      <b-icon icon="trash-fill" class="ml-auto" variant="danger"><b-button></b-button></b-icon>
       <b-card-group deck>
         <div v-for="report in List" :key="report.reportid">
           <b-card
@@ -16,6 +15,13 @@
             v-bind:title="report.title">
             <b-card-text>Some descriptions.</b-card-text>
             <b-button @click="go_to_report(report.localreportid)" variant="primary">Edit</b-button>
+            <template #footer>
+              <b-nav vertical>
+                <b-nav-item @click="alert('hi')">
+                  <b-icon icon="trash-fill" class="ml-auto" variant="danger"></b-icon>
+                </b-nav-item>
+              </b-nav>
+            </template>
           </b-card>
         </div>
       </b-card-group>
