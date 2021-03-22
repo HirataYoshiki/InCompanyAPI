@@ -14,6 +14,7 @@ from pydantic.error_wrappers import ValidationError
 from starlette.status import HTTP_400_BAD_REQUEST
 
 from copy import deepcopy
+from datetime import datetime
 
 
 def _create_localid(session:Session,username,table:object,idcolumn,tableproperty:str)->int:
@@ -37,7 +38,8 @@ async def create_new_report(
     adds = Report(
       **input.__dict__,
       username=current_user.username,
-      localreportid = localreportid)
+      localreportid = localreportid,
+      timestamp = datetime.now())
     session.add(adds)
     
     session.commit()

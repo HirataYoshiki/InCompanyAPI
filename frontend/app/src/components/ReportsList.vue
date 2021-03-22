@@ -1,6 +1,8 @@
 <template>
   <b-card>
     <b-form-group label="Your Reports" label-size="lg" label-class="font-weight-bold pt-0">
+      <b-icon icon="file-earmark-plus" class="ml-auto" variant="success"></b-icon>
+      <b-icon icon="trash-fill" class="ml-auto" variant="danger"><b-button></b-button></b-icon>
       <b-card-group deck>
         <div v-for="report in List" :key="report.reportid">
           <b-card
