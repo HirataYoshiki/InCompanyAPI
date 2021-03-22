@@ -3,7 +3,10 @@
     <div class="container">
       <div class="row text-green">
         <div class="col-xl-5 col-lg-6 col-md-8 col-sm-10 mx-auto text-center form p-4">
-          <h1 class="display-4 py-2 text-truncate">Sign in</h1>
+          <h1 class="display-4 py-2 text-truncate">
+            <div v-if="signup">Sign UP!</div>
+            <div v-else>Sign in</div>
+          </h1>
             <div class="px-2">
               <form action="" class="justify-content-center">
                 <div class="form-group row">
@@ -16,6 +19,15 @@
                   <label for="password" class="col-sm-4 col-form-label">Password</label>
                   <div class="col-sm-8">
                     <input type="password" class="form-control" v-bind:class="{'is-invalid':authentify_error}" id="password" placeholder="Enter password." v-model="password" required>
+                    <div class="invalid-feedback">
+                      Username or Password is invalid. Try again!
+                    </div>
+                  </div>
+                </div>
+                <div v-if="signup" class="form-group row">
+                  <label for="mailaddress" class="col-sm-4 col-form-label">E-mail</label>
+                  <div class="col-sm-8">
+                    <input type="mailaddress" class="form-control" id="mailaddress" placeholder="Enter your e-mail address." v-model="mailaddress">
                     <div class="invalid-feedback">
                       Username or Password is invalid. Try again!
                     </div>
