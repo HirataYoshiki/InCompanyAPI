@@ -28,7 +28,7 @@
               aria-labelledby="form-confirm-label"
               class="text-center p-3"
             >
-              <p><strong id="form-confirm-label">Delete?</strong></p>
+              <h3><strong id="form-confirm-label">Delete?</strong></h3>
               <div class="d-flex">
                 <b-button variant="outline-danger" class="mr-3" @click="Cancel">
                   Cancel

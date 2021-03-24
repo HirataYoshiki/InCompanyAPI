@@ -6,7 +6,7 @@
           <b-button :variant="[ edit ? 'warning': 'primary' ]" pill @click="change_editmode">
             {{ButtonLabel}}
           </b-button>
-          <b-button @click="back" variant="light">Back</b-button>
+          <b-button @click="back" variant="dark">Back</b-button>
         </b-col>
       </b-row>
       <b-row align-v="center" class="bg-secondary">
@@ -52,7 +52,7 @@ export default {
       }
     },
     back () {
-      this.parent.select = false
+      this.$emit('back')
     }
   },
   watch: {

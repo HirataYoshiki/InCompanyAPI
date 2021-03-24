@@ -1,6 +1,6 @@
 <template>
   <div v-if="select">
-    <ReportDetail :Report="SelectedReport.report"/>
+    <ReportDetail :Report="SelectedReport.report" v-on:back="changeselectmode"/>
   </div>
   <div v-else>
     <ReportsList :List="reports"/>
@@ -58,6 +58,9 @@ export default {
       } catch (e) {
         alert(e)
       }
+    },
+    changeselectmode () {
+      this.select = !this.select
     }
   },
   created () {
