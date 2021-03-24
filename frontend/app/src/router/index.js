@@ -27,9 +27,20 @@ export default new Router({
       component: Home
     },
     {
+      path: '/signup',
+      name: 'signup',
+      component: Signin,
+      props: {
+        signup: true
+      }
+    },
+    {
       path: '/signin',
       name: 'signin',
-      component: Signin
+      component: Signin,
+      props: {
+        signup: false
+      }
     },
     {
       path: '/character',

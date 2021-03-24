@@ -89,6 +89,11 @@ export default {
         this.character.NewUser = true
       }
     }
+  },
+  provide () {
+    return {
+      create_headers: this.create_header_with_accesstoken()
+    }
   }
 }
 </script>

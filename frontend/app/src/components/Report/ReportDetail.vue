@@ -6,6 +6,7 @@
           <b-button :variant="[ edit ? 'warning': 'primary' ]" pill @click="change_editmode">
             {{ButtonLabel}}
           </b-button>
+          <b-button @click="back" variant="light">Back</b-button>
         </b-col>
       </b-row>
       <b-row align-v="center" class="bg-secondary">
@@ -49,6 +50,9 @@ export default {
         this.edit = true
         this.ButtonLabel = 'Update'
       }
+    },
+    back () {
+      this.parent.select = false
     }
   },
   watch: {

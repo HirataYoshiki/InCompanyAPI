@@ -24,16 +24,25 @@
                     </div>
                   </div>
                 </div>
-                <div v-if="signup" class="form-group row">
-                  <label for="mailaddress" class="col-sm-4 col-form-label">E-mail</label>
-                  <div class="col-sm-8">
-                    <input type="mailaddress" class="form-control" id="mailaddress" placeholder="Enter your e-mail address." v-model="mailaddress">
-                    <div class="invalid-feedback">
-                      Username or Password is invalid. Try again!
+                <div v-if="signup">
+                  <div class="form-group row">
+                    <label for="mailaddress" class="col-sm-4 col-form-label">E-mail</label>
+                    <div class="col-sm-8">
+                      <input type="mailaddress" class="form-control" id="mailaddress" placeholder="Enter your e-mail address." v-model="mailaddress">
+                      <div class="invalid-feedback">
+                        Username or Password is invalid. Try again!
+                      </div>
                     </div>
                   </div>
                 </div>
-                <b-button variant="primary" @click="request_token">Sign in</b-button>
+                <div v-if="signup">
+                  <b-button variant="primary" @click="create_user">
+                    Let's Join us!</b-button>
+                </div>
+                <div v-else>
+                  <b-button variant="primary" @click="request_token">
+                    Sign in</b-button>
+                </div>
               </form>
             </div>
         </div>
@@ -44,13 +53,15 @@
 <script>
 export default {
   name: 'Signin',
+  props: {
+    signup: Boolean
+  },
   data () {
     return {
       username: '',
       password: '',
       mailaddress: '',
-      authentify_error: false,
-      signup: false
+      authentify_error: false
     } 
   },
   methods: {
@@ -83,6 +94,25 @@ export default {
           this.$router.push('/')
         }
       }
+    },
+    async create_user () {
+      const url='http://localhost:8080/users'
+      let data = {
+        username: this.username,
+        password: this.password,
+        mailaddress: this.mailaddress
+      }
+      try {
+        await this.$axios.post(url, data)
+        await this.request_token()
+      } catch (error) {
+        this.authentify_error = true
+      }
+    }
+  },
+  watch: {
+    signup () {
+      this.signup = this.signup
     }
   }
 }

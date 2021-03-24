@@ -46,7 +46,7 @@ export default {
       this.$parent.init()
     },
     go_signup () {
-      alert('Sign up')
+      this.$router.push('/signup')
     }
   },
   watch: {

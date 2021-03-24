@@ -8,8 +8,8 @@
 </template>
 
 <script>
-import ReportsList from '@/components/ReportsList'
-import ReportDetail from '@/components/ReportDetail'
+import ReportsList from '@/components/Report/ReportsList'
+import ReportDetail from '@/components/Report/ReportDetail'
 export default {
   name: 'report',
   components: {
