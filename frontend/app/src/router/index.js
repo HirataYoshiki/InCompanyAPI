@@ -7,6 +7,9 @@ import Home from '@/views/Home'
 import Character from '@/views/Character'
 import Report from '@/views/Report'
 import Signin from '@/views/Sign in'
+import Mde from '@/views/Mde'
+import VueSimplemde from 'vue-simplemde'
+import 'simplemde/dist/simplemde.min.css'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
@@ -16,6 +19,7 @@ Vue.use(BootstrapVue)
 Vue.use(BootstrapVueIcons)
 Vue.use(VueAxios, axios)
 Vue.use(Router)
+Vue.use(VueSimplemde)
 
 export default new Router({
   mode: 'history',
@@ -53,6 +57,11 @@ export default new Router({
       name: 'report',
       component: Report,
       props: true
+    },
+    {
+      path: '/test',
+      name: 'test',
+      component: Mde
     }
   ]
 })

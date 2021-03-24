@@ -26,6 +26,10 @@ export default {
         {
           name: 'Report',
           url: '/report'
+        },
+        {
+          name: 'MDE',
+          url: '/test'
         }
       ]
     }
