@@ -12,14 +12,22 @@ export default {
   components: {
     VueSimplemde
   },
+  props: {
+    initialtext: String
+  },
   data () {
     return {
-      text: ''
+      text: this.initialtext
     }
   },
   methods: {
     show () {
       alert(this.text)
+    }
+  },
+  watch: {
+    initialtext: function () {
+      this.initialtext = this.initialtext
     }
   }
 }

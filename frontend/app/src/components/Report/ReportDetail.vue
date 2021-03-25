@@ -19,13 +19,22 @@
           <h5>Name: {{report.username}}</h5>
         </b-col>
       </b-row>
+      <b-row>
+        <b-col>
+          <Mde :initialtext="report.title"/>
+        </b-col>
+      </b-row>
     </b-container>
   </b-card>
 </template>
 
 <script>
+import Mde from '@/views/Mde'
 export default {
   name: 'reportdetail',
+  components: {
+    Mde
+  },
   props: {
     Report: Object
   },
