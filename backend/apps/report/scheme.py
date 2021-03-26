@@ -13,14 +13,14 @@ class Reportout(BaseModel):
   localreportid:int
   username:str
   title:str
-  contentsid:Optional[int]=None
+  contentgroupid:Optional[int]=None
   timestamp:Optional[datetime]=None
   teamid:Optional[int]=None
   headerid:Optional[int]=None
 
 class Reportupdate(BaseModel):
   title:Optional[str]=None
-  contentsid:Optional[int]=None
+  contentgroupid:Optional[int]=None
   teamid:Optional[int]=None
   headerid:Optional[int]=None
 

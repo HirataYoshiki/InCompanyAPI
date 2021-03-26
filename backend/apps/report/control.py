@@ -65,11 +65,11 @@ async def get_current_users_reports(
   except:
     raise HTTPException(status_code=400)
 
-async def get_current_users_reports_by_id(
-  reportid:int,
+async def get_current_users_reports_by_localreportid(
+  localreportid:int,
   query: Query = Depends(get_current_users_reports)
   ):
-  result:Report = query.filter(Report.reportid==reportid).one()
+  result:Report = query.filter(Report.localreportid==localreportid).one()
   report = Reportout(**result.__dict__)
   return report
 #--------------------------------------------------------------------------------------

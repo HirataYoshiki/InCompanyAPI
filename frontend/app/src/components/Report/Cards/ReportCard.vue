@@ -49,7 +49,8 @@ export default {
     report: Object
   },
   inject: [
-    'create_headers'
+    'create_headers',
+    'show_detail'
   ],
   data () {
     return {
@@ -58,7 +59,7 @@ export default {
   },
   methods: {
     go_to_report () {
-      this.$emit('selectreport', this.report)
+      this.show_detail(this.report)
     },
     show_overlay () {
       this.overlay = true

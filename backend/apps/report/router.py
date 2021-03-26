@@ -23,9 +23,9 @@ class Reports:
       return query
     except:
       raise HTTPException(status_code=400)
-  @router.get('/reports/{reportid}',response_model=scheme.Reportout)
+  @router.get('/reports/{localreportid}',response_model=scheme.Reportout)
   async def editor_get_report(
-    report: scheme.Reportout = Depends(get_current_users_reports_by_id)):
+    report: scheme.Reportout = Depends(get_current_users_reports_by_localreportid)):
     try:
       return report
     except:
@@ -50,7 +50,7 @@ class Reports:
 
   @router.get('/reports/{localreportid}',response_model=scheme.Reportout)
   async def get_my_report_selected_by_id(
-    report: scheme.Reportout = Depends(get_current_users_reports_by_id)):
+    report: scheme.Reportout = Depends(get_current_users_reports_by_localreportid)):
     try:
       return report
     except:

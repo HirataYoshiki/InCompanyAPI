@@ -59,8 +59,12 @@ export default {
         alert(e)
       }
     },
-    changeselectmode () {
+    changeselectmode: function () {
       this.select = !this.select
+    },
+    set_selected_report: function (selectedreport) {
+      this.SelectedReport.report = selectedreport
+      this.select = true
     }
   },
   created () {
@@ -95,6 +99,12 @@ export default {
       } else {
         this.get_reports()
       }
+    }
+  },
+  provide () {
+    return {
+      show_detail: this.set_selected_report,
+      changeselectmode: this.changeselectmode
     }
   }
 }
