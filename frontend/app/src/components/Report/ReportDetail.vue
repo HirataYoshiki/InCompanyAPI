@@ -34,6 +34,9 @@
           <b-button variant="success" @click="create_report">
             report
           </b-button>
+          <b-button variant="primary" @click="create_report">
+            Update
+          </b-button>
         </b-col>
       </b-row>
     </b-container>

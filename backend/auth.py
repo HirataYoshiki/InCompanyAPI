@@ -57,7 +57,7 @@ def get_user(session:Session, username: str):
             return False
 
 
-def authenticate_user(session, username: str, password: str):
+def authenticate_user(session:Session, username: str, password: str):
       user_data = session.query(User).filter(User.username==username).one()
       if not user_data:
             return False
@@ -76,7 +76,7 @@ def create_access_token(user_data:dict, expires_delta: Optional[timedelta] = Non
       encoded_jwt = jwt.encode(to_encode, Develop.config["SECRET_KEY"], algorithm=Develop.config["ALGORITHM"])
       return encoded_jwt
 
-async def get_current_user(token: str = Depends(Develop.config["OAUTH2_SCHEME"])):
+async def get_current_user(token: str = Depends(Develop.config["OAUTH2_SCHEME"]),session: Session=Depends(get_session)):
       credentials_exception = HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Could not validate credentials",
@@ -90,7 +90,7 @@ async def get_current_user(token: str = Depends(Develop.config["OAUTH2_SCHEME"])
             token_data = TokenData(username=username)
       except JWTError:
             raise credentials_exception
-      user = get_user(get_session(), username=token_data.username)
+      user = get_user(session, username=token_data.username)
       if not user:
             raise credentials_exception
       return user
@@ -104,8 +104,7 @@ async def get_current_active_user(current_user: User = Depends(get_current_user)
 #token router especially get request when clients require new access_token
 router = APIRouter()
 @router.post("/token", response_model=Token)
-async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
-      session = get_session()
+async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(),session:Session = Depends(get_session)):
       user = authenticate_user(session, form_data.username, form_data.password)
       if not user:
             raise HTTPException(

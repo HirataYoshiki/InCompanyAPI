@@ -7,17 +7,17 @@ import config
 url = config.Develop.config["DB_URL"]
 
 engine = sqlalchemy.create_engine(url, echo=True)
-Session = sessionmaker(
+SessionLocal = sessionmaker(
         autocommit = False,
         autoflush = False,
         bind = engine
     )
 
 def get_session():
+    db = SessionLocal() # sessionを生成
     try:
-        SessionLocal = Session() # sessionを生成
-        return SessionLocal
+        yield db
     finally:
-        SessionLocal.close()
+        db.close()
 
 Base=declarative_base()

@@ -17,21 +17,26 @@ async def add_user(
   session:Session=Depends(get_session)):
   hashedpassword = hashlib.sha256(user.password.encode()).hexdigest()
   if user.username!="" and user.password!="":
-    adds=models.User(
-      username=user.username,
-      password = hashedpassword,
-      mailaddress = user.mailaddress,
-      editor=user.editor
-    )
-    query = session.query(models.User).filter(models.User.username==user.username).one_or_none()
-    if query==None:
-        session.add(adds)
-        session.commit()
-        query = session.query(models.User).filter(models.User.username==user.username).one()
-        return scheme.User_out(**query.__dict__)
-    else:
-      session.rollback()
-      return {"status":False}
+    userset = {'username': user.username, 'password': hashedpassword}
+    user_exist = models.User.__table__.select().where(and_(
+      models.User.__table__.c.username == bindparam('username'),
+      models.User.__table__.c.password == bindparam('password')
+    ))
+    query = session.execute(user_exist, userset)
+    if query is None:
+      adds={
+        'username':user.username,
+        'password': hashedpassword,
+        'mailaddress': user.mailaddress,
+        'editor': user.editor
+      }
+      session.execute(models.User.__table__.insert(),adds)
+      session.commit()
+      query = session.query(models.User).filter(models.User.username==user.username).one()
+      return scheme.User_out(**query.__dict__)
+  else:
+    session.rollback()
+    return {"status":False}
 
 
 

@@ -1,10 +1,11 @@
 {
     "name": "CompanyAPI",
     "dockerComposeFile": "docker-compose.yml",
-    "service": "frontend",
-    "workspaceFolder": "/app",
+    "service": "backend",
+    "workspaceFolder": "/tmp/dev/backend",
     "extensions": [
-        "octref.vetur"
+        "ms-python.python",
+        "ms-python.vscode-pylance"
     ],
     "settings": {
         "editor.tabSize": 2
