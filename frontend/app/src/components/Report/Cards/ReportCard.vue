@@ -72,7 +72,6 @@ export default {
       let url = 'http://localhost:8080/reportapp/reports/' + String(this.report.localreportid)
       const headers = this.create_headers()
       await this.$axios.delete(url, headers)
-      alert('Delete Complete')
       this.overlay = false
       await this.reset_reports()
     }
