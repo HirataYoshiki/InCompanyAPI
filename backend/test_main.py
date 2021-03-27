@@ -87,7 +87,7 @@ REPORTS={
       'localreportid': 1,
       'username': USER['editor']['input']['username'],
       'title': 'editor_title',
-      'contentsid': None,
+      'contentgroupid': None,
       'timestamp': None,
       'teamid': None,
       'headerid': None
@@ -102,7 +102,7 @@ REPORTS={
       'localreportid': 1,
       'username': USER['not editor']['input']['username'],
       'title': 'not_editor_title',
-      'contentsid': None,
+      'contentgroupid': None,
       'timestamp': None,
       'teamid': None,
       'headerid': None
@@ -246,16 +246,14 @@ def test_create_user_doubled():
     '/users',
     json=USER['editor']['input']
   )
-  assert response.status_code==200
-  assert response.json()=={'status':False}
+  assert response.status_code==422
 
 def test_create_user_luck_name():
   response=client.post(
     '/users',
     json={"username":"","password": "fakepass"}
   )
-  assert response.json()==None
-  assert response.status_code==200
+  assert response.status_code==400
 
 def _get_access_token(tester)->str:
   username = USER[tester]['input']['username']

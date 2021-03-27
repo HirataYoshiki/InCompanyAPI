@@ -1,4 +1,4 @@
-from fastapi import APIRouter,Depends
+from fastapi import APIRouter,Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.exc import MultipleResultsFound
 
@@ -17,44 +17,41 @@ async def add_user(
   session:Session=Depends(get_session)):
   hashedpassword = hashlib.sha256(user.password.encode()).hexdigest()
   if user.username!="" and user.password!="":
-    userset = {'username': user.username, 'password': hashedpassword}
-    user_exist = models.User.__table__.select().where(and_(
-      models.User.__table__.c.username == bindparam('username'),
-      models.User.__table__.c.password == bindparam('password')
-    ))
-    query = session.execute(user_exist, userset)
+    query = session.query(models.User).filter(models.User.username == user.username).one_or_none()
     if query is None:
-      adds={
-        'username':user.username,
-        'password': hashedpassword,
-        'mailaddress': user.mailaddress,
-        'editor': user.editor
-      }
-      session.execute(models.User.__table__.insert(),adds)
+      adds = models.User(
+        username = user.username,
+        password = hashedpassword,
+        mailaddress = user.mailaddress,
+        editor = user.editor
+      )
+      session.add(adds)
       session.commit()
-      query = session.query(models.User).filter(models.User.username==user.username).one()
-      return scheme.User_out(**query.__dict__)
+      session.refresh(adds)
+      return scheme.User_out(**adds.__dict__)
+    else:
+      raise HTTPException(status_code = 422, detail = "The User already exists.")
   else:
     session.rollback()
-    return {"status":False}
+    raise HTTPException(status_code = 400)
 
 
 
 @router.delete('/users/{userid}')
-async def delete_user(userid:int):
-  session = get_session()
+async def delete_user(userid:int, session:Session = Depends(get_session)):
   deletes = session.query(models.User).filter(models.User.userid==userid).one()
   session.delete(deletes)
   try:
     session.commit()
-  except Exception as e:
-    session.rollback()
-    print(e)
-
-  return {
+    return {
     "status":True,
     "item":userid
     }
+  except:
+    session.rollback()
+    raise HTTPException(status_code = 422)
+
+  
 
 @router.get('/users')
 async def get_all_users(
@@ -70,8 +67,8 @@ async def get_users_me(current_user: scheme.User_out = Depends(get_current_user)
 @router.put('/users/me')
 async def update_users_me(
   update:scheme.User_update,
-  current_user: scheme.User_out = Depends(get_current_user)):
-  session = get_session()
+  current_user: scheme.User_out = Depends(get_current_user),
+  session:Session = Depends(get_session)):
   query = session.query(models.User).filter(models.User.userid==current_user.userid).one()
   if update.username:
     query.username=update.username
