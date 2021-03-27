@@ -62,22 +62,26 @@ export default {
       }
       this.$router.push('/')
     },
-    create_header_with_accesstoken () {
-      let cookies = document.cookie.split(';')
-      var MyAccesstoken = ''
-      for (var cookie of cookies) {
-        let array = cookie.split('=')
-        if (array[0]==='accesstoken') {
-          MyAccesstoken = array[1]
+    create_header_with_accesstoken: function () {
+      try {
+        let cookies = document.cookie.split(';')
+        var MyAccesstoken = ''
+        for (var cookie of cookies) {
+          let array = cookie.split('=')
+          if (array[0]==='accesstoken') {
+            MyAccesstoken = array[1]
+          }
         }
-      }
-      let headers = {
-        headers: {
-          accept: 'application/json',
-          Authorization: 'Bearer ' + MyAccesstoken
+        let headers = {
+          headers: {
+            accept: 'application/json',
+            Authorization: 'Bearer ' + MyAccesstoken
+          }
         }
+        return headers
+      } catch (e) {
+        this.$router.push('/signin')
       }
-      return headers
     },
     async set_character () {
       let URL = 'http://localhost:8080/characters/me'
@@ -92,7 +96,7 @@ export default {
   },
   provide () {
     return {
-      create_headers: this.create_header_with_accesstoken()
+      create_headers: this.create_header_with_accesstoken
     }
   }
 }

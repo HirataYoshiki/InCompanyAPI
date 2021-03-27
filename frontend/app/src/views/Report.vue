@@ -49,10 +49,13 @@ export default {
       select: false
     }
   },
+  inject: [
+    'create_headers'
+  ],
   methods: {
-    async get_reports () {
+    get_reports: async function () {
       try {
-        let headers = this.$parent.create_header_with_accesstoken()
+        let headers = this.create_headers()
         const response = await this.$axios.get(this.urls.BASE, headers)
         this.reports = response.data
       } catch (e) {
@@ -104,7 +107,8 @@ export default {
   provide () {
     return {
       show_detail: this.set_selected_report,
-      changeselectmode: this.changeselectmode
+      changeselectmode: this.changeselectmode,
+      reset_reports: this.get_reports
     }
   }
 }

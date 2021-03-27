@@ -93,6 +93,9 @@ export default {
   props: {
     MyCharacter: Object
   },
+  inject: [
+    'create_headers'
+  ],
   data () {
     return {
       character: {
@@ -121,7 +124,7 @@ export default {
       }
       let URL = 'http://localhost:8080/characters/me'
       try {
-        let headers = this.$parent.create_header_with_accesstoken()
+        let headers = this.create_headers()
         const response = await this.$axios.put(URL, requestbody, headers)
         this.$parent.character.contents = JSON.parse(JSON.stringify(response.data))
         this.NotEditMode = true
@@ -132,7 +135,7 @@ export default {
     async post_new_profile () {
       let URL = 'http://localhost:8080/characters'
       try {
-        let headers = this.$parent.create_header_with_accesstoken()
+        let headers = this.create_headers()
         const response = await this.$axios.post(URL, this.character, headers)
         this.$parent.character.contents = JSON.parse(JSON.stringify(response.data))
         this.$parent.character.NewUser = false

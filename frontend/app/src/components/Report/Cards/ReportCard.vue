@@ -50,7 +50,8 @@ export default {
   },
   inject: [
     'create_headers',
-    'show_detail'
+    'show_detail',
+    'reset_reports'
   ],
   data () {
     return {
@@ -69,11 +70,11 @@ export default {
     },
     async OK () {
       let url = 'http://localhost:8080/reportapp/reports/' + String(this.report.localreportid)
-      const headers = this.create_headers
+      const headers = this.create_headers()
       await this.$axios.delete(url, headers)
       alert('Delete Complete')
       this.overlay = false
-      this.$router.push('/report')
+      await this.reset_reports()
     }
   },
   computed: {

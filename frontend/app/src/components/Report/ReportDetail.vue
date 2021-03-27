@@ -3,9 +3,6 @@
     <b-container fluid>
       <b-row>
         <b-col class="ml-auto text-secondary" md="4">
-          <b-button :variant="[ edit ? 'warning': 'primary' ]" pill @click="change_editmode">
-            {{ButtonLabel}}
-          </b-button>
           <b-button @click="back" variant="dark">Back</b-button>
         </b-col>
       </b-row>
@@ -37,7 +34,6 @@
           <b-button variant="success" @click="create_report">
             report
           </b-button>
-
         </b-col>
       </b-row>
     </b-container>
@@ -60,8 +56,6 @@ export default {
   ],
   data () {
     return {
-      edit: false,
-      ButtonLabel: 'Edit', 
       report: {
         localreportid: this.Report.localreportid,
         username: this.Report.username,
@@ -81,26 +75,18 @@ export default {
     async set_value () {
       try {
         const url = this.endpoints.reports + '/' + String(this.Report.localreportid)
-        const headers = this.create_headers
+        const headers = this.create_headers()
         const response = await this.$axios.get(url, headers)
-        const groupid = response.data.localgroupid
+        const groupid = response.data.contentgroupid
         const url2 = this.endpoints.groups + '/' + String(groupid)
         const response2 = await this.$axios.get(url2, headers)
-        const contentid = response2.data.contents[0]
+        const contentid = JSON.parse(JSON.stringify(response2.data)).contents[0].localcontentid
         const url3 = this.endpoints.contents + '/' + String(contentid)
         const response3 = await this.$axios.get(url3, headers)
         this.Mdevalue = response3.data.content
       } catch (e) {
         this.Mdevalue = '## Hi.\n### try it again'
-      }
-    },
-    change_editmode () {
-      if (this.edit) {
-        this.edit = false
-        this.ButtonLabel = 'Edit'
-      } else {
-        this.edit = true
-        this.ButtonLabel = 'Update'
+        alert(e)
       }
     },
     back () {
@@ -108,7 +94,7 @@ export default {
     },
     async _create_content () {
       try {
-        const headers = this.create_headers
+        const headers = this.create_headers()
         const data = {content: this.Mdevalue}
         const response = await this.$axios.post(this.endpoints.contents, data, headers)
         return response.data
@@ -119,7 +105,7 @@ export default {
     async _create_group () {
       try {
         const content = await this._create_content()
-        const headers = this.create_headers
+        const headers = this.create_headers()
         const data = {localcontentids: [content.localcontentid]}
         const response = await this.$axios.post(this.endpoints.groups, data, headers)
         return response.data
@@ -130,7 +116,7 @@ export default {
     async create_report () {
       try {
         const group = await this._create_group()
-        const headers = this.create_headers
+        const headers = this.create_headers()
         const data = {
           title: 'new',
           contentgroupid: group.localgroupid 
