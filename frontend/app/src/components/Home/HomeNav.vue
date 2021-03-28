@@ -3,12 +3,12 @@
     <b-nav-item :to="url">
       <b-card
       no-body
-      style="width: 15rem; height: 20rem;"
+      style="width: 15rem; height: 15rem;"
       header-bg-variant="transparent"
       class="shadow-sm"
       >
-        <b-card-header><b-icon :icon="img" role="img" alt="icon" font-scale="4"></b-icon></b-card-header>
-        <b-card-body :title="title">
+        <b-card-header><b-icon :icon="icon" role="img" alt="icon" font-scale="4"></b-icon></b-card-header>
+        <b-card-body :title="name">
           <b-card-text id="cardtext">
             {{description}}
           </b-card-text>
@@ -25,8 +25,8 @@ export default {
     'set_page_number'
   ],
   props: {
-    img: String,
-    title: String,
+    icon: String,
+    name: String,
     description: String,
     url: String
   }

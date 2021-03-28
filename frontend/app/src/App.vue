@@ -3,7 +3,7 @@
     <Headercolumn :value="username" :status="LoginStatus"/>
     <b-container fluid>
       <b-row>
-        <b-col class="col-md-2 d-none d-md-block bg-secondary sidebar-sticky">
+        <b-col class="col-2 d-md-block bg-secondary sidebar-sticky min-vh-100">
           <Sidebar :apps="apps"/>
         </b-col>
         <b-col>
@@ -45,16 +45,16 @@ export default {
       },
       apps: [
         {
-          name: 'Character',
-          url: '/character'
+          name: 'Profile',
+          url: '/character',
+          description: 'Set your profiles',
+          icon: 'person-circle'
         },
         {
           name: 'Report',
-          url: '/report'
-        },
-        {
-          name: 'MDE',
-          url: '/test'
+          url: '/report',
+          description: 'Build up Report!. Input type is MarkDown type.',
+          icon: 'file-earmark-text'
         }
       ]
     }

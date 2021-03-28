@@ -2,11 +2,15 @@
   <div v-if="PageNumber === 0">
     <h1><strong>Build Up Report</strong></h1>
     <h2>You can create and check reports</h2>
-    <b-card-group deck>
-      <div v-for="item in links" :key="item.pagenumber">
-        <ReportNavCard :img="item.img" :title="item.title" :description="item.description" :pagenumber="item.pagenumber"/>
-      </div>
-    </b-card-group>
+      <b-container fluid>
+        <b-row class="justify-content-md-center">
+        <div v-for="item in links" :key="item.pagenumber">
+          <b-col>
+            <ReportNavCard :img="item.img" :title="item.title" :description="item.description" :pagenumber="item.pagenumber"/>
+          </b-col>
+        </div>
+      </b-row>
+    </b-container>
   </div>
   <div v-else-if="PageNumber === 1">
     <Mde/>

@@ -1,5 +1,5 @@
 <template>
-  <b-nav vertical pills>
+  <b-nav vertical pills class="vw-auto">
     <b-nav-text class="text-dark font-weight-bold pt-0 font-size-large">
       Apps
     </b-nav-text>
