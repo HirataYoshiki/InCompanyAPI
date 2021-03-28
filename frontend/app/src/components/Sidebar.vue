@@ -3,7 +3,7 @@
     <b-nav-text class="text-dark font-weight-bold pt-0 font-size-large">
       Apps
     </b-nav-text>
-    <div v-for="item in items" :key="item.name">
+    <div v-for="item in apps" :key="item.name">
       <b-nav-item v-bind:to="item.url">
         <p class="text-white">
         {{item.name}}
@@ -16,23 +16,8 @@
 <script>
 export default {
   name: 'Sidebar',
-  data () {
-    return {
-      items: [
-        {
-          name: 'Character',
-          url: '/character'
-        },
-        {
-          name: 'Report',
-          url: '/report'
-        },
-        {
-          name: 'MDE',
-          url: '/test'
-        }
-      ]
-    }
+  props: {
+    apps: Array
   }
 }
 </script>

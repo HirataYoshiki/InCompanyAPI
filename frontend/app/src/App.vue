@@ -4,7 +4,7 @@
     <b-container fluid>
       <b-row>
         <b-col class="col-md-2 d-none d-md-block bg-secondary sidebar-sticky">
-          <Sidebar/>
+          <Sidebar :apps="apps"/>
         </b-col>
         <b-col>
           <section id="cover" class="min-vh-100">
@@ -42,7 +42,21 @@ export default {
       },
       reports: {
         contents: {}
-      }
+      },
+      apps: [
+        {
+          name: 'Character',
+          url: '/character'
+        },
+        {
+          name: 'Report',
+          url: '/report'
+        },
+        {
+          name: 'MDE',
+          url: '/test'
+        }
+      ]
     }
   },
   methods: {
@@ -100,7 +114,8 @@ export default {
   provide () {
     return {
       create_headers: this.create_header_with_accesstoken,
-      loginstatus: this.get_status
+      loginstatus: this.get_status,
+      apps: this.apps
     }
   }
 }

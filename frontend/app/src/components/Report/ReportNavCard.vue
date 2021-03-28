@@ -1,6 +1,6 @@
 <template>
   <b-nav>
-    <b-nav-item :to="url">
+    <b-nav-item @click="set_page_number(pagenumber)">
       <b-card
       no-body
       style="width: 15rem; height: 20rem;"
@@ -20,7 +20,7 @@
 
 <script>
 export default {
-  name: 'homenavcard',
+  name: 'reportnavcard',
   inject: [
     'set_page_number'
   ],
@@ -28,7 +28,7 @@ export default {
     img: String,
     title: String,
     description: String,
-    url: String
+    pagenumber: Number
   }
 }
 </script>
