@@ -1,14 +1,12 @@
 <template>
-  <b-card>
-    <b-form-group label="Your Reports" label-size="lg" label-class="font-weight-bold pt-0">
-      <b-icon icon="file-earmark-plus" class="ml-auto" variant="success"></b-icon>
-      <b-card-group deck>
-        <div v-for="report in List" :key="report.localreportid">
-          <ReportCard :report="report"/>
-        </div>
-      </b-card-group>
-    </b-form-group>
-  </b-card>
+  <b-form-group label="Your Reports" label-size="xg" label-class="font-weight-bold pt-0">
+    <b-icon icon="file-earmark-plus" class="ml-auto" variant="success"></b-icon>
+    <b-card-group deck>
+      <div v-for="report in List" :key="report.localreportid">
+        <ReportCard :report="report"/>
+      </div>
+    </b-card-group>
+  </b-form-group>
 </template>
 
 <script>

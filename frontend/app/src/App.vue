@@ -92,11 +92,15 @@ export default {
       } catch (e) {
         this.character.NewUser = true
       }
+    },
+    get_status: function () {
+      return this.LoginStatus
     }
   },
   provide () {
     return {
-      create_headers: this.create_header_with_accesstoken
+      create_headers: this.create_header_with_accesstoken,
+      loginstatus: this.get_status
     }
   }
 }
