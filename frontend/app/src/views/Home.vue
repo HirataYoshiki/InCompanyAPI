@@ -2,7 +2,7 @@
   <div v-if="status">
     <h1><strong>Build Up Report</strong></h1>
     <h2>You can create and check reports</h2>
-    <b-card-group>
+    <b-card-group deck>
       <div v-for="item in links" :key="item.number">
         <Homenavcard :img="item.img" :title="item.title" :description="item.description" :link="item.link"/>
       </div>
@@ -36,7 +36,7 @@ export default {
         },
         {
           number: 1,
-          img: 'files',
+          img: 'layers',
           title: 'Build up Report',
           description: 'Choose contents, Set title, Create a new report.',
           link: '/report'
