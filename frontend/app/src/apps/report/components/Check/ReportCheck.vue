@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="$route.path==='/report/check'">
-      <ReportsList :List="reports"/>
+      <ReportsList/>
     </div>
     <div v-else>
       <router-view/>
@@ -21,11 +21,22 @@ export default {
   ],
   data () {
     return {
-      reports: []
+      reports: [],
+      orderedcontents: []
+    }
+  },
+  methods: {
+    set_orderedcontents: function (orderedcontents) {
+      this.orderedcontents = orderedcontents
     }
   },
   beforeMount () {
     this.reports = this.get_reports()
+  },
+  provide () {
+    return {
+      set_orderedcontents: this.set_orderedcontents
+    }
   }
 }
 </script>

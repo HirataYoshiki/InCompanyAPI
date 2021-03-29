@@ -23,6 +23,10 @@ export default {
         text: '',
         endpoint: 'http://localhost:8080/reportapp/contents'
       },
+      group: {
+        group: [],
+        endpoint: 'http://localhost:8080/reportapp/groups'
+      },
       report: {
         report: {
           title: '',
@@ -32,6 +36,7 @@ export default {
         endpoint: 'http://localhost:8080/reportapp/reports'
       },
       reports: [],
+      groups: [],
       contents: []
     }
   },
@@ -51,14 +56,44 @@ export default {
     get_reports: function () {
       return this.reports
     },
+    get_groups: function () {
+      return this.groups
+    },
     get_contents: function () {
       return this.contents
     },
     push_reports: function (report) {
       this.reports.push(report)
     },
+    delete_from_reports: function (report) {
+      const newArray = this.reports.filter(n => n !== report)
+      this.reports = newArray
+    },
     push_contents: function (content) {
       this.contents.push(content)
+    },
+    delete_from_contents: function (content) {
+      const newArray = this.contents.filter(n => n !== content)
+      this.contents = newArray
+    },
+    async request_contents () {
+      try {
+        const headers = this.create_headers()
+        const response = await this.$axios.get(this.content.endpoint, headers)
+        this.contents = response.data
+      } catch (e) {
+        alert('Contents Request error')
+      }
+    },
+    async request_groups () {
+      try {
+        const headers = this.create_headers()
+        const response = await this.$axios.get(this.group.endpoint, headers)
+        this.groups = response.data
+      } catch (e) {
+        alert(e)
+        alert('Groups Request error')
+      }
     },
     async request_reports () {
       try {
@@ -68,15 +103,6 @@ export default {
       } catch (e) {
         alert(e)
         alert('Reports Request error')
-      }
-    },
-    async request_contents () {
-      try {
-        const headers = this.create_headers()
-        const response = await this.$axios.get(this.content.endpoint, headers)
-        this.contents = response.data
-      } catch (e) {
-        alert('Contents Request error')
       }
     }
   },
@@ -91,7 +117,12 @@ export default {
       get_report: this.get_report,
       set_report: this.set_report,
       get_reports: this.get_reports,
-      get_contents: this.get_contents
+      push_reports: this.push_reports,
+      get_groups: this.get_groups,
+      get_contents: this.get_contents,
+      push_contents: this.push_contents,
+      delete_from_reports: this.delete_from_reports,
+      delete_from_contents: this.delete_from_contents
     }
   }
 }

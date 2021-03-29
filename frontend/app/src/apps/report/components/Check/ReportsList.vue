@@ -16,24 +16,20 @@ export default {
   components: {
     ReportCard
   },
-  props: {
-    List: Array
-  },
-  data () {
-    return {
-      selecter: {},
-      text: 'this is reportslist'
-    }
-  },
+  inject: [
+    'get_reports'
+  ],
   methods: {
     setreport (report) {
       this.selecter = report
     } 
   },
+  computed: {
+    List () {
+      return this.get_reports()
+    }
+  },
   watch: {
-    List: function () {
-      this.List = this.List
-    },
     selecter: function () {
       this.selecter = this.selecter
       this.$parent.SelectedReport.report = this.selecter
