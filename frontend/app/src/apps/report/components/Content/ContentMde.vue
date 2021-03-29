@@ -1,5 +1,7 @@
 <template>
+<div id="mde">
   <VueSimplemde/>
+</div>
 </template>
 
 <script>

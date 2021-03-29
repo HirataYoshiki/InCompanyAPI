@@ -28,6 +28,9 @@ export default {
   methods: {
     set_orderedcontents: function (orderedcontents) {
       this.orderedcontents = orderedcontents
+    },
+    get_orderedcontents: function () {
+      return this.orderedcontents
     }
   },
   beforeMount () {
@@ -35,7 +38,8 @@ export default {
   },
   provide () {
     return {
-      set_orderedcontents: this.set_orderedcontents
+      set_orderedcontents: this.set_orderedcontents,
+      get_orderedcontents: this.get_orderedcontents
     }
   }
 }

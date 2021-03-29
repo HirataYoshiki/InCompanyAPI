@@ -14,8 +14,7 @@ export const ReportRoute = {
       children: [
         {
           path: 'detail',
-          contents: ReportDetail,
-          props: true
+          component: ReportDetail
         }
       ]
     },

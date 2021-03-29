@@ -109,6 +109,7 @@ export default {
   beforeMount () {
     this.request_reports()
     this.request_contents()
+    this.request_groups()
   },
   provide () {
     return {

@@ -51,6 +51,7 @@ export default {
   inject: [
     'create_headers',
     'get_groups',
+    'get_contents',
     'delete_from_reports',
     'set_orderedcontents'
   ],
@@ -61,8 +62,8 @@ export default {
   },
   methods: {
     go_to_detail () {
-      _orderedcontents()
-      this.$router.push('/report/check/detail')
+      this._orderedcontents()
+      this.$router.push({path: 'detail'})
     },
     show_overlay () {
       this.overlay = true
