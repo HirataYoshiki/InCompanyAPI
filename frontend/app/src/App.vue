@@ -46,7 +46,7 @@ export default {
       apps: [
         {
           name: 'Profile',
-          url: '/character',
+          url: '/profile',
           description: 'Set your profiles',
           icon: 'person-circle'
         },

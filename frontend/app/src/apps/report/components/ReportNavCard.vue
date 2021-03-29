@@ -1,6 +1,6 @@
 <template>
   <b-nav>
-    <b-nav-item @click="set_page_number(pagenumber)">
+    <b-nav-item :to="link" append>
       <b-card
       no-body
       style="width: 15rem; height: 20rem;"
@@ -21,14 +21,11 @@
 <script>
 export default {
   name: 'reportnavcard',
-  inject: [
-    'set_page_number'
-  ],
   props: {
     img: String,
     title: String,
     description: String,
-    pagenumber: Number
+    link: String
   }
 }
 </script>
