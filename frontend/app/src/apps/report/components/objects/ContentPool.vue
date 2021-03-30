@@ -1,6 +1,6 @@
 <template>
     <b-card-group deck>
-      <draggable v-model="List" :clone="clone">
+      <draggable v-model="List" :clone="clone" :group="group">
         <b-card class="item" v-for="content in List" :key="content.contentid">
           <b-card-body>
             <b-icon icon="file-text" role="img" alt="icon" font-scale="4"></b-icon>
@@ -17,7 +17,8 @@ export default {
   name: 'contentpool',
   props: {
     getter: Function,
-    setter: Function
+    setter: Function,
+    group: String
   },
   components: {
     draggable

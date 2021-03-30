@@ -38,7 +38,8 @@ export default {
         username: '',
         localcontentid: 0,
         contentid: 0
-      }
+      },
+      group: 'check'
     }
   },
   methods: {
@@ -71,7 +72,8 @@ export default {
       get_selected_report: this.get_selected_report,
       set_selected_report: this.set_selected_report,
       get_selected_content: this.get_selected_content,
-      set_selected_content: this.set_selected_content
+      set_selected_content: this.set_selected_content,
+      group: this.group
     }
   }
 }

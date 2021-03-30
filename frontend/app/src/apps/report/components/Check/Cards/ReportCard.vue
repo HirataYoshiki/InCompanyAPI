@@ -86,12 +86,14 @@ export default {
         return a.order - b.order
       })
       const contents = this.get_contents()
-      let orderedcontents = []
-      groups.forEach(function (item) {
-        let push = contents.concat()
-        push.filter(n => n.contentid === item.contentid)
-        orderedcontents.push(push[0])
-      })
+      var orderedcontents = []
+      for (var item of groups) {
+        for (var content of contents) {
+          if (item.contentid === content.contentid) {
+            orderedcontents.push(content)
+          }
+        }
+      }
       this.set_orderedcontents(orderedcontents)
     }
   },
