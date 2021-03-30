@@ -14,7 +14,7 @@
           </b-form-group>
           <b-form-group label="Contents:" label-for="contents">
             <div id="contents">
-              <ContentPool :getter="get_contents" :setter="no_return" :group="group"/>
+              <ContentPool :getter="get_contents" :setter="return_none" :group="group"/>
             </div>
           </b-form-group>
         </b-form>
@@ -34,7 +34,7 @@
               :key="content.contentid"
               :variant="color(content)"
               >
-                <strong>{{i+1}}:</strong>
+                <strong>{{i+1}}.</strong>
                 <b-icon icon="file-text"></b-icon>
                 {{content.content.substr( 0, 21)}}
               </b-list-group-item>
@@ -75,7 +75,7 @@ export default {
     }
   },
   methods: {
-    no_return (value) {
+    return_none (value) {
       return true
     },
     color (content) {
