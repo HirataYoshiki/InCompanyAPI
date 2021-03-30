@@ -22,7 +22,23 @@ export default {
   data () {
     return {
       reports: [],
-      orderedcontents: []
+      orderedcontents: [],
+      SelectedReport: {
+        reportid: 0,
+        timestamp: '2021-01-01T00:00:00',
+        headerid: 0,
+        title: '',
+        localreportid: 0,
+        contentgroupid: 0,
+        teamid: 0,
+        username: ''
+      },
+      SelectedContent: {
+        content: '',
+        username: '',
+        localcontentid: 0,
+        contentid: 0
+      }
     }
   },
   methods: {
@@ -31,6 +47,18 @@ export default {
     },
     get_orderedcontents: function () {
       return this.orderedcontents
+    },
+    get_selected_report: function () {
+      return this.SelectedReport
+    },
+    set_selected_report: function (report) {
+      this.SelectedReport = report
+    },
+    get_selected_content: function () {
+      return this.SelectedContent
+    },
+    set_selected_content: function (content) {
+      this.SelectedContent = content
     }
   },
   beforeMount () {
@@ -38,8 +66,12 @@ export default {
   },
   provide () {
     return {
+      get_orderedcontents: this.get_orderedcontents,
       set_orderedcontents: this.set_orderedcontents,
-      get_orderedcontents: this.get_orderedcontents
+      get_selected_report: this.get_selected_report,
+      set_selected_report: this.set_selected_report,
+      get_selected_content: this.get_selected_content,
+      set_selected_content: this.set_selected_content
     }
   }
 }

@@ -53,7 +53,8 @@ export default {
     'get_groups',
     'get_contents',
     'delete_from_reports',
-    'set_orderedcontents'
+    'set_orderedcontents',
+    'set_selected_report'
   ],
   data () {
     return {
@@ -63,7 +64,8 @@ export default {
   methods: {
     go_to_detail () {
       this._orderedcontents()
-      this.$router.push({path: 'detail'})
+      this.set_selected_report(this.report)
+      this.$router.push('check/detail')
     },
     show_overlay () {
       this.overlay = true

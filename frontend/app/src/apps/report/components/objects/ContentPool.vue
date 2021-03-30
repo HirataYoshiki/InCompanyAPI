@@ -1,9 +1,14 @@
 <template>
-    <draggable v-model="List" :clone="clone">
-      <div class="item" style="width: 15rem; height: 20rem;" v-for="content in List" :key="content.contentid">
-        <b-icon icon="file-text" role="img" alt="icon" font-scale="4"></b-icon>
-      </div>
-    </draggable>
+    <b-card-group deck>
+      <draggable v-model="List" :clone="clone">
+        <b-card class="item" v-for="content in List" :key="content.contentid">
+          <b-card-body>
+            <b-icon icon="file-text" role="img" alt="icon" font-scale="4"></b-icon>
+            <b-card-text>{{content.content}}</b-card-text>
+          </b-card-body>
+        </b-card>
+      </draggable>
+    </b-card-group>
 </template>
 
 <script>
