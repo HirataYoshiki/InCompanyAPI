@@ -30,7 +30,7 @@ export default {
         {
           img: 'file-text',
           title: 'Create content',
-          description: 'Create a part of report. You can gather content parts to build up a report.',
+          description: 'Create a part of report. You can gather contents to build up a report.',
           link: 'content'
         },
         {

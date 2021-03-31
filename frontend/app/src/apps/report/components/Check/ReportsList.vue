@@ -1,12 +1,14 @@
 <template>
-  <b-form-group>
-    <label for="cardgroup"><h1><b-icon icon="folder"></b-icon> Reports</h1></label>
-    <b-card-group deck id="cardgroup">
-      <div v-for="report in List" :key="report.localreportid">
-        <ReportCard :report="report"/>
-      </div>
-    </b-card-group>
-  </b-form-group>
+  <b-form>
+    <b-form-group>
+      <label for="cardgroup"><h1><b-icon icon="folder"></b-icon> Reports</h1></label>
+      <b-card-group deck id="cardgroup">
+        <div v-for="report in List" :key="report.localreportid">
+          <ReportCard :report="report"/>
+        </div>
+      </b-card-group>
+    </b-form-group>
+  </b-form>
 </template>
 
 <script>

@@ -1,7 +1,7 @@
 <template>
     <b-card-group deck>
       <draggable v-model="List" :group="group">
-        <b-card class="item" v-for="content in List" :key="content.contentid">
+        <b-card class="item m-1" v-for="content in List" :key="content.contentid">
           <b-card-body>
             <b-icon icon="file-text" role="img" alt="icon" font-scale="4"></b-icon>
             <b-card-text>{{content.content}}</b-card-text>

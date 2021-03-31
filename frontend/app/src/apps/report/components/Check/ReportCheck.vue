@@ -39,6 +39,7 @@ export default {
         localcontentid: 0,
         contentid: 0
       },
+      SelectedDescription: '',
       group: 'check'
     }
   },
@@ -60,6 +61,12 @@ export default {
     },
     set_selected_content: function (content) {
       this.SelectedContent = content
+    },
+    get_selected_description: function () {
+      return this.SelectedDescription
+    },
+    set_selected_description: function (description) {
+      this.SelectedDescription = description
     }
   },
   beforeMount () {
@@ -73,6 +80,8 @@ export default {
       set_selected_report: this.set_selected_report,
       get_selected_content: this.get_selected_content,
       set_selected_content: this.set_selected_content,
+      get_selected_description: this.get_selected_description,
+      set_selected_description: this.set_selected_description,
       group: this.group
     }
   }

@@ -9,18 +9,28 @@ export const ReportRoute = {
   component: Report,
   children: [
     {
+      path: 'content',
+      component: ContentMde
+    },
+    {
+      path: 'report',
+      component: ReportDetail,
+      props: {
+        new: true
+      }
+    },
+    {
       path: 'check',
       component: ReportCheck,
       children: [
         {
           path: 'detail',
-          component: ReportDetail
+          component: ReportDetail,
+          props: {
+            new: false
+          }
         }
       ]
-    },
-    {
-      path: 'content',
-      component: ContentMde
     }
   ]
 }

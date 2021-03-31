@@ -30,14 +30,19 @@ export default {
       report: {
         report: {
           title: '',
-          subtitle: '',
+          description: '',
           order: []
         },
         endpoint: 'http://localhost:8080/reportapp/reports'
       },
+      description: {
+        description: '',
+        endpoint: 'http://localhost:8080/reportapp/headers'
+      },
       reports: [],
       groups: [],
-      contents: []
+      contents: [],
+      descriptions: []
     }
   },
   methods: {
@@ -53,6 +58,12 @@ export default {
     set_report: function (report) {
       this.report.report = report 
     },
+    get_description: function () {
+      return this.description.description
+    },
+    set_description: function (description) {
+      this.description.description = description
+    },
     get_reports: function () {
       return this.reports
     },
@@ -61,6 +72,9 @@ export default {
     },
     get_contents: function () {
       return this.contents
+    },
+    get_descriptions: function () {
+      return this.descriptions
     },
     push_reports: function (report) {
       this.reports.push(report)
@@ -76,40 +90,33 @@ export default {
       const newArray = this.contents.filter(n => n !== content)
       this.contents = newArray
     },
-    async request_contents () {
+    async _request_get (endpoint) {
       try {
         const headers = this.create_headers()
-        const response = await this.$axios.get(this.content.endpoint, headers)
-        this.contents = response.data
+        const response = await this.$axios.get(endpoint, headers)
+        return response.data
       } catch (e) {
-        alert('Contents Request error')
+        alert('Request error')
       }
+    },
+    async request_contents () {
+      this.contents = await this._request_get(this.content.endpoint)
     },
     async request_groups () {
-      try {
-        const headers = this.create_headers()
-        const response = await this.$axios.get(this.group.endpoint, headers)
-        this.groups = response.data
-      } catch (e) {
-        alert(e)
-        alert('Groups Request error')
-      }
+      this.groups = await this._request_get(this.group.endpoint)
     },
     async request_reports () {
-      try {
-        const headers = this.create_headers()
-        const response = await this.$axios.get(this.report.endpoint, headers)
-        this.reports = response.data
-      } catch (e) {
-        alert(e)
-        alert('Reports Request error')
-      }
+      this.reports = await this._request_get(this.report.endpoint)
+    },
+    async request_descriptions () {
+      this.descriptions = await this._request_get(this.description.endpoint)
     }
   },
   beforeMount () {
     this.request_reports()
     this.request_contents()
     this.request_groups()
+    this.request_descriptions()
   },
   provide () {
     return {
@@ -120,6 +127,7 @@ export default {
       get_reports: this.get_reports,
       push_reports: this.push_reports,
       get_groups: this.get_groups,
+      get_descriptions: this.get_descriptions,
       get_contents: this.get_contents,
       push_contents: this.push_contents,
       delete_from_reports: this.delete_from_reports,
