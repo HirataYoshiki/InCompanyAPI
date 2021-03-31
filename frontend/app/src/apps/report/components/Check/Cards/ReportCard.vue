@@ -14,7 +14,7 @@
           <b-icon icon="trash-fill" class="ml-auto" variant="danger" v-b-popover.hover.top="'Delete'"></b-icon>
         </b-nav-item>
         <b-nav-item @click="go_to_detail">
-          <b-icon icon="pencil-square" v-b-popover.hover="'Edit'">Edit</b-icon>
+          <b-icon icon="pencil-square" v-b-popover.hover.top="'Edit'">Edit</b-icon>
         </b-nav-item>
       </b-nav>
     </template>

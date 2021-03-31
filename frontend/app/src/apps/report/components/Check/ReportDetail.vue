@@ -22,7 +22,7 @@
           </b-form-group>
           <b-form-group label="Content:" label-for="input-content">
             <div id="input-content">
-              <VueSimplemde v-model="selectedcontentvalue" v-on:update="updated('content')"/>
+              <vue-simplemde v-model="selectedcontentvalue"/>
             </div>
           </b-form-group>
           <b-form-group label="Contents:" label-for="contents">
@@ -39,11 +39,11 @@
         label-for="contentorder"
         >
           <b-list-group id="contentorder">
-            <draggable v-model="ReportContents" :group="group" draggable=".button" v-on:update="updated('order')">
+            <draggable v-model="ReportContents" :group="group" draggable=".button" v-on:update="updated('order')" v-on:add="updated('order')">
               <b-list-group-item
               v-for="(content, i) in ReportContents"
               class="button"
-              @click="change_content(content)"
+              @click.capture="change_content(content)"
               :key="content.contentid"
               :variant="color(content)"
               >
@@ -101,15 +101,15 @@ export default {
     return_true (value) {
       return true
     },
-    chaned (key) {
+    updated (key) {
       this.edit[key] = true
     },
     change_content (content) {
       if (this.edit.content) {
         alert('not saved. Save?')
       }
-      this.edit.content = false
       this.set_selected_content(content)
+      this.edit.content = false
     },
     color (content) {
       if (content === this.get_selected_content()) {
@@ -151,6 +151,7 @@ export default {
         let content = this.get_selected_content()
         content.content = value
         this.set_selected_content(content)
+        this.updated('content')
       }
     },
     ReportContents: {
@@ -187,6 +188,9 @@ export default {
   beforeMount () {
     const orderedcontents = this.get_orderedcontents()
     this.set_selected_content(orderedcontents[0])
+  },
+  mounted () {
+    this.edit.content = false
   }
 }
 
