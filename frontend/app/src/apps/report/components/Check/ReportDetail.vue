@@ -90,10 +90,10 @@ export default {
   data () {
     return {
       edit: {
-        title: false,
-        description: false,
         content: false,
-        order: false
+        order: false,
+        title: false,
+        description: false
       }
     }
   },

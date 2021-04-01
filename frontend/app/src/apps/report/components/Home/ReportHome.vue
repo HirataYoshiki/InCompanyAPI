@@ -1,7 +1,6 @@
 <template>
   <div>
-    <h1><strong>Build Up Report</strong></h1>
-    <h2>You can create and check reports</h2>
+    <b-img :src="faceimg" fluid alt="Responsive image"></b-img>
     <b-container fluid>
       <b-row class="justify-content-md-center">
         <div v-for="item in links" :key="item.pagenumber">
@@ -26,21 +25,22 @@ export default {
   ],
   data () {
     return {
+      faceimg: require('@/assets/reporthome.png'),
       links: [
         {
-          img: 'file-text',
+          img: require('@/assets/content.png'),
           title: 'Create content',
           description: 'Create a part of report. You can gather contents to build up a report.',
           link: 'content'
         },
         {
-          img: 'layers',
+          img: require('@/assets/build.png'),
           title: 'Build up Report',
           description: 'Choose contents, Set title, Create a new report.',
           link: 'content'
         },
         {
-          img: 'folder',
+          img: require('@/assets/reports.png'),
           title: 'Your Reports',
           description: 'Check, Edit, Delete your reports.',
           link: 'check'

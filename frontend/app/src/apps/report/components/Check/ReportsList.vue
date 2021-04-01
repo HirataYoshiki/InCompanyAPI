@@ -1,14 +1,16 @@
 <template>
-  <b-form>
-    <b-form-group>
-      <label for="cardgroup"><h1><b-icon icon="folder"></b-icon> Reports</h1></label>
-      <b-card-group deck id="cardgroup">
-        <div v-for="report in List" :key="report.localreportid">
-          <ReportCard :report="report"/>
-        </div>
-      </b-card-group>
-    </b-form-group>
-  </b-form>
+  <div>
+    <b-img :src="faceimg" fluid alt="Responsive image"></b-img>
+    <b-form class="mt-4">
+      <b-form-group>
+        <b-card-group deck id="cardgroup">
+          <div v-for="report in List" :key="report.localreportid">
+            <ReportCard :report="report"/>
+          </div>
+        </b-card-group>
+      </b-form-group>
+    </b-form>
+  </div>
 </template>
 
 <script>
@@ -21,6 +23,11 @@ export default {
   inject: [
     'get_reports'
   ],
+  data () {
+    return {
+      faceimg: require('@/assets/reportcheckheader.png')
+    }
+  },
   methods: {
     setreport (report) {
       this.selecter = report

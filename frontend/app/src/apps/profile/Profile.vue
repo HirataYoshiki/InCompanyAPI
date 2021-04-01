@@ -1,5 +1,5 @@
 <template>
-  <b-container fluid>
+  <b-container fluid class="mt-4">
     <div v-if="!MyCharacter.NewUser">
       <b-form-row id="topside">
         <b-col id="top-leftside">

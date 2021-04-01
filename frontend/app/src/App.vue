@@ -53,7 +53,7 @@ export default {
         {
           name: 'Report',
           url: '/report',
-          description: 'Build up Report!. Input type is MarkDown type.',
+          description: 'Build up Report. With Simple MarkDown Editor.',
           icon: 'file-earmark-text'
         }
       ]
