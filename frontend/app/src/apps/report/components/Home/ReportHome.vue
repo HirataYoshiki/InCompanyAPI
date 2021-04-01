@@ -37,7 +37,7 @@ export default {
           img: require('@/assets/build.png'),
           title: 'Build up Report',
           description: 'Choose contents, Set title, Create a new report.',
-          link: 'content'
+          link: 'report'
         },
         {
           img: require('@/assets/reports.png'),

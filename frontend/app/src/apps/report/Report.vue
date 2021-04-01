@@ -99,7 +99,7 @@ export default {
         alert('Request error')
       }
     },
-    async request_contents () {
+    request_contents: async function () {
       this.contents = await this._request_get(this.content.endpoint)
     },
     async request_groups () {
@@ -112,11 +112,11 @@ export default {
       this.descriptions = await this._request_get(this.description.endpoint)
     }
   },
-  beforeMount () {
-    this.request_reports()
-    this.request_contents()
-    this.request_groups()
-    this.request_descriptions()
+  async mounted () {
+    await this.request_reports()
+    await this.request_contents()
+    await this.request_groups()
+    await this.request_descriptions()
   },
   provide () {
     return {
@@ -131,7 +131,8 @@ export default {
       get_contents: this.get_contents,
       push_contents: this.push_contents,
       delete_from_reports: this.delete_from_reports,
-      delete_from_contents: this.delete_from_contents
+      delete_from_contents: this.delete_from_contents,
+      request_contents: this.request_contents
     }
   }
 }

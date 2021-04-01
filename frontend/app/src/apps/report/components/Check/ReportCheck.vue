@@ -69,7 +69,7 @@ export default {
       this.SelectedDescription = description
     }
   },
-  beforeMount () {
+  mounted () {
     this.reports = this.get_reports()
   },
   provide () {

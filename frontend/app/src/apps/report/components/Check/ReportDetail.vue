@@ -22,7 +22,7 @@
           </b-form-group>
           <b-form-group label="Content:" label-for="input-content">
             <div id="input-content">
-              <vue-simplemde v-model="selectedcontentvalue"/>
+              <vue-simplemde v-model="selectedcontentvalue" :configs="conf"/>
             </div>
           </b-form-group>
           <b-form-group label="Contents:" label-for="contents">
@@ -38,17 +38,18 @@
         label="Build Up Report!"
         label-for="contentorder"
         >
-          <b-list-group id="contentorder">
+          <b-list-group>
             <draggable v-model="ReportContents" :group="group" draggable=".button" v-on:update="updated('order')" v-on:add="updated('order')">
               <b-list-group-item
-              v-for="(content, i) in ReportContents"
-              class="button"
-              @click.capture="change_content(content)"
-              :key="content.contentid"
-              :variant="color(content)"
+                id="contentorder"
+                v-for="(content, i) in ReportContents"
+                class="button"
+                @click.capture="change_content(content)"
+                :key="content.contentid"
+                :variant="color(content)"
               >
                 <strong>{{i+1}}.</strong>
-                <b-icon icon="file-text"></b-icon>
+                <b-icon icon="box"></b-icon>
                 {{content.content.substr( 0, 21)}}
               </b-list-group-item>
               <b-list-group-item slot="footer" variant="light" id="contentorderfooter">Drag and Drop Content</b-list-group-item>
@@ -94,6 +95,10 @@ export default {
         order: false,
         title: false,
         description: false
+      },
+      conf: {
+        placeholder: 'Input content here',
+        spellChecker: false
       }
     }
   },

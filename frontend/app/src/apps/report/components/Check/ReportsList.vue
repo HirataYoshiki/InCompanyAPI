@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-img :src="faceimg" fluid alt="Responsive image"></b-img>
-    <b-form class="mt-4">
+    <b-form class="mt-2">
       <b-form-group>
         <b-card-group deck id="cardgroup">
           <div v-for="report in List" :key="report.localreportid">
