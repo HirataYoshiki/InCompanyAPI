@@ -8,3 +8,12 @@ export const SigninRoute = {
     signup: false
   }
 }
+
+export const SignupRoute = {
+  name: 'signup',
+  path: '/signup',
+  component: Signin,
+  props: {
+    signup: true
+  }
+}
