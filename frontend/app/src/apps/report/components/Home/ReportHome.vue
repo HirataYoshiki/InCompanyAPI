@@ -40,6 +40,12 @@ export default {
           link: 'report'
         },
         {
+          img: require('@/assets/contents.png'),
+          title: 'Your contents',
+          description: 'Under developping',
+          link: 'contents'
+        },
+        {
           img: require('@/assets/reports.png'),
           title: 'Your Reports',
           description: 'Check, Edit, Delete your reports.',

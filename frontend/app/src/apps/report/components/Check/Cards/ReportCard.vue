@@ -83,7 +83,7 @@ export default {
       this.delete_from_reports(this.report)
     },
     _orderedcontents () {
-      let groups = this.get_groups().filter(n => n.localgroupid === this.report.contentgroupid)
+      var groups = this.get_groups().filter(n => n.localgroupid === this.report.localgroupid)
       groups.sort(function (a, b) {
         return a.order - b.order
       })
@@ -110,7 +110,7 @@ export default {
     description () {
       try {
         let description = this.get_descriptions()
-        return description.filter(n => n.headerid === this.report.headerid)[0].type
+        return description.filter(n => n.localheaderid === this.report.headerid)[0].type
       } catch (e) {
         return ''
       }

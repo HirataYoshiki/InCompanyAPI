@@ -321,6 +321,7 @@ async def create_contentgroup(
       ReportContent.username==current_user.username,
       ReportContent.localcontentid.in_(adds.localcontentids)
     ).all()
+    contentslist = [j for i in adds.localcontentids for j in contentslist if i == j.localcontentid]
     try:
       group=[{
         "username": current_user.username,

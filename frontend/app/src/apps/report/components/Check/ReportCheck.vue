@@ -29,7 +29,7 @@ export default {
         headerid: 0,
         title: '',
         localreportid: 0,
-        contentgroupid: 0,
+        localgroupid: 0,
         teamid: 0,
         username: ''
       },

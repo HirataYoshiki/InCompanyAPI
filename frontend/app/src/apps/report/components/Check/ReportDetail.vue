@@ -8,6 +8,7 @@
         </b-navbar-nav>
         <b-navbar-nav class="ml-auto">
           <b-button :variant="save_button_color" @click="save">Save</b-button>
+          <b-button variant="info" @click="go_to_viewer">Preview</b-button>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
@@ -132,6 +133,10 @@ export default {
         alert('Saved')
         return true
       }
+    },
+    go_to_viewer () {
+      const textarray = this.ReportContents.map(n => n.content)
+      this.$router.push({name: 'viewer', params: {contents: textarray.join('\n\n')}})
     }
   },
   computed: {

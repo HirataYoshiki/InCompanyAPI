@@ -15,9 +15,9 @@ class Report(Base):
   title = Column(String(255),nullable=False)
   teamid=Column(Integer)
   headerid = Column(Integer, ForeignKey('reportheader.headerid'))
-  contentgroupid = Column(Integer, ForeignKey('reportcontentgroup.groupid'))
+  localgroupid = Column(Integer, ForeignKey('reportcontentgroup.groupid'))
   timestamp=Column(DateTime)
-  group = relationship("ReportContentGroup",back_populates="report")
+  group = relationship("ReportContentGroup")
   header = relationship("ReportHeader",back_populates="report")
 
   def updates(self,updates:Reportupdate):
