@@ -39,8 +39,7 @@ export default {
         localcontentid: 0,
         contentid: 0
       },
-      SelectedDescription: '',
-      group: 'check'
+      SelectedDescription: ''
     }
   },
   methods: {
@@ -81,8 +80,7 @@ export default {
       get_selected_content: this.get_selected_content,
       set_selected_content: this.set_selected_content,
       get_selected_description: this.get_selected_description,
-      set_selected_description: this.set_selected_description,
-      group: this.group
+      set_selected_description: this.set_selected_description
     }
   }
 }

@@ -1,14 +1,12 @@
 <template>
-    <b-card-group deck>
-      <draggable v-model="List" :group="group">
-        <b-card class="item m-1" style="width: 10rem; height: 15rem;" v-for="content in List" :key="content.contentid">
-          <b-card-body>
-            <b-icon icon="box" role="img" alt="icon" font-scale="2"></b-icon>
-            <b-card-text>{{content.content.substr(0, 21)}}</b-card-text>
-          </b-card-body>
-        </b-card>
-      </draggable>
-    </b-card-group>
+  <b-list-group horizontal>
+    <draggable v-model="List" :group="group" draggable=".button">
+      <b-list-group-item id="item" class="button flex-column align-items-start" v-for="content in List" :key="content.contentid">
+        <b-icon icon="box" role="img" alt="icon" font-scale="2"></b-icon>
+        <p>{{content.content.substr(0, 21)}}</p>
+      </b-list-group-item>
+    </draggable>
+  </b-list-group>
 </template>
 
 <script>
@@ -36,7 +34,19 @@ export default {
 }
 </script>
 <style scoped>
- .item {
+  #item {
     display: inline-block;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #7f7f7f;
+    border-radius: 10px;
+    background-color: #ffffff;
+  }
+
+  #item:hover {
+    cursor: grab;
+  }
+  #item:active {
+    cursor: grabbing;
   }
 </style>

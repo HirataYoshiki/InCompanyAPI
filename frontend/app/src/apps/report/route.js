@@ -35,9 +35,7 @@ export const ReportRoute = {
         {
           path: 'detail',
           component: ReportDetail,
-          props: {
-            new: false
-          }
+          props: true
         }
       ]
     }
