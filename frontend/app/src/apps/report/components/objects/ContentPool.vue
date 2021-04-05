@@ -1,7 +1,7 @@
 <template>
   <b-list-group horizontal>
     <draggable v-model="List" :group="group" draggable=".button">
-      <b-list-group-item id="item" class="button flex-column align-items-start" v-for="content in List" :key="content.contentid">
+      <b-list-group-item id="item" class="button flex-column align-items-start" v-for="content in List" :key="content.contentid" @click="itemclickevent(content)">
         <b-icon icon="box" role="img" alt="icon" font-scale="2"></b-icon>
         <p>{{content.content.substr(0, 21)}}</p>
       </b-list-group-item>
@@ -16,7 +16,13 @@ export default {
   props: {
     getter: Function,
     setter: Function,
-    group: String
+    group: String,
+    itemclickevent: {
+      type: Function,
+      default: function () {
+        return true
+      }
+    }
   },
   components: {
     draggable

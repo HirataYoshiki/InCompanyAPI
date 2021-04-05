@@ -179,6 +179,7 @@ async def delete_header_by_id(
     ).one()
 
     session.delete(deletes)
+    session.commit()
     return {"id": localheaderid}
   except:
     raise HTTPException(status_code=400)

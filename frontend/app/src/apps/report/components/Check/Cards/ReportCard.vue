@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import CardforEdit from '@/apps/report/components/objects/CardForEdit'
+import CardforEdit from '@/apps/report/components/objects/CardforEdit'
 export default {
   name: 'reportcard',
   props: {
@@ -45,6 +45,10 @@ export default {
       await this.$axios.delete(url1, headers)
       let url2 = 'http://localhost:8080/reportapp/groups/' + String(this.report.localgroupid)
       await this.$axios.delete(url2, headers)
+      if (this.report.headerid) {
+        let url3 = 'http://localhost:8080/reportapp/headers/' + String(this.report.headerid)
+        await this.$axios.delete(url3, headers)
+      }
       this.delete_from_reports(this.report)
     },
     _orderedcontents () {

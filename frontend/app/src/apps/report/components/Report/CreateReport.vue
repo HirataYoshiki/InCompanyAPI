@@ -1,5 +1,6 @@
 <template>
   <div v-if="this.$route.path==='/report/report'">
+    <b-img :src="img" fluid alt="Responsive image"></b-img>
     <ReportEditor
       :pagetitle="pagetitle"
       :reporttitle="reporttitle"
@@ -33,6 +34,7 @@ export default {
   ],
   data () {
     return {
+      img: require('@/assets/report/buildreportheader.png'),
       pagetitle: 'Create Report',
       reporttitle: '',
       description: '',
