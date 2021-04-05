@@ -16,17 +16,19 @@ export const ReportRoute = {
     },
     {
       path: 'report',
-      component: CreateReport
+      component: CreateReport,
+      children: [
+        {
+          path: 'viewer',
+          name: 'createreportviewer',
+          component: MDViewer,
+          props: true
+        }
+      ]
     },
     {
       path: 'contents',
       component: Contents
-    },
-    {
-      path: 'viewer',
-      name: 'viewer',
-      component: MDViewer,
-      props: true
     },
     {
       path: 'check',
@@ -35,7 +37,15 @@ export const ReportRoute = {
         {
           path: 'detail',
           component: ReportDetail,
-          props: true
+          props: true,
+          children: [
+            {
+              path: 'viewer',
+              name: 'detailreportviewer',
+              component: MDViewer,
+              props: true
+            }
+          ]
         }
       ]
     }

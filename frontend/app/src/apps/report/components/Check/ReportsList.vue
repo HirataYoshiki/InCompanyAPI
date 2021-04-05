@@ -25,7 +25,7 @@ export default {
   ],
   data () {
     return {
-      faceimg: require('@/assets/reportcheckheader.png')
+      faceimg: require('@/assets/report/reportcheckheader.png')
     }
   },
   methods: {

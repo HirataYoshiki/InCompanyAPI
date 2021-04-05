@@ -26,7 +26,7 @@ export default {
   data () {
     return {
       text: '',
-      img: require('@/assets/contentheader.png'),
+      img: require('@/assets/report/contentheader.png'),
       mdeconf: {
         placeholder: 'Input Content here',
         spellChecker: false

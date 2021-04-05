@@ -1,16 +1,22 @@
 <template>
-  <ReportEditor
-    :pagetitle="'Edit Report'"
-    :reporttitlegetter="reporttitlegetter"
-    :reporttitlesetter="reporttitlesetter"
-    :descriptiongetter="descriptiongetter"
-    :descriptionsetter="descriptionsetter"
-    :ordercontentsgetter="ordercontentsgetter"
-    :ordercontentssetter="ordercontentssetter"
-    :selectedcontentgetter="selectedcontentgetter"
-    :selectedcontentsetter="selectedcontentsetter"
-    :savefunc="save"
-  />
+  <div v-if="$route.path==='/report/check/detail'">
+    <ReportEditor
+      :pagetitle="'Edit Report'"
+      :reporttitlegetter="reporttitlegetter"
+      :reporttitlesetter="reporttitlesetter"
+      :descriptiongetter="descriptiongetter"
+      :descriptionsetter="descriptionsetter"
+      :ordercontentsgetter="ordercontentsgetter"
+      :ordercontentssetter="ordercontentssetter"
+      :selectedcontentgetter="selectedcontentgetter"
+      :selectedcontentsetter="selectedcontentsetter"
+      :savefunc="save"
+      :viewerpathname="'detailreportviewer'"
+    />
+  </div>
+  <div v-else>
+    <router-view/>
+  </div>
 </template>
 
 <script>

@@ -25,28 +25,28 @@ export default {
   ],
   data () {
     return {
-      faceimg: require('@/assets/reporthome.png'),
+      faceimg: require('@/assets/report/reporthome.png'),
       links: [
         {
-          img: require('@/assets/content.png'),
+          img: require('@/assets/report/content.png'),
           title: 'Create content',
           description: 'Create a part of report. You can gather contents to build up a report.',
           link: 'content'
         },
         {
-          img: require('@/assets/build.png'),
+          img: require('@/assets/report/build.png'),
           title: 'Build up Report',
           description: 'Choose contents, Set title, Create a new report.',
           link: 'report'
         },
         {
-          img: require('@/assets/contents.png'),
+          img: require('@/assets/report/contents.png'),
           title: 'Your contents',
           description: 'Under developping',
           link: 'contents'
         },
         {
-          img: require('@/assets/reports.png'),
+          img: require('@/assets/report/reports.png'),
           title: 'Your Reports',
           description: 'Check, Edit, Delete your reports.',
           link: 'check'

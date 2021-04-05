@@ -8,7 +8,7 @@
         </b-navbar-nav>
         <b-navbar-nav class="ml-auto">
           <b-button :variant="save_button_color" @click="save">Save</b-button>
-          <b-button variant="info" @click="go_to_viewer">Preview</b-button>
+          <b-button variant="info" :to="{name: viewerpathname, params: {contents: allcontentstext}}" append>Preview</b-button>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
@@ -83,7 +83,8 @@ export default {
     ordercontentssetter: Function,
     selectedcontentgetter: Function,
     selectedcontentsetter: Function,
-    savefunc: Function
+    savefunc: Function,
+    viewerpathname: String
   },
   inject: [
     'get_contents'
@@ -130,7 +131,7 @@ export default {
     },
     go_to_viewer () {
       const textarray = this.contents.map(n => n.content)
-      this.$router.push({name: 'viewer', params: {contents: textarray.join('\n\n')}})
+      this.$router.push({path: this.$route.path + '/viewer', params: {contents: textarray.join('\n\n')}})
     }
   },
   computed: {
@@ -192,6 +193,9 @@ export default {
         this.updated('content')
         this.selectedcontent.content = content
       }
+    },
+    allcontentstext () {
+      return this.contents.map(n => n.content).join('\n\n')
     }
   },
   mounted () {

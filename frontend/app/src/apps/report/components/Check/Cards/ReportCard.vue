@@ -7,7 +7,7 @@
     :description="description"
     :subtitle="createdtime"
     :editfunc="go_to_detail"
-    :overlayOK="OK"
+    :overlayOKfunc="OK"
   />
   </div>
 </template>
@@ -32,11 +32,6 @@ export default {
     'set_selected_report',
     'set_selected_description'
   ],
-  data () {
-    return {
-      overlay: false
-    }
-  },
   methods: {
     go_to_detail () {
       this._orderedcontents()
@@ -44,17 +39,12 @@ export default {
       this.set_selected_description(this.description)
       this.$router.push('check/detail')
     },
-    show_overlay () {
-      this.overlay = true
-    },
-    Cancel () {
-      this.overlay = false
-    },
     async OK () {
-      let url = 'http://localhost:8080/reportapp/reports/' + String(this.report.localreportid)
+      let url1 = 'http://localhost:8080/reportapp/reports/' + String(this.report.localreportid)
       const headers = this.create_headers()
-      await this.$axios.delete(url, headers)
-      this.overlay = false
+      await this.$axios.delete(url1, headers)
+      let url2 = 'http://localhost:8080/reportapp/groups/' + String(this.report.localgroupid)
+      await this.$axios.delete(url2, headers)
       this.delete_from_reports(this.report)
     },
     _orderedcontents () {

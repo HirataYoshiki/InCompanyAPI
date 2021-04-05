@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="this.$route.path==='/report/report'">
     <ReportEditor
       :pagetitle="pagetitle"
       :reporttitle="reporttitle"
@@ -12,8 +12,12 @@
       :ordercontentssetter="ordercontentssetter"
       :selectedcontentgetter="selectedcontentgetter"
       :selectedcontentsetter="selectedcontentsetter"
-      :savefunc="return_true"
+      :savefunc="save"
+      :viewerpathname="'createreportviewer'"
     />
+  </div>
+  <div v-else>
+    <router-view/>
   </div>
 </template>
 
@@ -42,9 +46,6 @@ export default {
     }
   },
   methods: {
-    return_true () {
-      alert('')
-    },
     reporttitlegetter: function () {
       return this.reporttitle
     }, 
@@ -75,15 +76,14 @@ export default {
       return response.data
     },
     async save () {
-      var data1 = { localcontentids: this.order.map(n => n.localcontentid) }
+      var data1 = { localcontentids: this.ordercontents.map(n => n.localcontentid) }
       var url1 = 'http://localhost:8080/reportapp/groups'
       const resgroup = await this._post(url1, data1)
 
       var body = {
-        title: this.title,
+        title: this.reporttitle,
         localgroupid: resgroup.localgroupid
       }
-      alert(resgroup.localgroupid)
       if (this.description) {
         var url2 = 'http://localhost:8080/reportapp/headers'
         var data2 = { type: this.description }

@@ -33,7 +33,7 @@
               <b-button variant="outline-danger" class="mr-3" @click="Cancel">
                 Cancel
               </b-button>
-              <b-button variant="outline-success" @click="overlayOKfunc">OK</b-button>
+              <b-button variant="outline-success" @click="OK">OK</b-button>
             </div>
           </div>
         </template>
@@ -63,6 +63,10 @@ export default {
       this.overlay = true
     },
     Cancel () {
+      this.overlay = false
+    },
+    OK () {
+      this.overlayOKfunc(this.object)
       this.overlay = false
     }
   }
