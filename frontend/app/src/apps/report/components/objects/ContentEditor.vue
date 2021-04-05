@@ -82,9 +82,7 @@ export default {
       return true
     },
     itemclickevent (content) {
-      if (this.itemclickactivate) {
-        this.text = content.content
-      }
+      this.text = content.content
     }
   }
 }
