@@ -17,18 +17,26 @@
 
 * Plane MarkDown Editor
 * Can reuse a Content as a template
+
+
 ![Create Content](https://github.com/HirataYoshiki/InCompanyAPI/blob/master/media/createcontent.gif)
 
 
 ### Create a Document
 * Drag and Drop Content to create a Document 
+
+
 ![Create Document](https://github.com/HirataYoshiki/InCompanyAPI/blob/master/media/createreport.gif)
 
 ### Edit a Content
+
+
 ![Edit Content](https://github.com/HirataYoshiki/InCompanyAPI/blob/master/media/editcontent.gif)
 
 ### Edit a Document
 * under development
+
+
 ![Edit Document](https://github.com/HirataYoshiki/InCompanyAPI/blob/master/media/editreport.gif)
 # Requirements
 
